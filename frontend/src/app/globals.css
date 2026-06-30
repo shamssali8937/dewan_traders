@@ -1,0 +1,169 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0284c7; /* Sky Blue */
+  --color-primary-hover: #0369a1;
+  --color-primary-dark: #075985;
+  --color-secondary: #0d9488; /* Clean Teal */
+  --color-secondary-hover: #0f766e;
+  --color-accent: #f43f5e; /* Coral Highlight */
+  --color-mint: #10b981; /* Fresh Mint */
+  --color-sage: #86efac;
+  --color-ice: #f8fafc; /* Ice White */
+  --color-snow: #fafafa;
+  --color-slate-950: #0f172a;
+  --font-sans: 'Inter', 'Outfit', system-ui, sans-serif;
+}
+
+:root {
+  --font-inter: 'Inter', sans-serif;
+}
+
+/* Base Body Styles - Bright Light Theme */
+body {
+  background-color: #ffffff;
+  color: #0f172a;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Premium Selection */
+::selection {
+  background: #bae6fd; /* Light Sky Blue */
+  color: #0369a1;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0284c7;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus ring */
+*:focus-visible {
+  outline: 2px solid #0284c7;
+  outline-offset: 2px;
+}
+
+/* Fine-line swiss grids */
+.swiss-grid-border {
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.swiss-border-b {
+  border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+.swiss-border-r {
+  border-right: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+/* Apple/Stripe Standard Frosted Light Glass Panel */
+.glass {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(15, 23, 42, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+}
+
+.glass-blue {
+  background: rgba(240, 249, 255, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(2, 132, 199, 0.1);
+}
+
+.glass-mint {
+  background: rgba(240, 253, 250, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(13, 148, 136, 0.1);
+}
+
+.glass-coral {
+  background: rgba(255, 241, 242, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(244, 63, 94, 0.1);
+}
+
+/* Light Gradient Text accents */
+.gradient-text-sky {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #0c4a6e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-coral {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #881337 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-teal {
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 50%, #115e59 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Subtle pastel background blobs */
+@keyframes fluidShift {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.fluid-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  mix-blend-mode: multiply;
+  opacity: 0.25;
+  animation: fluidShift 10s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Clean Card Hover Transitions */
+.card-hover {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(2, 132, 199, 0.2);
+  box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08);
+}
+
+/* Modern light grid details */
+.pattern-dots-light {
+  background-image: radial-gradient(circle, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.pattern-grid-light {
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
