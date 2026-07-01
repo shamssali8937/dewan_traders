@@ -27,7 +27,13 @@ export const inquiryService = {
   },
 
   async getById(id: string) {
-    const inquiry = await prisma.inquiry.findUnique({ where: { id } });
+    const inquiry = await prisma.inquiry.findUnique({
+      where: { id },
+      include: {
+        replies: { orderBy: { createdAt: 'asc' } },
+        user: { select: { name: true, email: true } },
+      },
+    });
     if (!inquiry) throw ApiError.notFound('Inquiry not found');
     return inquiry;
   },
@@ -40,7 +46,66 @@ export const inquiryService = {
         adminNotes,
         respondedAt: status === 'responded' ? new Date() : undefined,
       },
+      include: {
+        replies: { orderBy: { createdAt: 'asc' } },
+      },
     });
+  },
+
+  async createReply(inquiryId: string, message: string, sender: string) {
+    const inquiry = await prisma.inquiry.findUnique({ where: { id: inquiryId } });
+    if (!inquiry) throw ApiError.notFound('Inquiry not found');
+
+    const reply = await prisma.inquiryReply.create({
+      data: {
+        inquiryId,
+        message,
+        sender,
+      },
+    });
+
+    // Update inquiry status
+    await prisma.inquiry.update({
+      where: { id: inquiryId },
+      data: {
+        status: sender === 'admin' ? 'responded' : 'read',
+        respondedAt: sender === 'admin' ? new Date() : undefined,
+      },
+    });
+
+    // Handle notifications
+    const { notificationService } = require('./notification.service');
+    const { mailer } = require('../utils/mailer');
+
+    if (sender === 'admin') {
+      if (inquiry.userId) {
+        await notificationService.create(
+          inquiry.userId,
+          'Admin Responded to Inquiry',
+          `Dewan Traders admin replied to inquiry: "${message.slice(0, 60)}..."`,
+          'inquiry_reply'
+        );
+      }
+
+      // Fetch contact info
+      const contactInfo = await prisma.contactInfo.findFirst();
+      await mailer.sendInquiryReply(
+        inquiry.email,
+        inquiry.name,
+        inquiry.subject,
+        inquiry.message,
+        message,
+        contactInfo
+      );
+    } else {
+      await notificationService.createForAdmins(
+        'New Reply from Client',
+        `${inquiry.name} replied: "${message.slice(0, 60)}..."`,
+        'inquiry_reply'
+      );
+    }
+
+    return reply;
   },
 
   async delete(id: string) {

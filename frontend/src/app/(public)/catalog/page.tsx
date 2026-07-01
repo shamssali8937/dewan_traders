@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Search, ArrowRight, Leaf, Sprout, Scissors, Trophy, Package, MapPin, Wheat, Sparkles } from 'lucide-react';
 import { useProducts, useCategories } from '@/hooks/useProducts';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, resolveImageUrl } from '@/lib/utils';
 
 const iconMap = {
   Leaf: Leaf,
@@ -164,7 +164,7 @@ export default function CatalogPage() {
                         {/* Product Image */}
                         <div className="h-40 bg-slate-50 flex items-center justify-center border-b border-slate-100 relative overflow-hidden">
                           {product.imageUrl ? (
-                            <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
+                            <img src={resolveImageUrl(product.imageUrl)} alt={product.name} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
                           ) : (
                             <Package size={36} className="text-slate-200" />
                           )}

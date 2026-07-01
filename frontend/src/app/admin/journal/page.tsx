@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import { useAdminJournalPosts, useCreateJournalPost, useUpdateJournalPost, useDeleteJournalPost } from '@/hooks/useCms';
-import { Plus, Edit2, Trash2, Search, Newspaper, Check, X, Eye } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import { Plus, Edit2, Trash2, Search, Newspaper, Check, X, Eye, Image as ImageIcon, Loader } from 'lucide-react';
+import { formatDate, resolveImageUrl } from '@/lib/utils';
+import { productApi } from '@/services/endpoints';
+import { toast } from 'sonner';
 
 export default function AdminJournalPage() {
   const [search, setSearch] = useState('');
@@ -16,7 +18,8 @@ export default function AdminJournalPage() {
   const [content, setContent] = useState('');
   const [slug, setSlug] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-  const [published, setPublished] = useState(true);
+  const [isPublished, setIsPublished] = useState(true);
+  const [uploading, setUploading] = useState(false);
 
   const { data, isLoading } = useAdminJournalPosts();
   const { mutate: createPost } = useCreateJournalPost();
@@ -36,7 +39,7 @@ export default function AdminJournalPage() {
     setContent(post.content || '');
     setSlug(post.slug);
     setImageUrl(post.imageUrl || '');
-    setPublished(post.published);
+    setIsPublished(post.isPublished || false);
   };
 
   const handleCreateOpen = () => {
@@ -46,7 +49,26 @@ export default function AdminJournalPage() {
     setContent('');
     setSlug('');
     setImageUrl('');
-    setPublished(true);
+    setIsPublished(true);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    setUploading(true);
+    try {
+      const res = await productApi.uploadImage(formData);
+      setImageUrl(res.data.data.imageUrl);
+      toast.success('Journal image uploaded!');
+    } catch {
+      toast.error('Failed to upload image.');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const saveEdit = (e: React.FormEvent) => {
@@ -54,7 +76,7 @@ export default function AdminJournalPage() {
     if (!title || !slug) return;
     updatePost({
       id: editingPost.id,
-      data: { title, summary, content, slug, imageUrl, published }
+      data: { title, summary, content, slug, imageUrl, isPublished }
     }, {
       onSuccess: () => setEditingPost(null)
     });
@@ -64,7 +86,7 @@ export default function AdminJournalPage() {
     e.preventDefault();
     if (!title || !slug) return;
     createPost({
-      title, summary, content, slug, imageUrl, published
+      title, summary, content, slug, imageUrl, isPublished
     }, {
       onSuccess: () => setIsCreateOpen(false)
     });
@@ -139,9 +161,9 @@ export default function AdminJournalPage() {
                     <td className="px-5 py-4 font-mono text-[10px] text-slate-500">{post.slug}</td>
                     <td className="px-5 py-4">
                       <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold border ${
-                        post.published ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'
+                        post.isPublished ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'
                       }`}>
-                        {post.published ? 'Published' : 'Draft'}
+                        {post.isPublished ? 'Published' : 'Draft'}
                       </span>
                     </td>
                     <td className="px-5 py-4 text-slate-400 font-bold tracking-wide text-[10px]">{formatDate(post.createdAt)}</td>
@@ -194,10 +216,44 @@ export default function AdminJournalPage() {
                   className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800" />
               </div>
 
-              <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1 block">Banner Image URL</label>
-                <input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="e.g. /images/rice_hero.png"
-                  className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800" />
+              <div className="grid sm:grid-cols-2 gap-4 items-end">
+                <div>
+                  <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block">Banner Image</label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={uploading}
+                      className="hidden"
+                      id="create-post-image-file"
+                    />
+                    <label
+                      htmlFor="create-post-image-file"
+                      className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer hover:bg-slate-100 transition-all disabled:opacity-50"
+                    >
+                      {uploading ? (
+                        <>
+                          <Loader size={13} className="animate-spin text-primary" /> Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <ImageIcon size={13} /> Upload File
+                        </>
+                      )}
+                    </label>
+                  </div>
+                </div>
+
+                {imageUrl && (
+                  <div className="w-16 h-10 rounded-lg border border-slate-100 overflow-hidden bg-slate-50 relative shrink-0">
+                    <img
+                      src={resolveImageUrl(imageUrl)}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
               </div>
 
               <div>
@@ -208,7 +264,7 @@ export default function AdminJournalPage() {
 
               <div className="flex justify-between items-center pt-2">
                 <label className="flex items-center gap-2 cursor-pointer text-slate-700">
-                  <input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)}
+                  <input type="checkbox" checked={isPublished} onChange={(e) => setIsPublished(e.target.checked)}
                     className="rounded border-slate-300 text-primary focus:ring-primary/40 w-4 h-4" />
                   Publish immediately (Active)
                 </label>
@@ -252,10 +308,44 @@ export default function AdminJournalPage() {
                   className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800" />
               </div>
 
-              <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1 block">Banner Image URL</label>
-                <input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="e.g. /images/rice_hero.png"
-                  className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800" />
+              <div className="grid sm:grid-cols-2 gap-4 items-end">
+                <div>
+                  <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block">Banner Image</label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={uploading}
+                      className="hidden"
+                      id="edit-post-image-file"
+                    />
+                    <label
+                      htmlFor="edit-post-image-file"
+                      className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer hover:bg-slate-100 transition-all disabled:opacity-50"
+                    >
+                      {uploading ? (
+                        <>
+                          <Loader size={13} className="animate-spin text-primary" /> Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <ImageIcon size={13} /> Upload File
+                        </>
+                      )}
+                    </label>
+                  </div>
+                </div>
+
+                {imageUrl && (
+                  <div className="w-16 h-10 rounded-lg border border-slate-100 overflow-hidden bg-slate-50 relative shrink-0">
+                    <img
+                      src={resolveImageUrl(imageUrl)}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
               </div>
 
               <div>
@@ -266,7 +356,7 @@ export default function AdminJournalPage() {
 
               <div className="flex justify-between items-center pt-2">
                 <label className="flex items-center gap-2 cursor-pointer text-slate-700">
-                  <input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)}
+                  <input type="checkbox" checked={isPublished} onChange={(e) => setIsPublished(e.target.checked)}
                     className="rounded border-slate-300 text-primary focus:ring-primary/40 w-4 h-4" />
                   Publish immediately (Active)
                 </label>

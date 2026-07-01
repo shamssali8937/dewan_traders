@@ -34,11 +34,35 @@ export const journalService = {
 
   async create(data: any) {
     const slug = data.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-    return prisma.journalPost.create({ data: { ...data, slug } });
+    const publishedAt = data.isPublished ? new Date() : null;
+    const { summary, ...rest } = data;
+    return prisma.journalPost.create({
+      data: {
+        ...rest,
+        slug,
+        publishedAt,
+        excerpt: summary,
+      }
+    });
   },
 
   async update(id: string, data: any) {
-    return prisma.journalPost.update({ where: { id }, data });
+    const existing = await prisma.journalPost.findUnique({ where: { id } });
+    let publishedAt = data.publishedAt;
+    if (data.isPublished && (!existing || !existing.isPublished)) {
+      publishedAt = new Date();
+    } else if (data.isPublished === false) {
+      publishedAt = null;
+    }
+    const { summary, ...rest } = data;
+    return prisma.journalPost.update({
+      where: { id },
+      data: {
+        ...rest,
+        publishedAt,
+        excerpt: summary,
+      }
+    });
   },
 
   async delete(id: string) {

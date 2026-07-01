@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Search, ArrowRight, MapPin, Leaf, Sprout, Scissors, Trophy, Package, Wheat, Sparkles, ShoppingCart } from 'lucide-react';
 import { useProducts, useCategories } from '@/hooks/useProducts';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, resolveImageUrl } from '@/lib/utils';
 
 const iconMap = {
   Leaf: Leaf,
@@ -213,7 +213,7 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
                       {/* Product Image */}
                       <div className="h-40 bg-slate-50 flex items-center justify-center border-b border-slate-100 relative overflow-hidden">
                         {product.imageUrl ? (
-                          <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
+                          <img src={resolveImageUrl(product.imageUrl)} alt={product.name} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
                         ) : (
                           <IconComponent size={36} className="text-slate-200" />
                         )}
@@ -256,11 +256,17 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
                       </div>
                     </div>
                   </Link>
-                  {/* Request Quote CTA — outside the card link */}
-                  <Link href={`/catalog/${category}/${product.slug}#inquiry`}
-                    className="mt-2 w-full flex items-center justify-center gap-1.5 py-2 bg-gradient-to-r from-primary to-sky-600 hover:from-primary-hover hover:to-sky-700 text-white font-bold rounded-xl text-[10px] uppercase tracking-wider shadow-sm shadow-primary/10 transition-all">
-                    <ShoppingCart size={11} /> Request Quote
-                  </Link>
+                  {/* Sourcing and Direct Order Actions */}
+                  <div className="flex gap-2 mt-2">
+                    <Link href={`/catalog/${category}/${product.slug}?tab=quote#inquiry`}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2 border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-xl text-[9px] uppercase tracking-wider transition-all">
+                      RFQ Quote
+                    </Link>
+                    <Link href={`/catalog/${category}/${product.slug}?tab=order#inquiry`}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-gradient-to-r from-primary to-sky-600 hover:from-primary-hover hover:to-sky-700 text-white font-bold rounded-xl text-[9px] uppercase tracking-wider shadow-sm shadow-primary/10 transition-all">
+                      Buy/Order
+                    </Link>
+                  </div>
                 </motion.div>
               ))}
             </div>

@@ -4,7 +4,7 @@ import { use } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useJournalPost, useJournalPosts } from '@/hooks/useCms';
-import { formatDate } from '@/lib/utils';
+import { formatDate, resolveImageUrl } from '@/lib/utils';
 import { Clock, Calendar, User, Tag, ChevronRight, Globe, ArrowRight } from 'lucide-react';
 
 export default function JournalDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -75,7 +75,7 @@ export default function JournalDetailPage({ params }: { params: Promise<{ slug: 
             {/* Article Feature Image */}
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="glass rounded-2xl overflow-hidden aspect-video border border-slate-100 shadow-sm bg-slate-50 flex items-center justify-center">
               {post.imageUrl ? (
-                <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover" />
+                <img src={resolveImageUrl(post.imageUrl)} alt={post.title} className="w-full h-full object-cover" />
               ) : (
                 <div className="text-slate-300 text-4xl">📰</div>
               )}
@@ -135,7 +135,7 @@ export default function JournalDetailPage({ params }: { params: Promise<{ slug: 
                       <div className="glass rounded-2xl p-3.5 border border-slate-100 bg-white/70 card-hover flex gap-3.5 items-center shadow-sm">
                         <div className="w-16 h-12 bg-slate-50 rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
                           {p.imageUrl ? (
-                            <img src={p.imageUrl} alt={p.title} className="w-full h-full object-cover" />
+                            <img src={resolveImageUrl(p.imageUrl)} alt={p.title} className="w-full h-full object-cover" />
                           ) : (
                             <div className="text-slate-300 text-xs">📰</div>
                           )}

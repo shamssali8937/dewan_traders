@@ -17,6 +17,7 @@ export const authApi = {
   getUsers: () => api.get('/auth/users'),
   forgotPassword: (email: string) => api.post('/auth/forgot-password', { email }),
   resetPassword: (token: string, password: string) => api.post('/auth/reset-password', { token, password }),
+  updateProfile: (data: any) => api.put('/auth/profile', data),
 };
 
 export const productApi = {
@@ -26,6 +27,9 @@ export const productApi = {
   create: (data: unknown) => api.post('/products', data),
   update: (id: string, data: unknown) => api.put(`/products/${id}`, data),
   delete: (id: string) => api.delete(`/products/${id}`),
+  uploadImage: (formData: FormData) => api.post('/products/upload/image', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
 };
 
 export const categoryApi = {
@@ -49,6 +53,7 @@ export const orderApi = {
   getById: (id: string) => api.get(`/orders/${id}`),
   getAll: (params?: Record<string, unknown>) => api.get('/orders', { params }),
   updateStatus: (id: string, data: unknown) => api.patch(`/orders/${id}/status`, data),
+  trackOrder: (orderNumber: string) => api.get(`/orders/track/${orderNumber}`),
 };
 
 export const journalApi = {

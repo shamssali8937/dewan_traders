@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Clock, Sparkles } from 'lucide-react';
 import { useJournalPosts } from '@/hooks/useCms';
-import { formatDate } from '@/lib/utils';
+import { formatDate, resolveImageUrl } from '@/lib/utils';
 
 export default function JournalPage() {
   const { data, isLoading } = useJournalPosts();
@@ -70,7 +70,7 @@ export default function JournalPage() {
                     {/* Feature Image */}
                     <div className="h-48 bg-slate-50 flex items-center justify-center border-b border-slate-100 relative overflow-hidden shrink-0">
                       {post.imageUrl ? (
-                        <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
+                        <img src={resolveImageUrl(post.imageUrl)} alt={post.title} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
                       ) : (
                         <div className="text-slate-300 text-3xl font-bold">📰</div>
                       )}

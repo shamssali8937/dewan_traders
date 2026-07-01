@@ -7,6 +7,11 @@ import { useCreateProduct, useCategories } from '@/hooks/useProducts';
 import { useRouter } from 'next/navigation';
 import { Send, ArrowLeft, Package, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { resolveImageUrl } from '@/lib/utils';
+import { useState } from 'react';
+import { productApi } from '@/services/endpoints';
+import { toast } from 'sonner';
+import { Image as ImageIcon, Loader } from 'lucide-react';
 
 const productSchema = z.object({
   name: z.string().min(2, 'Name is required'),
@@ -28,6 +33,9 @@ export default function NewProductPage() {
   const { data: categories } = useCategories();
   const { mutate: createProduct, isPending } = useCreateProduct();
 
+  const [imageUrl, setImageUrl] = useState('');
+  const [uploading, setUploading] = useState(false);
+
   const { register, handleSubmit, formState: { errors } } = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -39,10 +47,32 @@ export default function NewProductPage() {
     }
   });
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    setUploading(true);
+    try {
+      const res = await productApi.uploadImage(formData);
+      // Ensure absolute path resolution or fallback
+      const uploadedUrl = res.data.data.imageUrl;
+      setImageUrl(uploadedUrl);
+      toast.success('Product image uploaded!');
+    } catch {
+      toast.error('Failed to upload image.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const onSubmit = (data: ProductFormData) => {
     createProduct({
       ...data,
       price: parseFloat(data.price),
+      imageUrl: imageUrl || undefined,
     }, {
       onSuccess: () => router.push('/admin/products')
     });
@@ -125,6 +155,46 @@ export default function NewProductPage() {
               <input type="checkbox" {...register('isFeatured')} className="rounded border-slate-300 text-primary focus:ring-primary/40 w-4 h-4" />
               Mark as Featured Product
             </label>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-5 items-end">
+            <div>
+              <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Product Image *</label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  disabled={uploading}
+                  className="hidden"
+                  id="product-image-file"
+                />
+                <label
+                  htmlFor="product-image-file"
+                  className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer hover:bg-slate-100 transition-all disabled:opacity-50"
+                >
+                  {uploading ? (
+                    <>
+                      <Loader size={13} className="animate-spin text-primary" /> Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <ImageIcon size={13} /> Choose Image File
+                    </>
+                  )}
+                </label>
+              </div>
+            </div>
+
+            {imageUrl && (
+              <div className="w-16 h-16 rounded-xl border border-slate-100 overflow-hidden bg-slate-50 relative shrink-0">
+                <img
+                  src={resolveImageUrl(imageUrl)}
+                  alt="Product preview"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
           </div>
 
           <div>

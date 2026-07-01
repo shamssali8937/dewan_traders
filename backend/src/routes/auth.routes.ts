@@ -18,6 +18,7 @@ router.post('/logout', authenticate, authController.logout);
 
 // GET /api/auth/me  (protected)
 router.get('/me', authenticate, authController.me);
+router.put('/profile', authenticate, authController.updateProfile);
 
 // GET /api/auth/users (protected, admin/manager only)
 router.get('/users', authenticate, authorize('admin', 'manager'), authController.getAllUsers);

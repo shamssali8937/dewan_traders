@@ -6,7 +6,7 @@ import { ShoppingCart, Package, ArrowRight, Clock, Sparkles } from 'lucide-react
 import { useMyOrders } from '@/hooks/useOrders';
 import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { formatPrice, formatDate } from '@/lib/utils';
 
 const STATUS_COLOR: Record<string, string> = {
@@ -22,10 +22,24 @@ export default function UserOrdersPage() {
   const { user, isAuthenticated } = useAuthStore();
   const router = useRouter();
   const { data: orders, isLoading } = useMyOrders();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     if (!isAuthenticated) router.push('/auth/login');
-  }, [isAuthenticated]);
+  }, [isAuthenticated, mounted]);
+
+  if (!mounted || !isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white min-h-screen pt-24 relative overflow-hidden pattern-dots-light pb-16">
@@ -115,9 +129,18 @@ export default function UserOrdersPage() {
                     </div>
 
                     {/* Tracking details */}
-                    {order.trackingNumber && (
-                      <div className="px-5 py-3 bg-sky-50/50 border-t border-slate-100 text-[10px] text-slate-500 font-semibold">
-                        Freight Tracking: <span className="text-primary font-bold font-mono">{order.trackingNumber}</span>
+                    {(order.trackingNumber || order.estimatedDelivery) && (
+                      <div className="px-5 py-3 bg-sky-50/50 border-t border-slate-100 text-[10px] text-slate-500 font-semibold flex flex-col sm:flex-row gap-2 justify-between">
+                        {order.trackingNumber && (
+                          <div>
+                            Freight Tracking: <span className="text-primary font-bold font-mono">{order.trackingNumber}</span>
+                          </div>
+                        )}
+                        {order.estimatedDelivery && (
+                          <div>
+                            Target Delivery Date: <span className="text-primary font-bold">{order.estimatedDelivery}</span>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>

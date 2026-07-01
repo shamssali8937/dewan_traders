@@ -2,14 +2,15 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Eye, CheckCircle, Clock, XCircle, MessageSquare, Trash2, Sparkles } from 'lucide-react';
+import { Search, Eye, CheckCircle, Clock, XCircle, MessageSquare, Trash2, Sparkles, Send } from 'lucide-react';
 import { useInquiries, useUpdateInquiryStatus, useDeleteInquiry } from '@/hooks/useInquiries';
 import { formatDate } from '@/lib/utils';
+import { toast } from 'sonner';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: any }> = {
-  pending: { label: 'Pending', color: 'bg-amber-50 border-amber-100 text-amber-600', icon: Clock },
-  read: { label: 'Read', color: 'bg-blue-50 border-blue-100 text-blue-600', icon: Eye },
-  responded: { label: 'Responded', color: 'bg-emerald-50 border-emerald-100 text-emerald-600', icon: CheckCircle },
+  pending: { label: 'New', color: 'bg-amber-50 border-amber-100 text-amber-600', icon: Clock },
+  read: { label: 'In Progress', color: 'bg-blue-50 border-blue-100 text-blue-600', icon: Eye },
+  responded: { label: 'Answered', color: 'bg-emerald-50 border-emerald-100 text-emerald-600', icon: CheckCircle },
   closed: { label: 'Closed', color: 'bg-slate-100 border-slate-200 text-slate-500', icon: XCircle },
 };
 
@@ -19,7 +20,12 @@ export default function AdminInquiriesPage() {
   const [selectedInquiry, setSelectedInquiry] = useState<any>(null);
   const [adminNotes, setAdminNotes] = useState('');
 
-  const { data, isLoading } = useInquiries({ status: statusFilter || undefined });
+  // Conversation history states
+  const [replies, setReplies] = useState<any[]>([]);
+  const [replyMessage, setReplyMessage] = useState('');
+  const [sendingReply, setSendingReply] = useState(false);
+
+  const { data, isLoading, refetch } = useInquiries({ status: statusFilter || undefined });
   const { mutate: updateStatus } = useUpdateInquiryStatus();
   const { mutate: deleteInquiry } = useDeleteInquiry();
 
@@ -32,17 +38,72 @@ export default function AdminInquiriesPage() {
       )
     : inquiries;
 
+  const loadInquiryDetail = async (id: string) => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
+    try {
+      const res = await fetch(`${apiUrl}/inquiries/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken') || ''}`
+        }
+      });
+      const resData = await res.json();
+      if (resData.success) {
+        setSelectedInquiry(resData.data);
+        setAdminNotes(resData.data.adminNotes || '');
+        setReplies(resData.data.replies || []);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to load inquiry details.');
+    }
+  };
+
   const handleStatusUpdate = (id: string, status: string) => {
-    updateStatus({ id, status, adminNotes });
-    setSelectedInquiry(null);
+    updateStatus({ id, status, adminNotes }, {
+      onSuccess: () => {
+        toast.success(`Inquiry status updated to: ${status}`);
+        refetch();
+        loadInquiryDetail(id);
+      }
+    });
+  };
+
+  const handleSendReply = async () => {
+    if (!replyMessage) return;
+    setSendingReply(true);
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
+    try {
+      const res = await fetch(`${apiUrl}/inquiries/${selectedInquiry.id}/reply`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken') || ''}`
+        },
+        body: JSON.stringify({ message: replyMessage })
+      });
+      const resData = await res.json();
+      if (resData.success) {
+        toast.success('Inquiry reply sent and customer notified via email!');
+        setReplyMessage('');
+        loadInquiryDetail(selectedInquiry.id);
+        refetch();
+      } else {
+        toast.error(resData.message || 'Failed to send reply');
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to send reply.');
+    } finally {
+      setSendingReply(false);
+    }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-sans">
       <div className="flex items-center justify-between mb-7">
         <div>
-          <h1 className="text-xl font-bold text-slate-800 uppercase tracking-wide">Inquiries</h1>
-          <p className="text-slate-500 text-xs mt-0.5 font-semibold">{data?.pagination?.total || 0} total trade submissions</p>
+          <h1 className="text-xl font-bold text-slate-800 uppercase tracking-wide">Inquiries Sourcing response center</h1>
+          <p className="text-slate-500 text-xs mt-0.5 font-semibold">{data?.pagination?.total || 0} total client requests</p>
         </div>
       </div>
 
@@ -57,13 +118,12 @@ export default function AdminInquiriesPage() {
         
         <div className="flex flex-wrap gap-1.5">
           {['', 'pending', 'read', 'responded', 'closed'].map((s) => {
-            const cfg = s ? STATUS_CONFIG[s] : null;
             return (
               <button key={s} onClick={() => setStatusFilter(s)}
                 className={`px-3.5 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all ${
                   statusFilter === s
-                    ? 'bg-gradient-to-r from-primary to-sky-600 text-white shadow-sm'
-                    : 'glass text-slate-500 hover:text-slate-900 hover:bg-slate-50'
+                    ? 'bg-primary text-white shadow-sm'
+                    : 'glass text-slate-500 hover:text-slate-900 hover:bg-slate-50 border border-slate-200 bg-white shadow-sm'
                 }`}>
                 {s ? STATUS_CONFIG[s].label : 'All'}
               </button>
@@ -93,7 +153,7 @@ export default function AdminInquiriesPage() {
               const Icon = cfg.icon;
               return (
                 <button key={inquiry.id}
-                  onClick={() => { setSelectedInquiry(inquiry); setAdminNotes(inquiry.adminNotes || ''); }}
+                  onClick={() => loadInquiryDetail(inquiry.id)}
                   className={`w-full text-left glass rounded-2xl p-4 border transition-all hover:bg-slate-50/20 shadow-sm flex flex-col justify-between ${
                     selectedInquiry?.id === inquiry.id
                       ? 'border-primary/50 bg-sky-50/40'
@@ -118,7 +178,7 @@ export default function AdminInquiriesPage() {
           {!selectedInquiry ? (
             <div className="glass rounded-3xl p-16 text-center border border-slate-100 bg-white/80 h-full flex flex-col items-center justify-center shadow-sm space-y-3">
               <MessageSquare className="text-slate-300" size={36} />
-              <p className="text-slate-400 text-xs font-bold uppercase">Select an inquiry to view details</p>
+              <p className="text-slate-400 text-xs font-bold uppercase">Select an inquiry to response</p>
             </div>
           ) : (
             <motion.div key={selectedInquiry.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
@@ -154,20 +214,62 @@ export default function AdminInquiriesPage() {
 
               {/* Message Content */}
               <div className="space-y-2">
-                <p className="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Client Message</p>
+                <p className="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Client original Message</p>
                 <p className="text-xs text-slate-600 leading-relaxed bg-slate-50 border border-slate-100 rounded-2xl p-4">{selectedInquiry.message}</p>
               </div>
 
+              {/* Replies History */}
+              <div className="space-y-3 pt-4 border-t border-slate-100">
+                <p className="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Conversation history thread</p>
+                {replies.length === 0 ? (
+                  <p className="text-xs text-slate-400 font-semibold italic">No response messages sent yet.</p>
+                ) : (
+                  <div className="space-y-2.5 max-h-60 overflow-y-auto pr-2">
+                    {replies.map((r: any) => (
+                      <div key={r.id} className={`p-3 rounded-2xl text-xs leading-relaxed max-w-[85%] ${
+                        r.sender === 'admin'
+                          ? 'bg-sky-50 text-sky-950 ml-auto border border-sky-100/50'
+                          : 'bg-slate-100 text-slate-800 mr-auto border border-slate-200/50'
+                      }`}>
+                        <p className="font-bold text-[9px] uppercase text-slate-400 mb-1">
+                          {r.sender === 'admin' ? 'Dewan Traders Response' : 'Client Response'} &middot; {formatDate(r.createdAt)}
+                        </p>
+                        <p className="font-medium">{r.message}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Send Response Reply Input */}
+              <div className="space-y-2 pt-3 border-t border-slate-100 font-bold">
+                <p className="text-[9px] text-slate-400 uppercase tracking-widest block">Write a reply Response</p>
+                <textarea
+                  value={replyMessage}
+                  onChange={(e) => setReplyMessage(e.target.value)}
+                  rows={3}
+                  placeholder="Type your response to the client. This will send an automatic email notification with Dewan Traders contact helplines..."
+                  className="w-full px-3 py-2 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 resize-none shadow-sm"
+                />
+                <button
+                  onClick={handleSendReply}
+                  disabled={sendingReply || !replyMessage}
+                  className="px-4 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold uppercase rounded-xl transition-all shadow-md shadow-primary/10 disabled:opacity-50 flex items-center gap-1.5"
+                >
+                  <Send size={12} /> {sendingReply ? 'Sending Response...' : 'Send Response'}
+                </button>
+              </div>
+
               {/* Internal Notes */}
-              <div className="space-y-2">
+              <div className="space-y-2 pt-4 border-t border-slate-100">
                 <label className="text-[9px] text-slate-400 uppercase tracking-widest font-bold block">Internal Admin Notes</label>
-                <textarea value={adminNotes} onChange={(e) => setAdminNotes(e.target.value)} rows={3}
+                <textarea value={adminNotes} onChange={(e) => setAdminNotes(e.target.value)} rows={2}
                   placeholder="Add internal notes..."
                   className="w-full px-3 py-2 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 resize-none shadow-sm" />
               </div>
 
               {/* Status Update Actions */}
-              <div className="space-y-2.5">
+              <div className="space-y-2.5 pt-2">
                 <p className="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Update Status</p>
                 <div className="flex flex-wrap gap-2">
                   {Object.entries(STATUS_CONFIG).map(([status, cfg]) => (
@@ -175,7 +277,7 @@ export default function AdminInquiriesPage() {
                       className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${
                         selectedInquiry.status === status
                           ? cfg.color
-                          : 'glass text-slate-500 hover:text-slate-800 hover:bg-slate-50 border-slate-200'
+                          : 'glass text-slate-500 hover:text-slate-800 hover:bg-slate-50 border-slate-200 bg-white'
                       }`}>
                       {cfg.label}
                     </button>

@@ -54,3 +54,17 @@ export const CATEGORY_ICONS: Record<string, string> = {
   surgical: 'Scissors',
   sports: 'Trophy',
 };
+
+export function resolveImageUrl(url?: string | null): string {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  if (url.startsWith('/images/') || url.startsWith('images/')) {
+    return url.startsWith('/') ? url : `/${url}`;
+  }
+  
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
+  const baseUrl = apiUrl.replace(/\/api$/, '');
+  
+  const relativePath = url.startsWith('/') ? url : `/${url}`;
+  return `${baseUrl}${relativePath}`;
+}

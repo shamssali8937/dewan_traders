@@ -19,6 +19,8 @@ import inquiryRoutes from './routes/inquiry.routes';
 import orderRoutes from './routes/order.routes';
 import journalRoutes from './routes/journal.routes';
 import cmsRoutes from './routes/cms.routes';
+import paymentAccountRoutes from './routes/paymentAccount.routes';
+import notificationRoutes from './routes/notification.routes';
 
 const app = express();
 
@@ -85,6 +87,16 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
   next();
 });
 
+// Custom Console HTTP request logger
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    logger.info(`[HTTP] ${req.method} ${req.originalUrl} - ${res.statusCode} (${duration}ms)`);
+  });
+  next();
+});
+
 // ─── HTTP Logger ─────────────────────────
 if (config.isDev) {
   app.use(morgan('dev'));
@@ -135,6 +147,8 @@ app.use('/api/inquiries', inquiryRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/journal', journalRoutes);
 app.use('/api/cms', cmsRoutes);
+app.use('/api/payment-accounts', paymentAccountRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // ─── 404 + Error Handler ─────────────────
 app.use(notFoundHandler);

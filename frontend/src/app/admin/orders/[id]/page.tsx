@@ -3,19 +3,12 @@
 import { use, useState, useEffect } from 'react';
 import { useOrder, useUpdateOrderStatus } from '@/hooks/useOrders';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Clock, ShoppingCart, User, MapPin, Truck, CheckCircle2, ShieldCheck } from 'lucide-react';
-import { formatPrice, formatDate } from '@/lib/utils';
+import { ArrowLeft, Clock, ShoppingCart, User, MapPin, Truck, CheckCircle2, ShieldCheck, Download, AlertTriangle, FileText, Check, X } from 'lucide-react';
+import { formatPrice, formatDate, resolveImageUrl } from '@/lib/utils';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
-const STATUS_OPTIONS = ['pending','confirmed','processing','shipped','delivered','cancelled'];
-const STATUS_COLOR: Record<string, string> = {
-  pending: 'bg-amber-50 border-amber-100 text-amber-600',
-  confirmed: 'bg-blue-50 border-blue-100 text-blue-600',
-  processing: 'bg-purple-50 border-purple-100 text-purple-600',
-  shipped: 'bg-cyan-50 border-cyan-100 text-cyan-600',
-  delivered: 'bg-emerald-50 border-emerald-100 text-emerald-600',
-  cancelled: 'bg-red-50 border-red-100 text-red-600',
-};
+const STATUS_OPTIONS = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
 
 export default function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -25,11 +18,16 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
   const [status, setStatus] = useState('');
   const [trackingNumber, setTrackingNumber] = useState('');
+  const [estimatedDelivery, setEstimatedDelivery] = useState('');
+  const [rejectNotes, setRejectNotes] = useState('');
+  const [showRejectForm, setShowRejectForm] = useState(false);
+  const [verifying, setVerifying] = useState(false);
 
   useEffect(() => {
     if (order) {
       setStatus(order.status);
       setTrackingNumber(order.trackingNumber || '');
+      setEstimatedDelivery(order.estimatedDelivery || '');
     }
   }, [order]);
 
@@ -38,7 +36,46 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       id,
       status,
       trackingNumber: trackingNumber || undefined,
+      estimatedDelivery: status === 'shipped' ? estimatedDelivery : undefined,
     });
+  };
+
+  const handleVerify = async (targetStatus: string) => {
+    if (targetStatus === 'rejected' && !rejectNotes) {
+      toast.error('Please specify verification notes / rejection reason.');
+      return;
+    }
+
+    setVerifying(true);
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
+    try {
+      const res = await fetch(`${apiUrl}/orders/${id}/verify-payment`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken') || ''}`
+        },
+        body: JSON.stringify({
+          status: targetStatus,
+          notes: rejectNotes || undefined
+        })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        toast.success(`Payment verified status set to: ${targetStatus.toUpperCase()}`);
+        setShowRejectForm(false);
+        setRejectNotes('');
+        window.location.reload();
+      } else {
+        toast.error(data.message || 'Verification update failed');
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to submit verification.');
+    } finally {
+      setVerifying(false);
+    }
   };
 
   if (isLoading) {
@@ -59,8 +96,17 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     );
   }
 
+  const paymentMethodLabel =
+    order.paymentMethod === 'bank_transfer'
+      ? 'Bank Transfer'
+      : order.paymentMethod === 'easypaisa'
+      ? 'EasyPaisa'
+      : order.paymentMethod === 'jazzcash'
+      ? 'JazzCash'
+      : 'N/A';
+
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 max-w-4xl font-sans">
       <div className="flex items-center gap-3 mb-6">
         <Link href="/admin/orders" className="p-2 rounded-xl hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors border border-transparent hover:border-slate-200">
           <ArrowLeft size={16} />
@@ -72,7 +118,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6 items-start">
-        {/* Left Columns: Items list & Addresses */}
+        {/* Left Columns: Items list & Addresses & Payment Info */}
         <div className="lg:col-span-2 space-y-6">
           
           {/* Items card */}
@@ -105,13 +151,124 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
 
+          {/* Payment Verification Section */}
+          <div className="glass rounded-3xl p-6 border border-slate-100 bg-white shadow-sm space-y-4">
+            <h3 className="text-slate-800 font-bold text-xs uppercase tracking-wider flex items-center gap-1.5">
+              💰 Payment Information
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-semibold text-slate-600">
+              <div>
+                <span className="text-[9px] text-slate-400 block uppercase">Payment Method</span>
+                <span className="text-slate-800 font-bold uppercase">{paymentMethodLabel}</span>
+              </div>
+              <div>
+                <span className="text-[9px] text-slate-400 block uppercase">Upload Date</span>
+                <span className="text-slate-800">{order.paymentProofUploadedAt ? formatDate(order.paymentProofUploadedAt) : 'No Proof Uploaded'}</span>
+              </div>
+              <div>
+                <span className="text-[9px] text-slate-400 block uppercase">Verification Status</span>
+                <span className={`inline-block text-[9px] px-2 py-0.5 rounded font-black uppercase tracking-wider mt-1 ${
+                  order.paymentProofStatus === 'approved'
+                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                    : order.paymentProofStatus === 'rejected'
+                    ? 'bg-red-50 text-red-700 border border-red-200'
+                    : order.paymentProofStatus === 'pending_verification'
+                    ? 'bg-amber-50 text-amber-700 border border-amber-200 animate-pulse'
+                    : 'bg-slate-100 text-slate-600'
+                }`}>
+                  {order.paymentProofStatus === 'pending_upload' ? 'Pending Upload' : order.paymentProofStatus === 'pending_verification' ? 'Pending Verification' : order.paymentProofStatus}
+                </span>
+              </div>
+            </div>
+
+            {/* Proof Preview */}
+            {order.paymentProofUrl ? (
+              <div className="space-y-3 pt-3 border-t border-slate-50">
+                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">Uploaded Receipt Screenshot</span>
+                
+                {order.paymentProofUrl.toLowerCase().endsWith('.pdf') ? (
+                  <div className="p-4 border rounded-2xl bg-slate-50 flex items-center justify-between text-xs font-bold text-slate-700">
+                    <span className="flex items-center gap-2"><FileText size={16} className="text-red-500" /> Transaction Receipt (PDF)</span>
+                    <a
+                      href={resolveImageUrl(order.paymentProofUrl)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-slate-100 flex items-center gap-1"
+                    >
+                      <Download size={12} /> Open PDF
+                    </a>
+                  </div>
+                ) : (
+                  <div className="relative border border-slate-100 rounded-2xl overflow-hidden max-h-72 flex justify-center bg-slate-50">
+                    <img src={resolveImageUrl(order.paymentProofUrl)} alt="Receipt screenshot" className="object-contain max-h-72 max-w-full" />
+                    <a
+                      href={resolveImageUrl(order.paymentProofUrl)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute top-2 right-2 p-1.5 bg-black/60 hover:bg-black text-white rounded-lg text-xs"
+                      title="Open full image"
+                    >
+                      <Download size={14} />
+                    </a>
+                  </div>
+                )}
+
+                {/* Verification Actions */}
+                {order.paymentProofStatus === 'pending_verification' && (
+                  <div className="space-y-3 pt-3">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleVerify('approved')}
+                        disabled={verifying}
+                        className="flex-1 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold uppercase flex items-center justify-center gap-1"
+                      >
+                        <Check size={12} /> Approve Payment
+                      </button>
+                      <button
+                        onClick={() => setShowRejectForm(!showRejectForm)}
+                        disabled={verifying}
+                        className="flex-1 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl text-xs font-bold uppercase flex items-center justify-center gap-1"
+                      >
+                        <X size={12} /> Reject Payment / Request New
+                      </button>
+                    </div>
+
+                    {showRejectForm && (
+                      <div className="p-3 border border-red-100 rounded-2xl bg-red-50/50 space-y-2">
+                        <textarea
+                          placeholder="Rejection remarks / request details..."
+                          value={rejectNotes}
+                          onChange={e => setRejectNotes(e.target.value)}
+                          rows={2}
+                          className="w-full p-2 bg-white rounded-lg border border-red-200 text-xs focus:outline-none"
+                        />
+                        <button
+                          onClick={() => handleVerify('rejected')}
+                          disabled={verifying}
+                          className="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold uppercase rounded-lg"
+                        >
+                          Confirm Rejection
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="p-4 border border-dashed rounded-2xl bg-slate-50/30 text-center text-xs text-slate-400">
+                No transaction payment screenshot submitted yet.
+              </div>
+            )}
+          </div>
+
           {/* Logistics Address Card */}
           <div className="glass rounded-3xl p-6 border border-slate-100 bg-white/80 shadow-sm space-y-4">
             <h3 className="text-slate-800 font-bold text-xs uppercase tracking-wider flex items-center gap-1.5"><MapPin size={14} className="text-primary" /> Delivery Terminals</h3>
             
             <div className="grid sm:grid-cols-2 gap-6 text-xs text-slate-600 leading-relaxed">
               <div>
-                <p className="text-[9px] text-slate-400 uppercase tracking-widest font-bold mb-1">Discharge Port Address</p>
+                <p className="text-[9px] text-slate-400 uppercase tracking-widest font-bold mb-1">Transit Destination Address</p>
                 <p className="font-semibold bg-slate-50 border border-slate-100 rounded-2xl p-3.5">{order.shippingAddress || '—'}</p>
               </div>
               <div>
@@ -145,6 +302,20 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 <input value={trackingNumber} onChange={(e) => setTrackingNumber(e.target.value)} placeholder="e.g. OBL-93821034"
                   className="w-full px-3 py-2 bg-white rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 shadow-sm font-mono font-bold" />
               </div>
+
+              {(status === 'shipped' || order.estimatedDelivery) && (
+                <div>
+                  <label className="text-[9px] text-slate-400 uppercase tracking-widest font-bold block mb-1.5">Estimated / Target Delivery Date</label>
+                  <input
+                    type="date"
+                    value={estimatedDelivery}
+                    onChange={(e) => setEstimatedDelivery(e.target.value)}
+                    disabled={status !== 'shipped'}
+                    className="w-full px-3 py-2 bg-white rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 shadow-sm font-bold disabled:bg-slate-50 disabled:text-slate-500"
+                    required={status === 'shipped'}
+                  />
+                </div>
+              )}
 
               <button onClick={handleUpdate} disabled={isPending}
                 className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-primary to-sky-600 hover:from-primary-hover hover:to-sky-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md shadow-primary/10 transition-all disabled:opacity-60">

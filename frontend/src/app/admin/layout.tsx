@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import {
   LayoutDashboard, Package, MessageSquare, ShoppingCart,
   Settings, Globe, ChevronLeft, ChevronRight, LogOut, Users, Menu, X,
-  Newspaper, Star
+  Newspaper, Star, CreditCard
 } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { useAuth } from '@/hooks/useAuth';
@@ -21,6 +21,7 @@ const navItems = [
   { label: 'Users', href: '/admin/users', icon: Users },
   { divider: true },
   { label: 'Testimonials', href: '/admin/testimonials', icon: Star },
+  { label: 'Payment Methods', href: '/admin/payment-accounts', icon: CreditCard },
   { label: 'Contact Info', href: '/admin/contact-info', icon: Settings },
 ];
 
@@ -31,15 +32,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
   const { user, isAuthenticated } = useAuthStore();
   const { logout } = useAuth();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Redirect if not admin
   useEffect(() => {
+    if (!mounted) return;
     if (!isAuthenticated) { router.push('/auth/login'); return; }
     if (user?.role !== 'admin' && user?.role !== 'manager') { router.push('/'); }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user, mounted]);
 
-  if (!isAuthenticated || (user?.role !== 'admin' && user?.role !== 'manager')) {
-    return null;
+  if (!mounted || !isAuthenticated || (user?.role !== 'admin' && user?.role !== 'manager')) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   const SidebarContent = () => (

@@ -9,6 +9,7 @@ export function useInquiries(params?: Record<string, unknown>) {
       const res = await inquiryApi.getAll(params);
       return res.data.data;
     },
+    refetchInterval: 5000, // poll every 5s for real-time
   });
 }
 

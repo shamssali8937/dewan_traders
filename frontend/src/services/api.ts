@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { mockDb } from './mockDb';
-
+import { useAuthStore } from '../store/authStore';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
 
 export const api = axios.create({
@@ -239,7 +239,16 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await api.post('/auth/refresh');
+        const refreshResponse = await api.post('/auth/refresh');
+        const accessToken = refreshResponse.data?.data?.accessToken;
+
+        if (accessToken) {
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('accessToken', accessToken);
+          }
+          useAuthStore.getState().setToken(accessToken);
+        }
+
         processQueue(null);
         return api(originalRequest);
       } catch (refreshError) {

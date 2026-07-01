@@ -34,6 +34,7 @@ const navLinks = [
   { label: 'Services', href: '/services' },
   { label: 'Industries', href: '/industries' },
   { label: 'Journal', href: '/journal' },
+  { label: 'Track Cargo', href: '/track' },
   { label: 'Contact', href: '/contact' },
 ];
 

@@ -160,4 +160,18 @@ export const authService = {
       data: { password: hashed, refreshToken: null },
     });
   },
+
+  async updateProfile(userId: string, data: any) {
+    const { password, role, email, ...updatable } = data;
+    return prisma.user.update({
+      where: { id: userId },
+      data: updatable,
+      select: {
+        id: true, name: true, email: true, phone: true, role: true,
+        userType: true, companyName: true, companyReg: true, taxNumber: true,
+        businessType: true, address: true, city: true, country: true,
+        postalCode: true, website: true, createdAt: true,
+      }
+    });
+  },
 };

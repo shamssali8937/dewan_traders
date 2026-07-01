@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { useFeaturedProducts } from '@/hooks/useProducts';
 import { useTestimonials } from '@/hooks/useCms';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, resolveImageUrl } from '@/lib/utils';
 import { useState } from 'react';
 
 const iconMap = {
@@ -230,7 +230,7 @@ export default function HomePage() {
                 <div className={`glass rounded-2xl p-5 border card-hover flex flex-col h-full bg-white/80 transition-all duration-300 ${cat.bgStyle}`}>
                   {/* Category Image Box */}
                   <div className="h-28 rounded-xl bg-slate-50 mb-4 overflow-hidden relative border border-slate-100 shadow-inner">
-                    <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
+                    <img src={resolveImageUrl(cat.imageUrl)} alt={cat.name} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/10 to-transparent" />
                   </div>
 
@@ -275,7 +275,7 @@ export default function HomePage() {
                   <div className="glass rounded-2xl overflow-hidden card-hover border border-slate-100 flex flex-col h-full bg-white shadow-sm">
                     <div className="h-40 bg-slate-50 flex items-center justify-center border-b border-slate-100 relative overflow-hidden">
                       {p.imageUrl ? (
-                        <img src={p.imageUrl} alt={p.name} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
+                        <img src={resolveImageUrl(p.imageUrl)} alt={p.name} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
                       ) : (
                         <Package size={36} className="text-slate-300" />
                       )}
