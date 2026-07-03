@@ -56,7 +56,7 @@ export default function LoginPage() {
             <div>
               <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Email Address *</label>
               <input {...register('email')} type="email" placeholder="you@company.com"
-                className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
               {errors.email && <p className="text-[10px] text-red-500 mt-1">{errors.email.message}</p>}
             </div>
 
@@ -64,9 +64,9 @@ export default function LoginPage() {
               <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Password *</label>
               <div className="relative">
                 <input {...register('password')} type={showPass ? 'text' : 'password'} placeholder="••••••••"
-                  className="w-full px-3 py-2.5 pr-11 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                  className="w-full px-3 py-2.5 pr-11 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                 <button type="button" onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors">
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-700 transition-colors">
                   {showPass ? <EyeOff size={14} /> : <Eye size={14} />}
                 </button>
               </div>
@@ -92,7 +92,7 @@ export default function LoginPage() {
             <p className="font-semibold text-slate-600 mt-0.5">Password: <span className="font-mono text-primary select-all">Admin@123</span></p>
           </div>
 
-          <p className="text-center text-xs text-slate-400 mt-6">
+          <p className="text-center text-xs text-slate-600 mt-6">
             Don't have a trade account?{' '}
             <Link href="/auth/register" className="text-primary hover:underline font-bold uppercase tracking-wide">
               Register here

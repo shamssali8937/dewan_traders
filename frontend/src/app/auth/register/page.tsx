@@ -87,20 +87,20 @@ export default function RegisterPage() {
               <div>
                 <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Full Name *</label>
                 <input {...register('name')} placeholder="Your full name"
-                  className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                  className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                 {errors.name && <p className="text-[10px] text-red-500 mt-1">{errors.name.message}</p>}
               </div>
               <div>
                 <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Phone / WhatsApp</label>
                 <input {...register('phone')} placeholder="+971 50 000 0000"
-                  className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                  className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
               </div>
             </div>
 
             <div>
               <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Email Address *</label>
               <input {...register('email')} type="email" placeholder="you@company.com"
-                className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
               {errors.email && <p className="text-[10px] text-red-500 mt-1">{errors.email.message}</p>}
             </div>
 
@@ -108,9 +108,9 @@ export default function RegisterPage() {
               <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Password *</label>
               <div className="relative">
                 <input {...register('password')} type={showPass ? 'text' : 'password'} placeholder="Min. 8 characters"
-                  className="w-full px-3 py-2.5 pr-11 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                  className="w-full px-3 py-2.5 pr-11 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                 <button type="button" onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors">
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-700 transition-colors">
                   {showPass ? <EyeOff size={14} /> : <Eye size={14} />}
                 </button>
               </div>
@@ -123,19 +123,19 @@ export default function RegisterPage() {
                 <div>
                   <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Company Name *</label>
                   <input {...register('companyName')} placeholder="Your Company Ltd."
-                    className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                    className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                   {errors.companyName && <p className="text-[10px] text-red-500 mt-1">{errors.companyName.message}</p>}
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Company Registration No.</label>
                     <input {...register('companyReg')} placeholder="CR-12345"
-                      className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                      className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                   </div>
                   <div>
                     <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">City</label>
                     <input {...register('city')} placeholder="Dubai"
-                      className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                      className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                   </div>
                 </div>
               </motion.div>
@@ -147,7 +147,7 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          <p className="text-center text-xs text-slate-400 mt-6">
+          <p className="text-center text-xs text-slate-600 mt-6">
             Already have an account?{' '}
             <Link href="/auth/login" className="text-primary hover:underline font-bold uppercase tracking-wide">Sign in</Link>
           </p>

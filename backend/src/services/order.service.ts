@@ -5,6 +5,15 @@ export const orderService = {
   async create(userId: string, data: any) {
     const { items, notes, shippingAddress, billingAddress, paymentMethod } = data;
 
+    // Calculate packing surcharge multiplier
+    let packingMultiplier = 1.0;
+    if (notes && typeof notes === 'string') {
+      if (notes.includes('Container Type: 40ft_reefer')) packingMultiplier = 1.25;
+      else if (notes.includes('Container Type: 20ft_reefer')) packingMultiplier = 1.15;
+      else if (notes.includes('Container Type: 40ft_dry')) packingMultiplier = 1.08;
+      else if (notes.includes('Container Type: 20ft_dry')) packingMultiplier = 1.04;
+    }
+
     // Calculate totals
     let subtotal = 0;
     const orderItems = [];
@@ -13,12 +22,13 @@ export const orderService = {
       const product = await prisma.product.findUnique({ where: { id: item.productId } });
       if (!product) throw ApiError.notFound(`Product ${item.productId} not found`);
 
-      const itemTotal = Number(product.price) * item.quantity;
+      const adjustedPrice = Number(product.price) * packingMultiplier;
+      const itemTotal = adjustedPrice * item.quantity;
       subtotal += itemTotal;
       orderItems.push({
         productId: item.productId,
         quantity: item.quantity,
-        unitPrice: product.price,
+        unitPrice: adjustedPrice,
         total: itemTotal,
         notes: item.notes,
       });
@@ -140,15 +150,13 @@ export const orderService = {
     return order;
   },
 
-  async uploadPaymentProof(id: string, userId: string, filename: string) {
+  async uploadPaymentProof(id: string, userId: string, paymentProofUrl: string) {
     const order = await prisma.order.findUnique({
       where: { id },
       include: { user: { select: { name: true } } },
     });
     if (!order) throw ApiError.notFound('Order not found');
     if (order.userId !== userId) throw ApiError.forbidden('Access denied');
-
-    const paymentProofUrl = `/uploads/payments/${filename}`;
 
     const updatedOrder = await prisma.order.update({
       where: { id },

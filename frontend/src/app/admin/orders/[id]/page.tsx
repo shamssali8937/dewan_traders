@@ -131,10 +131,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   <div>
                     <h4 className="text-xs font-bold text-slate-800">{item.product?.name || 'Cargo Item'}</h4>
                     <p className="text-[10px] text-slate-500 mt-0.5 font-semibold">
-                      {item.quantity} {item.product?.unit || 'units'} &times; {formatPrice(item.unitPrice)}
+                      {item.quantity} {item.product?.unit || 'units'} &times; {formatPrice(item.unitPrice, 'PKR', order.notes)}
                     </p>
                   </div>
-                  <span className="text-xs font-black text-slate-800">{formatPrice(item.total)}</span>
+                  <span className="text-xs font-black text-slate-800">{formatPrice(item.total, 'PKR', order.notes)}</span>
                 </div>
               ))}
             </div>
@@ -142,11 +142,11 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             <div className="border-t border-slate-100 pt-4 space-y-2 text-xs">
               <div className="flex justify-between text-slate-500 font-semibold">
                 <span>Subtotal</span>
-                <span>{formatPrice(order.subtotal)}</span>
+                <span>{formatPrice(order.subtotal, 'PKR', order.notes)}</span>
               </div>
               <div className="flex justify-between text-slate-800 font-black text-sm border-t border-slate-50 pt-2">
                 <span>Grand Total</span>
-                <span>{formatPrice(order.total)}</span>
+                <span>{formatPrice(order.total, 'PKR', order.notes)}</span>
               </div>
             </div>
           </div>
@@ -159,15 +159,15 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-semibold text-slate-600">
               <div>
-                <span className="text-[9px] text-slate-400 block uppercase">Payment Method</span>
+                <span className="text-[9px] text-slate-600 block uppercase">Payment Method</span>
                 <span className="text-slate-800 font-bold uppercase">{paymentMethodLabel}</span>
               </div>
               <div>
-                <span className="text-[9px] text-slate-400 block uppercase">Upload Date</span>
+                <span className="text-[9px] text-slate-600 block uppercase">Upload Date</span>
                 <span className="text-slate-800">{order.paymentProofUploadedAt ? formatDate(order.paymentProofUploadedAt) : 'No Proof Uploaded'}</span>
               </div>
               <div>
-                <span className="text-[9px] text-slate-400 block uppercase">Verification Status</span>
+                <span className="text-[9px] text-slate-600 block uppercase">Verification Status</span>
                 <span className={`inline-block text-[9px] px-2 py-0.5 rounded font-black uppercase tracking-wider mt-1 ${
                   order.paymentProofStatus === 'approved'
                     ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
@@ -185,7 +185,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             {/* Proof Preview */}
             {order.paymentProofUrl ? (
               <div className="space-y-3 pt-3 border-t border-slate-50">
-                <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">Uploaded Receipt Screenshot</span>
+                <span className="text-[9px] text-slate-600 font-bold uppercase tracking-wider block">Uploaded Receipt Screenshot</span>
                 
                 {order.paymentProofUrl.toLowerCase().endsWith('.pdf') ? (
                   <div className="p-4 border rounded-2xl bg-slate-50 flex items-center justify-between text-xs font-bold text-slate-700">
@@ -256,7 +256,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 )}
               </div>
             ) : (
-              <div className="p-4 border border-dashed rounded-2xl bg-slate-50/30 text-center text-xs text-slate-400">
+              <div className="p-4 border border-dashed rounded-2xl bg-slate-50/30 text-center text-xs text-slate-600">
                 No transaction payment screenshot submitted yet.
               </div>
             )}
@@ -268,11 +268,11 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             
             <div className="grid sm:grid-cols-2 gap-6 text-xs text-slate-600 leading-relaxed">
               <div>
-                <p className="text-[9px] text-slate-400 uppercase tracking-widest font-bold mb-1">Transit Destination Address</p>
+                <p className="text-[9px] text-slate-600 uppercase tracking-widest font-bold mb-1">Transit Destination Address</p>
                 <p className="font-semibold bg-slate-50 border border-slate-100 rounded-2xl p-3.5">{order.shippingAddress || '—'}</p>
               </div>
               <div>
-                <p className="text-[9px] text-slate-400 uppercase tracking-widest font-bold mb-1">Billing Entity Address</p>
+                <p className="text-[9px] text-slate-600 uppercase tracking-widest font-bold mb-1">Billing Entity Address</p>
                 <p className="font-semibold bg-slate-50 border border-slate-100 rounded-2xl p-3.5">{order.billingAddress || '—'}</p>
               </div>
             </div>
@@ -288,7 +288,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             
             <div className="space-y-4">
               <div>
-                <label className="text-[9px] text-slate-400 uppercase tracking-widest font-bold block mb-1.5">Cargo Status</label>
+                <label className="text-[9px] text-slate-600 uppercase tracking-widest font-bold block mb-1.5">Cargo Status</label>
                 <select value={status} onChange={(e) => setStatus(e.target.value)}
                   className="w-full px-3 py-2 bg-white rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 shadow-sm capitalize font-bold">
                   {STATUS_OPTIONS.map((s) => (
@@ -298,14 +298,14 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
               </div>
 
               <div>
-                <label className="text-[9px] text-slate-400 uppercase tracking-widest font-bold block mb-1.5">Ocean Bill of Lading (Tracking #)</label>
+                <label className="text-[9px] text-slate-600 uppercase tracking-widest font-bold block mb-1.5">Ocean Bill of Lading (Tracking #)</label>
                 <input value={trackingNumber} onChange={(e) => setTrackingNumber(e.target.value)} placeholder="e.g. OBL-93821034"
                   className="w-full px-3 py-2 bg-white rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 shadow-sm font-mono font-bold" />
               </div>
 
               {(status === 'shipped' || order.estimatedDelivery) && (
                 <div>
-                  <label className="text-[9px] text-slate-400 uppercase tracking-widest font-bold block mb-1.5">Estimated / Target Delivery Date</label>
+                  <label className="text-[9px] text-slate-600 uppercase tracking-widest font-bold block mb-1.5">Estimated / Target Delivery Date</label>
                   <input
                     type="date"
                     value={estimatedDelivery}
@@ -330,16 +330,16 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
             
             <div className="space-y-3.5 text-xs text-slate-700">
               <div>
-                <span className="text-[9px] text-slate-400 uppercase tracking-widest font-bold block">Contact Officer</span>
+                <span className="text-[9px] text-slate-600 uppercase tracking-widest font-bold block">Contact Officer</span>
                 <p className="font-bold text-slate-800 mt-0.5">{order.user?.name}</p>
               </div>
               <div>
-                <span className="text-[9px] text-slate-400 uppercase tracking-widest font-bold block">Business Email</span>
+                <span className="text-[9px] text-slate-600 uppercase tracking-widest font-bold block">Business Email</span>
                 <p className="font-semibold text-slate-500 mt-0.5">{order.user?.email}</p>
               </div>
               {order.user?.companyName && (
                 <div>
-                  <span className="text-[9px] text-slate-400 uppercase tracking-widest font-bold block">Company Entity</span>
+                  <span className="text-[9px] text-slate-600 uppercase tracking-widest font-bold block">Company Entity</span>
                   <p className="font-bold text-slate-800 mt-0.5">{order.user.companyName}</p>
                 </div>
               )}

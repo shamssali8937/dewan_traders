@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Search, ArrowRight, Leaf, Sprout, Scissors, Trophy, Package, MapPin, Wheat, Sparkles } from 'lucide-react';
 import { useProducts, useCategories } from '@/hooks/useProducts';
 import { formatPrice, resolveImageUrl } from '@/lib/utils';
+import { useMarketStore } from '@/store/marketStore';
 
 const iconMap = {
   Leaf: Leaf,
@@ -28,6 +29,7 @@ export default function CatalogPage() {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [page, setPage] = useState(1);
+  const { formatProductPrice, getProductUnit, getProductMoq, region } = useMarketStore();
 
   const { data: categoryData } = useCategories();
   const { data, isLoading } = useProducts({
@@ -110,13 +112,13 @@ export default function CatalogPage() {
         {/* Search Input */}
         <div className="flex gap-3 mb-8">
           <div className="flex-1 relative">
-            <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" />
             <input
               type="text"
               placeholder="Search by product name, grade, SKU..."
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-              className="w-full pl-10 pr-4 py-3 bg-white/80 rounded-2xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 shadow-sm"
+              className="w-full pl-10 pr-4 py-3 bg-white/80 rounded-2xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 shadow-sm"
             />
           </div>
         </div>
@@ -139,12 +141,12 @@ export default function CatalogPage() {
           <div className="text-center py-20">
             <div className="text-4xl mb-3">🔍</div>
             <h3 className="text-sm font-bold text-slate-800 uppercase">No items match criteria</h3>
-            <p className="text-slate-400 text-xs mt-1">Try modifying keywords or category tags.</p>
+            <p className="text-slate-600 text-xs mt-1">Try modifying keywords or category tags.</p>
           </div>
         ) : (
           <>
             <div className="flex items-center justify-between mb-5">
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-600">
                 Displaying {products.length} of {pagination?.total || 0} cargo items
               </p>
             </div>
@@ -166,7 +168,7 @@ export default function CatalogPage() {
                           {product.imageUrl ? (
                             <img src={resolveImageUrl(product.imageUrl)} alt={product.name} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
                           ) : (
-                            <Package size={36} className="text-slate-200" />
+                            <Package size={36} className="text-slate-500" />
                           )}
                         </div>
 
@@ -182,18 +184,39 @@ export default function CatalogPage() {
                             <h3 className="text-xs font-bold text-slate-800 group-hover:text-primary transition-colors truncate">{product.name}</h3>
                             {product.origin && (
                               <p className="text-[10px] text-slate-500 mt-2 flex items-center gap-1.5">
-                                <MapPin size={11} className="text-slate-400" /> Origin: {product.origin}
+                                <MapPin size={11} className="text-slate-600" /> Origin: {product.origin}
                               </p>
                             )}
                           </div>
                           
                           <div className="space-y-3.5 mt-4">
-                            <div className="flex items-center justify-between border-t border-slate-100 pt-3.5">
-                              <div>
-                                <span className="text-sm font-black text-slate-800">{formatPrice(product.price)}</span>
-                                <span className="text-[10px] text-slate-500 font-normal">/{product.unit}</span>
+                            <div className="flex flex-col gap-2.5 border-t border-slate-100 pt-3.5">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <span className="text-sm font-black text-slate-800">{formatProductPrice(product.slug, product.price)}</span>
+                                  <span className="text-[10px] text-slate-500 font-normal">/{getProductUnit(product.slug, product.unit)}</span>
+                                </div>
+                                <span className="text-[10px] text-slate-600 font-bold uppercase">
+                                  MOQ: {getProductMoq(product.slug, product.minOrderQty)} {getProductUnit(product.slug, product.unit)}
+                                </span>
                               </div>
-                              <span className="text-[10px] text-slate-400 font-semibold uppercase">Min MOQ: {product.minOrderQty}</span>
+
+                              {/* Regional tags */}
+                              <div className="flex flex-wrap gap-1 mt-1">
+                                {region === 'PK' ? (
+                                  <>
+                                    <span className="text-[8px] bg-emerald-50 text-emerald-700 border border-emerald-100 px-1.5 py-0.5 rounded font-bold">Local Delivery</span>
+                                    <span className="text-[8px] bg-sky-50 text-sky-700 border border-sky-100 px-1.5 py-0.5 rounded font-bold">Domestic Shipping</span>
+                                    <span className="text-[8px] bg-amber-50 text-amber-700 border border-amber-100 px-1.5 py-0.5 rounded font-bold">Fast Delivery</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <span className="text-[8px] bg-indigo-50 text-indigo-700 border border-indigo-100 px-1.5 py-0.5 rounded font-bold">Export Available</span>
+                                    <span className="text-[8px] bg-sky-50 text-sky-700 border border-sky-100 px-1.5 py-0.5 rounded font-bold">Worldwide Shipping</span>
+                                    <span className="text-[8px] bg-slate-50 text-slate-700 border border-slate-200 px-1.5 py-0.5 rounded font-bold">Incoterms</span>
+                                  </>
+                                )}
+                              </div>
                             </div>
                             
                             <div className="flex items-center justify-between border-t border-slate-50 pt-2 text-[10px] text-slate-500">
@@ -223,7 +246,7 @@ export default function CatalogPage() {
                     className={`w-9 h-9 rounded-xl text-xs font-bold transition-all ${
                       page === p
                         ? 'bg-gradient-to-r from-primary to-sky-600 text-white shadow-sm'
-                        : 'glass text-slate-400 hover:text-slate-900 hover:bg-slate-50'
+                        : 'glass text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                     }`}
                   >
                     {p}

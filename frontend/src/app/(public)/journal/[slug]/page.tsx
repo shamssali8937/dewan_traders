@@ -52,9 +52,9 @@ export default function JournalDetailPage({ params }: { params: Promise<{ slug: 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         
         {/* Back Button & Breadcrumbs */}
-        <div className="flex items-center gap-2 text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-8 border-b border-slate-100 pb-4">
+        <div className="flex items-center gap-2 text-[10px] text-slate-600 font-bold uppercase tracking-wider mb-8 border-b border-slate-100 pb-4">
           <Link href="/journal" className="hover:text-primary transition-colors">Journal</Link>
-          <ChevronRight size={12} className="text-slate-300" />
+          <ChevronRight size={12} className="text-slate-500" />
           <span className="text-slate-700 truncate max-w-xs">{post.title}</span>
         </div>
 
@@ -65,7 +65,7 @@ export default function JournalDetailPage({ params }: { params: Promise<{ slug: 
               <h1 className="text-3xl sm:text-4xl font-black text-slate-900 leading-tight">{post.title}</h1>
               
               {/* Meta Info */}
-              <div className="flex flex-wrap items-center gap-4 text-[10px] text-slate-400 font-semibold uppercase pt-2 pb-4 border-b border-slate-100">
+              <div className="flex flex-wrap items-center gap-4 text-[10px] text-slate-600 font-semibold uppercase pt-2 pb-4 border-b border-slate-100">
                 <div className="flex items-center gap-1.5"><Calendar size={13} className="text-primary shrink-0" /> {formatDate(post.publishedAt || new Date())}</div>
                 <div className="flex items-center gap-1.5"><Clock size={13} className="text-primary shrink-0" /> {post.readTime || 5} min read</div>
                 <div className="flex items-center gap-1.5"><User size={13} className="text-primary shrink-0" /> {post.author || 'Dewan Traders'}</div>
@@ -77,7 +77,7 @@ export default function JournalDetailPage({ params }: { params: Promise<{ slug: 
               {post.imageUrl ? (
                 <img src={resolveImageUrl(post.imageUrl)} alt={post.title} className="w-full h-full object-cover" />
               ) : (
-                <div className="text-slate-300 text-4xl">📰</div>
+                <div className="text-slate-500 text-4xl">📰</div>
               )}
             </motion.div>
 
@@ -91,7 +91,7 @@ export default function JournalDetailPage({ params }: { params: Promise<{ slug: 
             {/* Tags Footer */}
             {post.tags && post.tags.length > 0 && (
               <div className="flex items-center gap-2 pt-6 border-t border-slate-100">
-                <Tag size={13} className="text-slate-400" />
+                <Tag size={13} className="text-slate-600" />
                 <div className="flex flex-wrap gap-1.5">
                   {post.tags.map((tag: string) => (
                     <span key={tag} className="text-[9px] px-2.5 py-0.5 bg-sky-50 border border-sky-100 text-primary rounded-full font-bold uppercase tracking-wider">
@@ -137,12 +137,12 @@ export default function JournalDetailPage({ params }: { params: Promise<{ slug: 
                           {p.imageUrl ? (
                             <img src={resolveImageUrl(p.imageUrl)} alt={p.title} className="w-full h-full object-cover" />
                           ) : (
-                            <div className="text-slate-300 text-xs">📰</div>
+                            <div className="text-slate-500 text-xs">📰</div>
                           )}
                         </div>
                         <div className="overflow-hidden">
                           <h4 className="text-[11px] font-bold text-slate-800 group-hover:text-primary transition-colors truncate uppercase tracking-wide">{p.title}</h4>
-                          <span className="text-[9px] text-slate-400 block mt-1">{p.readTime || 5} min read</span>
+                          <span className="text-[9px] text-slate-600 block mt-1">{p.readTime || 5} min read</span>
                         </div>
                       </div>
                     </Link>

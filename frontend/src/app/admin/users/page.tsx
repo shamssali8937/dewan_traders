@@ -27,9 +27,9 @@ export default function AdminUsersPage() {
 
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div className="flex-1 relative">
-          <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-600" />
           <input type="text" placeholder="Search by name, email, or company..." value={search} onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 shadow-sm" />
+            className="w-full pl-10 pr-4 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 shadow-sm" />
         </div>
       </div>
 
@@ -38,11 +38,11 @@ export default function AdminUsersPage() {
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50/50">
-                <th className="text-slate-400 font-bold uppercase tracking-wider px-5 py-3.5">User</th>
-                <th className="text-slate-400 font-bold uppercase tracking-wider px-5 py-3.5">Role</th>
-                <th className="text-slate-400 font-bold uppercase tracking-wider px-5 py-3.5">Account Type</th>
-                <th className="text-slate-400 font-bold uppercase tracking-wider px-5 py-3.5">Company Details</th>
-                <th className="text-slate-400 font-bold uppercase tracking-wider px-5 py-3.5">Joined Date</th>
+                <th className="text-slate-600 font-bold uppercase tracking-wider px-5 py-3.5">User</th>
+                <th className="text-slate-600 font-bold uppercase tracking-wider px-5 py-3.5">Role</th>
+                <th className="text-slate-600 font-bold uppercase tracking-wider px-5 py-3.5">Account Type</th>
+                <th className="text-slate-600 font-bold uppercase tracking-wider px-5 py-3.5">Company Details</th>
+                <th className="text-slate-600 font-bold uppercase tracking-wider px-5 py-3.5">Joined Date</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
@@ -55,8 +55,8 @@ export default function AdminUsersPage() {
               ) : filtered.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-5 py-16 text-center space-y-2">
-                    <Users className="mx-auto text-slate-300" size={32} />
-                    <p className="text-slate-400 font-bold uppercase">No users registered</p>
+                    <Users className="mx-auto text-slate-500" size={32} />
+                    <p className="text-slate-600 font-bold uppercase">No users registered</p>
                   </td>
                 </tr>
               ) : (
@@ -69,7 +69,7 @@ export default function AdminUsersPage() {
                         </div>
                         <div>
                           <p className="font-bold text-slate-800">{user.name}</p>
-                          <p className="text-[10px] text-slate-400 mt-0.5 flex items-center gap-1"><Mail size={10} /> {user.email}</p>
+                          <p className="text-[10px] text-slate-600 mt-0.5 flex items-center gap-1"><Mail size={10} /> {user.email}</p>
                         </div>
                       </div>
                     </td>
@@ -98,13 +98,13 @@ export default function AdminUsersPage() {
                       {user.companyName ? (
                         <div>
                           <p className="font-bold text-slate-800">{user.companyName}</p>
-                          {user.phone && <p className="text-[10px] text-slate-400 mt-0.5 flex items-center gap-1"><Phone size={10} /> {user.phone}</p>}
+                          {user.phone && <p className="text-[10px] text-slate-600 mt-0.5 flex items-center gap-1"><Phone size={10} /> {user.phone}</p>}
                         </div>
                       ) : (
                         user.phone || '—'
                       )}
                     </td>
-                    <td className="px-5 py-4 text-slate-400 font-bold tracking-wide text-[10px] flex items-center gap-1 mt-1.5"><Calendar size={10} /> {formatDate(user.createdAt)}</td>
+                    <td className="px-5 py-4 text-slate-600 font-bold tracking-wide text-[10px] flex items-center gap-1 mt-1.5"><Calendar size={10} /> {formatDate(user.createdAt)}</td>
                   </tr>
                 ))
               )}

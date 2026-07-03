@@ -74,29 +74,29 @@ export default function OrderConfirmationPage({ params }: { params: Promise<{ id
 
         {/* Order Details Summary */}
         <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-sm space-y-5">
-          <h3 className="text-[10px] text-slate-400 font-bold uppercase tracking-widest pb-3 border-b border-slate-100">Order Summary</h3>
+          <h3 className="text-[10px] text-slate-600 font-bold uppercase tracking-widest pb-3 border-b border-slate-100">Order Summary</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-semibold text-slate-600">
             <div className="space-y-3">
               <div>
-                <span className="text-[9px] text-slate-400 uppercase tracking-wider block mb-0.5">Order Number</span>
+                <span className="text-[9px] text-slate-600 uppercase tracking-wider block mb-0.5">Order Number</span>
                 <span className="font-mono text-slate-800 font-bold">{order.orderNumber}</span>
               </div>
               <div>
-                <span className="text-[9px] text-slate-400 uppercase tracking-wider block mb-0.5">Commodity / Product</span>
+                <span className="text-[9px] text-slate-600 uppercase tracking-wider block mb-0.5">Commodity / Product</span>
                 <span className="text-slate-800 font-bold">{order.items[0]?.product?.name || 'Wholesale Commodity'}</span>
               </div>
               <div>
-                <span className="text-[9px] text-slate-400 uppercase tracking-wider block mb-0.5">Quantity</span>
+                <span className="text-[9px] text-slate-600 uppercase tracking-wider block mb-0.5">Quantity</span>
                 <span className="text-slate-800 font-bold">{order.items[0]?.quantity} {order.items[0]?.product?.unit || 'kg'}s</span>
               </div>
             </div>
             <div className="space-y-3">
               <div>
-                <span className="text-[9px] text-slate-400 uppercase tracking-wider block mb-0.5">Total Amount</span>
-                <span className="text-primary font-black text-sm">{formatPrice(order.total)}</span>
+                <span className="text-[9px] text-slate-600 uppercase tracking-wider block mb-0.5">Total Amount</span>
+                <span className="text-primary font-black text-sm">{formatPrice(order.total, 'PKR', order.notes)}</span>
               </div>
               <div>
-                <span className="text-[9px] text-slate-400 uppercase tracking-wider block mb-0.5">Payment Option</span>
+                <span className="text-[9px] text-slate-600 uppercase tracking-wider block mb-0.5">Payment Option</span>
                 <span className="text-slate-800 font-bold uppercase">{paymentMethodLabel}</span>
               </div>
             </div>
@@ -105,9 +105,9 @@ export default function OrderConfirmationPage({ params }: { params: Promise<{ id
 
         {/* Payment Account Credentials */}
         <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-sm space-y-5">
-          <h3 className="text-[10px] text-slate-400 font-bold uppercase tracking-widest pb-3 border-b border-slate-100">Payment Accounts Instructions</h3>
+          <h3 className="text-[10px] text-slate-600 font-bold uppercase tracking-widest pb-3 border-b border-slate-100">Payment Accounts Instructions</h3>
           <p className="text-xs text-slate-500 font-medium leading-relaxed">
-            Please transfer the amount of <strong className="text-slate-800">{formatPrice(order.total)}</strong> to one of the following accounts:
+            Please transfer the amount of <strong className="text-slate-800">{formatPrice(order.total, 'PKR', order.notes)}</strong> to one of the following accounts:
           </p>
           
           <div className="space-y-3">
@@ -120,22 +120,22 @@ export default function OrderConfirmationPage({ params }: { params: Promise<{ id
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-slate-600 font-semibold">
                     <div>
-                      <span className="text-[9px] text-slate-400 block">Account Title</span>
+                      <span className="text-[9px] text-slate-600 block">Account Title</span>
                       <span className="text-slate-800">{acc.accountTitle}</span>
                     </div>
                     <div>
-                      <span className="text-[9px] text-slate-400 block">Account Number</span>
+                      <span className="text-[9px] text-slate-600 block">Account Number</span>
                       <span className="text-slate-800">{acc.accountNumber}</span>
                     </div>
                     {acc.iban && (
                       <div className="sm:col-span-2">
-                        <span className="text-[9px] text-slate-400 block">IBAN Code</span>
+                        <span className="text-[9px] text-slate-600 block">IBAN Code</span>
                         <span className="font-mono text-slate-800">{acc.iban}</span>
                       </div>
                     )}
                     {acc.branch && (
                       <div className="sm:col-span-2">
-                        <span className="text-[9px] text-slate-400 block">Branch Details</span>
+                        <span className="text-[9px] text-slate-600 block">Branch Details</span>
                         <span className="text-slate-700">{acc.branch}</span>
                       </div>
                     )}
@@ -144,7 +144,7 @@ export default function OrderConfirmationPage({ params }: { params: Promise<{ id
               ))
             ) : (
               <div className="text-center py-4 border border-dashed border-slate-200 rounded-2xl">
-                <span className="text-xs text-slate-400">No specific accounts setup for this method. Please contact support.</span>
+                <span className="text-xs text-slate-600">No specific accounts setup for this method. Please contact support.</span>
               </div>
             )}
           </div>

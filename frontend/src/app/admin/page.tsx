@@ -65,7 +65,7 @@ export default function AdminDashboard() {
                   <div className="text-2xl font-black text-slate-800 mb-1">
                     {isLoading ? <div className="h-7 w-12 bg-slate-100 rounded animate-pulse" /> : value}
                   </div>
-                  <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{label}</div>
+                  <div className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">{label}</div>
                 </div>
               </div>
             </Link>
@@ -87,8 +87,8 @@ export default function AdminDashboard() {
           
           {recentOrders.length === 0 ? (
             <div className="p-12 text-center space-y-2">
-              <ShoppingCart className="mx-auto text-slate-300" size={32} />
-              <p className="text-xs text-slate-400 font-semibold uppercase">No orders registered</p>
+              <ShoppingCart className="mx-auto text-slate-500" size={32} />
+              <p className="text-xs text-slate-600 font-semibold uppercase">No orders registered</p>
             </div>
           ) : (
             <div className="divide-y divide-slate-100">
@@ -96,10 +96,10 @@ export default function AdminDashboard() {
                 <Link key={order.id} href={`/admin/orders/${order.id}`} className="flex items-center justify-between p-4.5 hover:bg-slate-50/50 transition-colors">
                   <div>
                     <p className="text-xs font-bold text-slate-800">{order.orderNumber}</p>
-                    <p className="text-[10px] text-slate-400 mt-1 font-semibold">{order.user?.name} &middot; {formatDate(order.createdAt)}</p>
+                    <p className="text-[10px] text-slate-600 mt-1 font-semibold">{order.user?.name} &middot; {formatDate(order.createdAt)}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs font-black text-slate-800">{formatPrice(order.total)}</p>
+                    <p className="text-xs font-black text-slate-800">{formatPrice(order.total, 'PKR', order.notes)}</p>
                     <span className={`inline-block text-[9px] px-2 py-0.5 rounded-full capitalize font-bold border mt-1.5 ${ORDER_STATUS_COLOR[order.status] || 'bg-slate-100 text-slate-500 border-slate-200'}`}>
                       {order.status}
                     </span>
@@ -121,8 +121,8 @@ export default function AdminDashboard() {
           
           {recentInquiries.length === 0 ? (
             <div className="p-12 text-center space-y-2">
-              <MessageSquare className="mx-auto text-slate-300" size={32} />
-              <p className="text-xs text-slate-400 font-semibold uppercase">No inquiries logged</p>
+              <MessageSquare className="mx-auto text-slate-500" size={32} />
+              <p className="text-xs text-slate-600 font-semibold uppercase">No inquiries logged</p>
             </div>
           ) : (
             <div className="divide-y divide-slate-100">
@@ -130,7 +130,7 @@ export default function AdminDashboard() {
                 <Link key={inquiry.id} href={`/admin/inquiries/${inquiry.id}`} className="flex items-center justify-between p-4.5 hover:bg-slate-50/50 transition-colors">
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-slate-800 truncate">{inquiry.name}</p>
-                    <p className="text-[10px] text-slate-400 truncate mt-1 font-semibold">{inquiry.subject}</p>
+                    <p className="text-[10px] text-slate-600 truncate mt-1 font-semibold">{inquiry.subject}</p>
                   </div>
                   <span className={`text-[9px] px-2 py-0.5 rounded-full shrink-0 ml-3 font-bold uppercase border ${INQUIRY_STATUS_COLOR[inquiry.status] || 'bg-slate-100 text-slate-500 border-slate-200'}`}>
                     {inquiry.status}

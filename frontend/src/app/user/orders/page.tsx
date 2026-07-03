@@ -77,9 +77,9 @@ export default function UserOrdersPage() {
             </div>
           ) : !orders || orders.length === 0 ? (
             <div className="glass rounded-3xl p-16 text-center border border-slate-100 bg-white/80 shadow-sm space-y-4">
-              <ShoppingCart className="mx-auto text-slate-300" size={40} />
+              <ShoppingCart className="mx-auto text-slate-500" size={40} />
               <h2 className="text-sm font-bold text-slate-800 uppercase">No orders yet</h2>
-              <p className="text-slate-400 text-xs max-w-sm mx-auto leading-relaxed">Sourcing contract requests or invoices are processed here. Browse the product list and submit an RFQ to create your first order entry.</p>
+              <p className="text-slate-600 text-xs max-w-sm mx-auto leading-relaxed">Sourcing contract requests or invoices are processed here. Browse the product list and submit an RFQ to create your first order entry.</p>
               <div className="pt-2">
                 <Link href="/catalog" className="px-6 py-3 bg-gradient-to-r from-primary to-sky-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md shadow-primary/10">
                   Explore Products
@@ -100,12 +100,12 @@ export default function UserOrdersPage() {
                     <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-slate-50/50">
                       <div>
                         <p className="text-xs font-bold text-slate-800">{order.orderNumber}</p>
-                        <p className="text-[10px] text-slate-400 flex items-center gap-1.5 mt-1 font-semibold">
+                        <p className="text-[10px] text-slate-600 flex items-center gap-1.5 mt-1 font-semibold">
                           <Clock size={11} className="text-primary shrink-0" /> {formatDate(order.createdAt)}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-xs font-black text-slate-800">{formatPrice(order.total)}</p>
+                        <p className="text-xs font-black text-slate-800">{formatPrice(order.total, 'PKR', order.notes)}</p>
                         <span className={`inline-block text-[9px] px-2 py-0.5 rounded-full capitalize font-bold border mt-1.5 ${STATUS_COLOR[order.status] || 'bg-slate-100 text-slate-500 border-slate-200'}`}>
                           {order.status}
                         </span>
@@ -121,9 +121,9 @@ export default function UserOrdersPage() {
                           </div>
                           <div className="flex-1">
                             <p className="text-xs font-bold text-slate-800">{item.product?.name}</p>
-                            <p className="text-[10px] text-slate-400 mt-0.5 font-semibold">{item.quantity} {item.product?.unit} &times; {formatPrice(item.unitPrice)}</p>
+                            <p className="text-[10px] text-slate-600 mt-0.5 font-semibold">{item.quantity} {item.product?.unit || 'units'} &times; {formatPrice(item.unitPrice, 'PKR', order.notes)}</p>
                           </div>
-                          <p className="text-xs font-bold text-slate-800">{formatPrice(item.total)}</p>
+                          <p className="text-xs font-bold text-slate-800">{formatPrice(item.total, 'PKR', order.notes)}</p>
                         </div>
                       ))}
                     </div>

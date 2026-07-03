@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShoppingCart, Package, Send, Clock, CheckCircle, Truck, XCircle,
@@ -33,6 +33,7 @@ export default function UserDashboard() {
   const { logout } = useAuth();
   const updateProfile = useUpdateProfile();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { data: orders, isLoading: loadingOrders, refetch: refetchOrders } = useMyOrders();
 
   const [activeTab, setActiveTab] = useState<'overview' | 'orders' | 'track' | 'upload' | 'notifications' | 'profile'>('overview');
@@ -70,6 +71,14 @@ export default function UserDashboard() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const tabParam = searchParams.get('tab');
+    if (tabParam && ['overview', 'orders', 'track', 'upload', 'notifications', 'profile'].includes(tabParam)) {
+      setActiveTab(tabParam as any);
+    }
+  }, [searchParams, mounted]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -284,7 +293,7 @@ export default function UserDashboard() {
         <div className="fluid-blob bg-teal-50 w-[350px] h-[350px] bottom-[10%] left-[-100px] opacity-60" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10 space-y-8">
+      <div className="max-w-7xl mx-auto px-6 relative z-10 space-y-4">
 
         {/* Dashboard Header */}
         <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -325,7 +334,7 @@ export default function UserDashboard() {
               </div>
               <div>
                 <p className="text-xl font-black text-slate-800 leading-none mb-1">{stat.value}</p>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{stat.label}</p>
+                <p className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">{stat.label}</p>
               </div>
             </div>
           ))}
@@ -346,8 +355,8 @@ export default function UserDashboard() {
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key as any)}
                 className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${activeTab === tab.key
-                    ? 'bg-primary text-white shadow-sm'
-                    : 'text-slate-600 hover:bg-slate-50'
+                  ? 'bg-primary text-white shadow-sm'
+                  : 'text-slate-600 hover:bg-slate-50'
                   }`}
               >
                 <span className="flex items-center gap-2">
@@ -378,7 +387,7 @@ export default function UserDashboard() {
                   <div className="space-y-6">
                     <div className="pb-4 border-b border-slate-100 flex justify-between items-center">
                       <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Dashboard Overview</h2>
-                      <span className="text-[10px] text-slate-400 font-bold uppercase">Activity status</span>
+                      <span className="text-[10px] text-slate-600 font-bold uppercase">Activity status</span>
                     </div>
 
                     {/* Notice Banner */}
@@ -397,7 +406,7 @@ export default function UserDashboard() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {/* Recent Orders Overview */}
                       <div className="space-y-3">
-                        <h4 className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Recent Sourcing Orders</h4>
+                        <h4 className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">Recent Sourcing Orders</h4>
                         {ordersList.slice(0, 3).length > 0 ? (
                           <div className="divide-y divide-slate-100">
                             {ordersList.slice(0, 3).map(order => {
@@ -406,7 +415,7 @@ export default function UserDashboard() {
                                 <div key={order.id} className="py-2.5 flex justify-between items-center text-xs">
                                   <div>
                                     <p className="font-bold text-slate-800 font-mono">{order.orderNumber}</p>
-                                    <p className="text-[10px] text-slate-400 font-semibold">{formatDate(order.createdAt)}</p>
+                                    <p className="text-[10px] text-slate-600 font-semibold">{formatDate(order.createdAt)}</p>
                                   </div>
                                   <span className={`text-[9px] px-2 py-0.5 rounded border ${lbl.color} font-bold`}>
                                     {lbl.label}
@@ -416,13 +425,13 @@ export default function UserDashboard() {
                             })}
                           </div>
                         ) : (
-                          <p className="text-xs text-slate-400 font-semibold py-4">No orders placed yet.</p>
+                          <p className="text-xs text-slate-600 font-semibold py-4">No orders placed yet.</p>
                         )}
                       </div>
 
                       {/* Recent Messages Notifications */}
                       <div className="space-y-3">
-                        <h4 className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Latest Alerts</h4>
+                        <h4 className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">Latest Alerts</h4>
                         {notifications.slice(0, 3).length > 0 ? (
                           <div className="space-y-2">
                             {notifications.slice(0, 3).map(n => (
@@ -433,7 +442,7 @@ export default function UserDashboard() {
                             ))}
                           </div>
                         ) : (
-                          <p className="text-xs text-slate-400 font-semibold py-4">No recent notification alerts.</p>
+                          <p className="text-xs text-slate-600 font-semibold py-4">No recent notification alerts.</p>
                         )}
                       </div>
                     </div>
@@ -445,12 +454,12 @@ export default function UserDashboard() {
                   <div className="space-y-6">
                     <div className="pb-4 border-b border-slate-100 flex justify-between items-center">
                       <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Order Contracts history</h2>
-                      <span className="text-[10px] text-slate-400 font-bold uppercase">{ordersList.length} orders</span>
+                      <span className="text-[10px] text-slate-600 font-bold uppercase">{ordersList.length} orders</span>
                     </div>
 
                     {ordersList.length === 0 ? (
                       <div className="text-center py-12 space-y-3">
-                        <ShoppingCart className="mx-auto text-slate-200" size={40} />
+                        <ShoppingCart className="mx-auto text-slate-500" size={40} />
                         <p className="text-xs text-slate-500 font-medium">No order contracts placed yet.</p>
                         <Link href="/catalog" className="inline-block text-primary font-bold text-xs">Explore Catalog &rarr;</Link>
                       </div>
@@ -463,7 +472,7 @@ export default function UserDashboard() {
                             <div key={order.id} className="border border-slate-100 rounded-2xl p-4 space-y-3 hover:bg-slate-50/40 transition-colors">
                               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-3 border-b border-slate-50 gap-2">
                                 <div>
-                                  <span className="text-[9px] text-slate-400 uppercase tracking-wider block">Reference #</span>
+                                  <span className="text-[9px] text-slate-600 uppercase tracking-wider block">Reference #</span>
                                   <span className="font-bold text-slate-800 font-mono text-xs">{order.orderNumber}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
@@ -481,19 +490,19 @@ export default function UserDashboard() {
 
                               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-semibold text-slate-600">
                                 <div>
-                                  <span className="text-[9px] text-slate-400 block uppercase">Product</span>
+                                  <span className="text-[9px] text-slate-600 block uppercase">Product</span>
                                   <span className="text-slate-800 truncate block">{order.items[0]?.product?.name || 'Commodity'}</span>
                                 </div>
                                 <div>
-                                  <span className="text-[9px] text-slate-400 block uppercase">Total Quantity</span>
+                                  <span className="text-[9px] text-slate-600 block uppercase">Total Quantity</span>
                                   <span className="text-slate-800">{order.items[0]?.quantity} {order.items[0]?.product?.unit || 'kg'}s</span>
                                 </div>
                                 <div>
-                                  <span className="text-[9px] text-slate-400 block uppercase">Contract Value</span>
-                                  <span className="text-primary font-bold">{formatPrice(order.total)}</span>
+                                  <span className="text-[9px] text-slate-600 block uppercase">Contract Value</span>
+                                  <span className="text-primary font-bold">{formatPrice(order.total, 'PKR', order.notes)}</span>
                                 </div>
                                 <div>
-                                  <span className="text-[9px] text-slate-400 block uppercase">Date Placed</span>
+                                  <span className="text-[9px] text-slate-600 block uppercase">Date Placed</span>
                                   <span className="text-slate-800">{formatDate(order.createdAt)}</span>
                                 </div>
                               </div>
@@ -534,7 +543,7 @@ export default function UserDashboard() {
 
                     {!selectedOrder ? (
                       <div className="text-center py-12 space-y-4">
-                        <Truck className="mx-auto text-slate-200" size={40} />
+                        <Truck className="mx-auto text-slate-500" size={40} />
                         <p className="text-xs text-slate-500 font-medium">Select an order contract from your order history list to track cargo shipping progress.</p>
                         <button onClick={() => setActiveTab('orders')} className="px-4 py-2 bg-primary text-white text-xs font-bold uppercase rounded-xl">View Order List</button>
                       </div>
@@ -558,14 +567,14 @@ export default function UserDashboard() {
                               return (
                                 <div key={step} className="flex flex-col items-center gap-2">
                                   <div className={`w-8 h-8 rounded-full border flex items-center justify-center font-bold text-xs transition-all ${isCompleted
-                                      ? 'bg-primary border-primary text-white'
-                                      : isActive
-                                        ? 'bg-white border-primary text-primary ring-2 ring-primary/10'
-                                        : 'bg-white border-slate-200 text-slate-400'
+                                    ? 'bg-primary border-primary text-white'
+                                    : isActive
+                                      ? 'bg-white border-primary text-primary ring-2 ring-primary/10'
+                                      : 'bg-white border-slate-200 text-slate-600'
                                     }`}>
                                     {isCompleted ? <Check size={14} className="stroke-[2.5]" /> : idx + 1}
                                   </div>
-                                  <span className={`text-[9px] font-bold uppercase tracking-wider text-center max-w-[80px] hidden sm:block ${isActive ? 'text-primary' : isCompleted ? 'text-slate-800' : 'text-slate-400'
+                                  <span className={`text-[9px] font-bold uppercase tracking-wider text-center max-w-[80px] hidden sm:block ${isActive ? 'text-primary' : isCompleted ? 'text-slate-800' : 'text-slate-600'
                                     }`}>
                                     {STEP_LABELS[idx]}
                                   </span>
@@ -577,28 +586,28 @@ export default function UserDashboard() {
 
                         {/* Stepper Details */}
                         <div className="p-5 border border-slate-100 rounded-2xl bg-slate-50/50 space-y-4">
-                          <h4 className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Cargo Contract Specifications</h4>
+                          <h4 className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">Cargo Contract Specifications</h4>
 
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs font-semibold text-slate-600">
                             <div>
-                              <span className="text-[9px] text-slate-400 block uppercase">Transit Method</span>
+                              <span className="text-[9px] text-slate-600 block uppercase">Transit Method</span>
                               <span className="text-slate-800 uppercase">{selectedOrder.paymentMethodLabel || selectedOrder.paymentMethod?.replace('_', ' ') || 'Bank Wire'}</span>
                             </div>
                             {selectedOrder.trackingNumber && (
                               <div>
-                                <span className="text-[9px] text-slate-400 block uppercase">Tracking Cargo Number</span>
+                                <span className="text-[9px] text-slate-600 block uppercase">Tracking Cargo Number</span>
                                 <span className="font-mono text-slate-800">{selectedOrder.trackingNumber}</span>
                               </div>
                             )}
                             {selectedOrder.estimatedDelivery && (
                               <div>
-                                <span className="text-[9px] text-slate-400 block uppercase">Target Delivery Date</span>
+                                <span className="text-[9px] text-slate-600 block uppercase">Target Delivery Date</span>
                                 <span className="text-slate-800 font-bold text-primary">{selectedOrder.estimatedDelivery}</span>
                               </div>
                             )}
                             {parseNotes(selectedOrder.notes).map((item, idx) => (
                               <div key={idx}>
-                                <span className="text-[9px] text-slate-400 block uppercase">{item.label}</span>
+                                <span className="text-[9px] text-slate-600 block uppercase">{item.label}</span>
                                 <span className="text-slate-800">{item.value}</span>
                               </div>
                             ))}
@@ -606,7 +615,7 @@ export default function UserDashboard() {
 
                           {selectedOrder.status === 'pending' && (
                             <div className="border-t border-slate-200/60 pt-4 space-y-3">
-                              <h5 className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Payment Instructions</h5>
+                              <h5 className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">Payment Instructions</h5>
                               <p className="text-[11px] text-slate-500 font-medium">Please transfer the value to the matching company account:</p>
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {paymentAccounts.filter(acc => {
@@ -620,16 +629,16 @@ export default function UserDashboard() {
                                     </div>
                                     <div className="grid grid-cols-2 gap-2 text-[10px] text-slate-600 font-semibold mt-1">
                                       <div>
-                                        <span className="text-[8px] text-slate-400 block uppercase">Title</span>
+                                        <span className="text-[8px] text-slate-600 block uppercase">Title</span>
                                         <span className="text-slate-800 font-bold">{acc.accountTitle}</span>
                                       </div>
                                       <div>
-                                        <span className="text-[8px] text-slate-400 block uppercase">Number</span>
+                                        <span className="text-[8px] text-slate-600 block uppercase">Number</span>
                                         <span className="text-slate-800 font-bold">{acc.accountNumber}</span>
                                       </div>
                                       {acc.iban && (
                                         <div className="col-span-2">
-                                          <span className="text-[8px] text-slate-400 block uppercase">IBAN</span>
+                                          <span className="text-[8px] text-slate-600 block uppercase">IBAN</span>
                                           <span className="font-mono text-slate-800 font-bold">{acc.iban}</span>
                                         </div>
                                       )}
@@ -660,13 +669,13 @@ export default function UserDashboard() {
                   <form onSubmit={submitPaymentProof} className="space-y-6">
                     <div className="pb-4 border-b border-slate-100 flex justify-between items-center">
                       <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Upload Transaction receipt proof</h2>
-                      <span className="text-[10px] text-slate-400 font-bold uppercase">Offline Bank Transfer</span>
+                      <span className="text-[10px] text-slate-600 font-bold uppercase">Offline Bank Transfer</span>
                     </div>
 
                     <div className="space-y-4">
                       {/* Select Order */}
                       <div>
-                        <label className="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1.5 block">Select Sourcing Order Contract *</label>
+                        <label className="text-[10px] text-slate-600 uppercase font-bold tracking-widest mb-1.5 block">Select Sourcing Order Contract *</label>
                         <select
                           value={uploadOrderSelection}
                           onChange={e => setUploadOrderSelection(e.target.value)}
@@ -674,9 +683,9 @@ export default function UserDashboard() {
                           required
                         >
                           <option value="">-- Select Order Reference --</option>
-                          {ordersList.filter(o => o.paymentProofStatus !== 'approved').map(o => (
+                           {ordersList.filter(o => o.paymentProofStatus !== 'approved').map(o => (
                             <option key={o.id} value={o.id}>
-                              {o.orderNumber} ({formatPrice(o.total)}) - {STATUS_LABEL[o.status]?.label || o.status}
+                              {o.orderNumber} ({formatPrice(o.total, 'PKR', o.notes)}) - {STATUS_LABEL[o.status]?.label || o.status}
                             </option>
                           ))}
                         </select>
@@ -685,7 +694,7 @@ export default function UserDashboard() {
                       {/* Payment Account Credentials */}
                       {uploadOrderSelection && (
                         <div className="p-4 border border-slate-100 rounded-2xl bg-sky-50/20 space-y-3">
-                          <h4 className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Company Payment Account Details</h4>
+                          <h4 className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">Company Payment Account Details</h4>
                           {paymentAccounts.filter(acc => {
                             const orderObj = ordersList.find(o => o.id === uploadOrderSelection);
                             if (!orderObj) return true;
@@ -707,22 +716,22 @@ export default function UserDashboard() {
                                 </div>
                                 <div className="grid grid-cols-2 gap-2 text-[10px] text-slate-600 font-semibold">
                                   <div>
-                                    <span className="text-[8px] text-slate-400 block uppercase">Title</span>
+                                    <span className="text-[8px] text-slate-600 block uppercase">Title</span>
                                     <span className="text-slate-800 font-bold">{acc.accountTitle}</span>
                                   </div>
                                   <div>
-                                    <span className="text-[8px] text-slate-400 block uppercase">Account Number</span>
+                                    <span className="text-[8px] text-slate-600 block uppercase">Account Number</span>
                                     <span className="text-slate-800 font-bold">{acc.accountNumber}</span>
                                   </div>
                                   {acc.iban && (
                                     <div className="col-span-2">
-                                      <span className="text-[8px] text-slate-400 block uppercase">IBAN</span>
+                                      <span className="text-[8px] text-slate-600 block uppercase">IBAN</span>
                                       <span className="font-mono text-slate-800 font-bold">{acc.iban}</span>
                                     </div>
                                   )}
                                   {acc.branch && (
                                     <div className="col-span-2">
-                                      <span className="text-[8px] text-slate-400 block uppercase">Branch</span>
+                                      <span className="text-[8px] text-slate-600 block uppercase">Branch</span>
                                       <span className="text-slate-700">{acc.branch}</span>
                                     </div>
                                   )}
@@ -737,7 +746,7 @@ export default function UserDashboard() {
 
                       {!uploadOrderSelection && (
                         <div className="p-4 border border-slate-100 rounded-2xl bg-slate-50/50 space-y-3">
-                          <h4 className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Dewan Traders Active Payment Accounts</h4>
+                          <h4 className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">Dewan Traders Active Payment Accounts</h4>
                           {paymentAccounts.length > 0 ? (
                             <div className="space-y-2">
                               {paymentAccounts.map(acc => (
@@ -751,14 +760,14 @@ export default function UserDashboard() {
                               ))}
                             </div>
                           ) : (
-                            <p className="text-[11px] text-slate-400 font-medium animate-pulse">Loading active payment accounts...</p>
+                            <p className="text-[11px] text-slate-600 font-medium animate-pulse">Loading active payment accounts...</p>
                           )}
                         </div>
                       )}
 
                       {/* Dropzone */}
                       <div>
-                        <label className="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1.5 block">Screenshot Receipt or PDF file *</label>
+                        <label className="text-[10px] text-slate-600 uppercase font-bold tracking-widest mb-1.5 block">Screenshot Receipt or PDF file *</label>
                         <div className="relative border-2 border-dashed border-slate-200 rounded-2xl p-8 text-center bg-slate-50/50 hover:bg-slate-50 transition-colors flex flex-col items-center justify-center cursor-pointer">
                           <input
                             type="file"
@@ -766,9 +775,9 @@ export default function UserDashboard() {
                             accept=".pdf,.png,.jpg,.jpeg"
                             className="absolute inset-0 opacity-0 cursor-pointer"
                           />
-                          <Upload className="text-slate-300 mb-3" size={32} />
+                          <Upload className="text-slate-500 mb-3" size={32} />
                           <span className="text-xs font-bold text-slate-700 block">Click to select or drag & drop</span>
-                          <span className="text-[9px] text-slate-400 mt-1">Accepted formats: JPG, JPEG, PNG, PDF (Max: 5MB)</span>
+                          <span className="text-[9px] text-slate-600 mt-1">Accepted formats: JPG, JPEG, PNG, PDF (Max: 5MB)</span>
                         </div>
                       </div>
 
@@ -785,7 +794,7 @@ export default function UserDashboard() {
                             )}
                             <div className="min-w-0">
                               <p className="text-xs font-bold text-slate-800 truncate">{selectedFile.name}</p>
-                              <p className="text-[9px] text-slate-400 font-semibold">{(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
+                              <p className="text-[9px] text-slate-600 font-semibold">{(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
                             </div>
                           </div>
                           <button
@@ -845,7 +854,7 @@ export default function UserDashboard() {
                       </div>
                     ) : notifications.length === 0 ? (
                       <div className="text-center py-12 space-y-3">
-                        <Bell className="mx-auto text-slate-200" size={40} />
+                        <Bell className="mx-auto text-slate-500" size={40} />
                         <p className="text-xs text-slate-500 font-medium">No alerts received yet.</p>
                       </div>
                     ) : (
@@ -855,14 +864,14 @@ export default function UserDashboard() {
                             key={n.id}
                             onClick={() => !n.isRead && markNotificationRead(n.id)}
                             className={`p-4 border rounded-2xl flex justify-between items-start gap-4 transition-all cursor-pointer ${n.isRead
-                                ? 'bg-white border-slate-100 text-slate-500'
-                                : 'bg-sky-50/20 border-sky-100/50 text-slate-800 font-semibold'
+                              ? 'bg-white border-slate-100 text-slate-500'
+                              : 'bg-sky-50/20 border-sky-100/50 text-slate-800 font-semibold'
                               }`}
                           >
                             <div className="space-y-1">
                               <p className="text-xs font-bold text-slate-800">{n.title}</p>
                               <p className="text-[11px] font-medium leading-relaxed">{n.message}</p>
-                              <p className="text-[9px] text-slate-400 font-semibold">{formatDate(n.createdAt)}</p>
+                              <p className="text-[9px] text-slate-600 font-semibold">{formatDate(n.createdAt)}</p>
                             </div>
                             {!n.isRead && (
                               <span className="w-2 h-2 bg-primary rounded-full shrink-0 mt-1.5" />
@@ -879,12 +888,12 @@ export default function UserDashboard() {
                   <form onSubmit={handleProfileUpdate} className="space-y-6">
                     <div className="pb-4 border-b border-slate-100 flex justify-between items-center">
                       <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Company & Personal Profile</h2>
-                      <span className="text-[10px] text-slate-400 font-bold uppercase">Secure Settings</span>
+                      <span className="text-[10px] text-slate-600 font-bold uppercase">Secure Settings</span>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-semibold text-slate-700">
                       <div>
-                        <label className="text-[9px] text-slate-400 uppercase tracking-wider mb-1 block">Full Representative Name *</label>
+                        <label className="text-[9px] text-slate-600 uppercase tracking-wider mb-1 block">Full Representative Name *</label>
                         <input
                           type="text"
                           value={profileForm.name}
@@ -894,7 +903,7 @@ export default function UserDashboard() {
                         />
                       </div>
                       <div>
-                        <label className="text-[9px] text-slate-400 uppercase tracking-wider mb-1 block">Active Contact phone *</label>
+                        <label className="text-[9px] text-slate-600 uppercase tracking-wider mb-1 block">Active Contact phone *</label>
                         <input
                           type="text"
                           value={profileForm.phone}
@@ -904,7 +913,7 @@ export default function UserDashboard() {
                         />
                       </div>
                       <div>
-                        <label className="text-[9px] text-slate-400 uppercase tracking-wider mb-1 block">Company Name</label>
+                        <label className="text-[9px] text-slate-600 uppercase tracking-wider mb-1 block">Company Name</label>
                         <input
                           type="text"
                           value={profileForm.companyName}
@@ -913,7 +922,7 @@ export default function UserDashboard() {
                         />
                       </div>
                       <div>
-                        <label className="text-[9px] text-slate-400 uppercase tracking-wider mb-1 block">Company NTN / Tax Number</label>
+                        <label className="text-[9px] text-slate-600 uppercase tracking-wider mb-1 block">Company NTN / Tax Number</label>
                         <input
                           type="text"
                           value={profileForm.taxNumber}
@@ -922,7 +931,7 @@ export default function UserDashboard() {
                         />
                       </div>
                       <div className="md:col-span-2">
-                        <label className="text-[9px] text-slate-400 uppercase tracking-wider mb-1 block">Corporate Address</label>
+                        <label className="text-[9px] text-slate-600 uppercase tracking-wider mb-1 block">Corporate Address</label>
                         <input
                           type="text"
                           value={profileForm.address}
@@ -931,7 +940,7 @@ export default function UserDashboard() {
                         />
                       </div>
                       <div>
-                        <label className="text-[9px] text-slate-400 uppercase tracking-wider mb-1 block">City</label>
+                        <label className="text-[9px] text-slate-600 uppercase tracking-wider mb-1 block">City</label>
                         <input
                           type="text"
                           value={profileForm.city}
@@ -940,7 +949,7 @@ export default function UserDashboard() {
                         />
                       </div>
                       <div>
-                        <label className="text-[9px] text-slate-400 uppercase tracking-wider mb-1 block">Country</label>
+                        <label className="text-[9px] text-slate-600 uppercase tracking-wider mb-1 block">Country</label>
                         <input
                           type="text"
                           value={profileForm.country}

@@ -16,4 +16,9 @@ export const config = {
     dir: process.env.UPLOAD_DIR || 'uploads',
     maxSize: parseInt(process.env.MAX_FILE_SIZE || '5242880', 10),
   },
+  cloudinary: {
+    cloudName: (process.env.CLOUDINARY_CLOUD_NAME || '').replace(/^["']|["']$/g, ''),
+    apiKey: (process.env.CLOUDINARY_API_KEY || '').replace(/^["']|["']$/g, ''),
+    apiSecret: (process.env.CLOUDINARY_API_SECRET || '').replace(/^["']|["']$/g, ''),
+  }
 };

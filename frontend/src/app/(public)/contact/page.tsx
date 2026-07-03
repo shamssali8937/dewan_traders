@@ -114,14 +114,14 @@ export default function ContactPage() {
                     <div>
                       <label className="text-[9px] text-slate-500 uppercase font-semibold mb-1 block">Full Name *</label>
                       <input {...register('name')} placeholder="Ahmed Al-Rashidi"
-                        className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                        className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                       {errors.name && <p className="text-[10px] text-red-500 mt-1">{errors.name.message}</p>}
                     </div>
                     
                     <div>
                       <label className="text-[9px] text-slate-500 uppercase font-semibold mb-1 block">Email Address *</label>
                       <input {...register('email')} type="email" placeholder="ahmed@company.com"
-                        className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                        className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                       {errors.email && <p className="text-[10px] text-red-500 mt-1">{errors.email.message}</p>}
                     </div>
                   </div>
@@ -130,25 +130,25 @@ export default function ContactPage() {
                     <div>
                       <label className="text-[9px] text-slate-500 uppercase font-semibold mb-1 block">Phone / WhatsApp</label>
                       <input {...register('phone')} placeholder="+971 50 123 4567"
-                        className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                        className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                     </div>
                     <div>
                       <label className="text-[9px] text-slate-500 uppercase font-semibold mb-1 block">Company Name</label>
                       <input {...register('company')} placeholder="Your Company Ltd."
-                        className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                        className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                     </div>
                   </div>
                   
                   <div>
                     <label className="text-[9px] text-slate-500 uppercase font-semibold mb-1 block">Product Sourcing Interest</label>
                     <input {...register('productName')} placeholder="e.g. Kinnow Mandarin, Basmati Rice, Footballs..."
-                      className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                      className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                   </div>
                   
                   <div>
                     <label className="text-[9px] text-slate-500 uppercase font-semibold mb-1 block">Subject *</label>
                     <input {...register('subject')} placeholder="Product inquiry / Quote request"
-                      className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                      className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                     {errors.subject && <p className="text-[10px] text-red-500 mt-1">{errors.subject.message}</p>}
                   </div>
                   
@@ -156,7 +156,7 @@ export default function ContactPage() {
                     <label className="text-[9px] text-slate-500 uppercase font-semibold mb-1 block">Message *</label>
                     <textarea {...register('message')} rows={4}
                       placeholder="Tell us about your requirements — commodity grade, target weight, port transits..."
-                      className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 resize-none" />
+                      className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 resize-none" />
                     {errors.message && <p className="text-[10px] text-red-500 mt-1">{errors.message.message}</p>}
                   </div>
 

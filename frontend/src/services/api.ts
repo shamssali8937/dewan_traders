@@ -119,6 +119,14 @@ async function handleMockRequest(config: any) {
       }
       const res = mockDb.getMyOrders(userId);
       responseData = { success: true, data: res };
+    } else if (url.startsWith('/orders/track/')) {
+      const orderNumber = url.replace('/orders/track/', '');
+      const order = mockDb.getOrders().orders.find(o => o.orderNumber === orderNumber);
+      if (!order) {
+        responseData = { success: false, message: 'Cargo tracking reference not found' };
+      } else {
+        responseData = { success: true, data: order };
+      }
     } else if (url.startsWith('/orders/')) {
       const id = url.split('/')[2];
       if (url.endsWith('/status')) {

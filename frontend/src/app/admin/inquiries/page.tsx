@@ -110,10 +110,10 @@ export default function AdminInquiriesPage() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div className="flex-1 relative">
-          <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-600" />
           <input type="text" placeholder="Search by sender name, email, or subject..."
             value={search} onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 shadow-sm" />
+            className="w-full pl-10 pr-4 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 shadow-sm" />
         </div>
         
         <div className="flex flex-wrap gap-1.5">
@@ -144,8 +144,8 @@ export default function AdminInquiriesPage() {
             ))
           ) : filtered.length === 0 ? (
             <div className="glass rounded-2xl p-10 text-center bg-white border border-slate-100 shadow-sm space-y-2">
-              <MessageSquare className="mx-auto text-slate-300" size={32} />
-              <p className="text-xs text-slate-400 font-bold uppercase">No inquiries registered</p>
+              <MessageSquare className="mx-auto text-slate-500" size={32} />
+              <p className="text-xs text-slate-600 font-bold uppercase">No inquiries registered</p>
             </div>
           ) : (
             filtered.map((inquiry: any) => {
@@ -166,7 +166,7 @@ export default function AdminInquiriesPage() {
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-500 truncate font-semibold mb-2">{inquiry.subject}</p>
-                  <p className="text-[9px] text-slate-400 font-bold tracking-wide uppercase">{formatDate(inquiry.createdAt)}</p>
+                  <p className="text-[9px] text-slate-600 font-bold tracking-wide uppercase">{formatDate(inquiry.createdAt)}</p>
                 </button>
               );
             })
@@ -177,8 +177,8 @@ export default function AdminInquiriesPage() {
         <div className="lg:col-span-2">
           {!selectedInquiry ? (
             <div className="glass rounded-3xl p-16 text-center border border-slate-100 bg-white/80 h-full flex flex-col items-center justify-center shadow-sm space-y-3">
-              <MessageSquare className="text-slate-300" size={36} />
-              <p className="text-slate-400 text-xs font-bold uppercase">Select an inquiry to response</p>
+              <MessageSquare className="text-slate-500" size={36} />
+              <p className="text-slate-600 text-xs font-bold uppercase">Select an inquiry to response</p>
             </div>
           ) : (
             <motion.div key={selectedInquiry.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
@@ -187,11 +187,11 @@ export default function AdminInquiriesPage() {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wider">{selectedInquiry.subject}</h2>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase mt-1">{formatDate(selectedInquiry.createdAt)}</p>
+                  <p className="text-[10px] text-slate-600 font-bold uppercase mt-1">{formatDate(selectedInquiry.createdAt)}</p>
                 </div>
                 <button onClick={() => {
                   if (confirm('Delete this inquiry?')) { deleteInquiry(selectedInquiry.id); setSelectedInquiry(null); }
-                }} className="p-2 rounded-xl hover:bg-red-50 border border-transparent hover:border-red-100 text-slate-400 hover:text-red-500 transition-all shadow-sm">
+                }} className="p-2 rounded-xl hover:bg-red-50 border border-transparent hover:border-red-100 text-slate-600 hover:text-red-500 transition-all shadow-sm">
                   <Trash2 size={14} />
                 </button>
               </div>
@@ -206,7 +206,7 @@ export default function AdminInquiriesPage() {
                   ['Target Product', selectedInquiry.productName || '—'],
                 ].map(([label, value]) => (
                   <div key={label}>
-                    <p className="text-[9px] text-slate-400 uppercase tracking-widest font-bold">{label}</p>
+                    <p className="text-[9px] text-slate-600 uppercase tracking-widest font-bold">{label}</p>
                     <p className="text-slate-800 mt-1 font-bold">{value}</p>
                   </div>
                 ))}
@@ -214,15 +214,15 @@ export default function AdminInquiriesPage() {
 
               {/* Message Content */}
               <div className="space-y-2">
-                <p className="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Client original Message</p>
+                <p className="text-[9px] text-slate-600 uppercase tracking-widest font-bold">Client original Message</p>
                 <p className="text-xs text-slate-600 leading-relaxed bg-slate-50 border border-slate-100 rounded-2xl p-4">{selectedInquiry.message}</p>
               </div>
 
               {/* Replies History */}
               <div className="space-y-3 pt-4 border-t border-slate-100">
-                <p className="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Conversation history thread</p>
+                <p className="text-[9px] text-slate-600 uppercase tracking-widest font-bold">Conversation history thread</p>
                 {replies.length === 0 ? (
-                  <p className="text-xs text-slate-400 font-semibold italic">No response messages sent yet.</p>
+                  <p className="text-xs text-slate-600 font-semibold italic">No response messages sent yet.</p>
                 ) : (
                   <div className="space-y-2.5 max-h-60 overflow-y-auto pr-2">
                     {replies.map((r: any) => (
@@ -231,7 +231,7 @@ export default function AdminInquiriesPage() {
                           ? 'bg-sky-50 text-sky-950 ml-auto border border-sky-100/50'
                           : 'bg-slate-100 text-slate-800 mr-auto border border-slate-200/50'
                       }`}>
-                        <p className="font-bold text-[9px] uppercase text-slate-400 mb-1">
+                        <p className="font-bold text-[9px] uppercase text-slate-600 mb-1">
                           {r.sender === 'admin' ? 'Dewan Traders Response' : 'Client Response'} &middot; {formatDate(r.createdAt)}
                         </p>
                         <p className="font-medium">{r.message}</p>
@@ -243,13 +243,13 @@ export default function AdminInquiriesPage() {
 
               {/* Send Response Reply Input */}
               <div className="space-y-2 pt-3 border-t border-slate-100 font-bold">
-                <p className="text-[9px] text-slate-400 uppercase tracking-widest block">Write a reply Response</p>
+                <p className="text-[9px] text-slate-600 uppercase tracking-widest block">Write a reply Response</p>
                 <textarea
                   value={replyMessage}
                   onChange={(e) => setReplyMessage(e.target.value)}
                   rows={3}
                   placeholder="Type your response to the client. This will send an automatic email notification with Dewan Traders contact helplines..."
-                  className="w-full px-3 py-2 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 resize-none shadow-sm"
+                  className="w-full px-3 py-2 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 resize-none shadow-sm"
                 />
                 <button
                   onClick={handleSendReply}
@@ -262,15 +262,15 @@ export default function AdminInquiriesPage() {
 
               {/* Internal Notes */}
               <div className="space-y-2 pt-4 border-t border-slate-100">
-                <label className="text-[9px] text-slate-400 uppercase tracking-widest font-bold block">Internal Admin Notes</label>
+                <label className="text-[9px] text-slate-600 uppercase tracking-widest font-bold block">Internal Admin Notes</label>
                 <textarea value={adminNotes} onChange={(e) => setAdminNotes(e.target.value)} rows={2}
                   placeholder="Add internal notes..."
-                  className="w-full px-3 py-2 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 resize-none shadow-sm" />
+                  className="w-full px-3 py-2 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 resize-none shadow-sm" />
               </div>
 
               {/* Status Update Actions */}
               <div className="space-y-2.5 pt-2">
-                <p className="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Update Status</p>
+                <p className="text-[9px] text-slate-600 uppercase tracking-widest font-bold">Update Status</p>
                 <div className="flex flex-wrap gap-2">
                   {Object.entries(STATUS_CONFIG).map(([status, cfg]) => (
                     <button key={status} onClick={() => handleStatusUpdate(selectedInquiry.id, status)}

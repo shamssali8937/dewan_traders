@@ -78,7 +78,7 @@ export default function Footer() {
       </div>
 
       {/* Footer bottom */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 border-t border-slate-200/60 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-slate-400 font-medium">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 border-t border-slate-200/60 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-slate-600 font-medium">
         <div>
           &copy; {currentYear} Dewan Traders. All rights reserved.
         </div>

@@ -66,7 +66,7 @@ export default function FaqsPage() {
           
           {faqCategories.map((cat, catIdx) => (
             <div key={cat.category} className="space-y-4">
-              <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2">
+              <h2 className="text-[10px] font-bold text-slate-600 uppercase tracking-widest border-b border-slate-100 pb-2">
                 {cat.category}
               </h2>
               

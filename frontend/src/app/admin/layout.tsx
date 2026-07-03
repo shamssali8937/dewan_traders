@@ -19,6 +19,7 @@ const navItems = [
   { label: 'Inquiries', href: '/admin/inquiries', icon: MessageSquare },
   { label: 'Journal', href: '/admin/journal', icon: Newspaper },
   { label: 'Users', href: '/admin/users', icon: Users },
+  { label: 'Market Config', href: '/admin/market-config', icon: Globe },
   { divider: true },
   { label: 'Testimonials', href: '/admin/testimonials', icon: Star },
   { label: 'Payment Methods', href: '/admin/payment-accounts', icon: CreditCard },
@@ -100,7 +101,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
             <div className="min-w-0">
               <p className="text-xs font-bold text-slate-800 truncate">{user?.name}</p>
-              <p className="text-[10px] text-slate-400 capitalize font-medium">{user?.role}</p>
+              <p className="text-[10px] text-slate-600 capitalize font-medium">{user?.role}</p>
             </div>
           </div>
         )}
@@ -127,7 +128,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Collapse toggle */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="absolute left-full top-20 -translate-x-3 w-6 h-6 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-800 shadow-sm transition-colors z-10"
+          className="absolute left-full top-20 -translate-x-3 w-6 h-6 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-slate-800 shadow-sm transition-colors z-10"
         >
           {collapsed ? <ChevronRight size={11} /> : <ChevronLeft size={11} />}
         </button>
@@ -150,7 +151,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <button className="lg:hidden p-1.5 rounded-lg hover:bg-slate-50 text-slate-500" onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <X size={16} /> : <Menu size={16} />}
           </button>
-          <div className="text-xs text-slate-400 font-semibold hidden lg:block uppercase tracking-wider">
+          <div className="text-xs text-slate-600 font-semibold hidden lg:block uppercase tracking-wider">
             {new Date().toLocaleDateString('en-PK', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </div>
           <div className="flex items-center gap-3">

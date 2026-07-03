@@ -187,7 +187,7 @@ export default function AdminPaymentAccountsPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4 text-xs font-semibold text-slate-700">
               <div>
-                <label className="text-[9px] text-slate-400 uppercase tracking-wider mb-1 block">Account Type *</label>
+                <label className="text-[9px] text-slate-600 uppercase tracking-wider mb-1 block">Account Type *</label>
                 <select
                   value={form.type}
                   onChange={e => setForm({ ...form, type: e.target.value })}
@@ -201,7 +201,7 @@ export default function AdminPaymentAccountsPage() {
 
               {form.type === 'bank' && (
                 <div>
-                  <label className="text-[9px] text-slate-400 uppercase tracking-wider mb-1 block">Bank Name *</label>
+                  <label className="text-[9px] text-slate-600 uppercase tracking-wider mb-1 block">Bank Name *</label>
                   <input
                     type="text"
                     placeholder="e.g. Meezan Bank, HBL"
@@ -214,7 +214,7 @@ export default function AdminPaymentAccountsPage() {
               )}
 
               <div>
-                <label className="text-[9px] text-slate-400 uppercase tracking-wider mb-1 block">Account Title *</label>
+                <label className="text-[9px] text-slate-600 uppercase tracking-wider mb-1 block">Account Title *</label>
                 <input
                   type="text"
                   placeholder="e.g. Sajjad Hussain Awan"
@@ -226,7 +226,7 @@ export default function AdminPaymentAccountsPage() {
               </div>
 
               <div>
-                <label className="text-[9px] text-slate-400 uppercase tracking-wider mb-1 block">Account / Mobile Number *</label>
+                <label className="text-[9px] text-slate-600 uppercase tracking-wider mb-1 block">Account / Mobile Number *</label>
                 <input
                   type="text"
                   placeholder="Account Number or Phone Number"
@@ -240,7 +240,7 @@ export default function AdminPaymentAccountsPage() {
               {form.type === 'bank' && (
                 <>
                   <div>
-                    <label className="text-[9px] text-slate-400 uppercase tracking-wider mb-1 block">IBAN Number</label>
+                    <label className="text-[9px] text-slate-600 uppercase tracking-wider mb-1 block">IBAN Number</label>
                     <input
                       type="text"
                       placeholder="PKXX..."
@@ -250,7 +250,7 @@ export default function AdminPaymentAccountsPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] text-slate-400 uppercase tracking-wider mb-1 block">Branch Details</label>
+                    <label className="text-[9px] text-slate-600 uppercase tracking-wider mb-1 block">Branch Details</label>
                     <input
                       type="text"
                       placeholder="e.g. Sargodha Main Branch (099)"
@@ -297,8 +297,8 @@ export default function AdminPaymentAccountsPage() {
           {loading ? (
             <div className="h-40 bg-white border rounded-3xl animate-pulse" />
           ) : accounts.length === 0 ? (
-            <div className="bg-white border rounded-3xl p-16 text-center text-slate-400 space-y-2">
-              <CreditCard className="mx-auto text-slate-200" size={40} />
+            <div className="bg-white border rounded-3xl p-16 text-center text-slate-600 space-y-2">
+              <CreditCard className="mx-auto text-slate-500" size={40} />
               <p className="text-xs font-bold uppercase">No billing credentials setup yet.</p>
             </div>
           ) : (
@@ -313,14 +313,14 @@ export default function AdminPaymentAccountsPage() {
                     <div className="flex items-center gap-1.5">
                       <button
                         onClick={() => handleToggleActive(acc)}
-                        className={`p-1 rounded ${acc.isActive ? 'text-emerald-500 hover:bg-emerald-50' : 'text-slate-300 hover:bg-slate-50'}`}
+                        className={`p-1 rounded ${acc.isActive ? 'text-emerald-500 hover:bg-emerald-50' : 'text-slate-500 hover:bg-slate-50'}`}
                         title={acc.isActive ? 'Active' : 'Inactive'}
                       >
                         {acc.isActive ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
                       </button>
                       <button
                         onClick={() => handleEditClick(acc)}
-                        className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-50 rounded"
+                        className="p-1 text-slate-600 hover:text-slate-700 hover:bg-slate-50 rounded"
                       >
                         <Edit size={16} />
                       </button>
@@ -335,22 +335,22 @@ export default function AdminPaymentAccountsPage() {
 
                   <div className="text-[11px] font-semibold text-slate-600 grid grid-cols-1 sm:grid-cols-2 gap-2 leading-relaxed">
                     <div>
-                      <span className="text-[9px] text-slate-400 block">Account Title</span>
+                      <span className="text-[9px] text-slate-600 block">Account Title</span>
                       <span className="text-slate-800">{acc.accountTitle}</span>
                     </div>
                     <div>
-                      <span className="text-[9px] text-slate-400 block">Account/Wallet No</span>
+                      <span className="text-[9px] text-slate-600 block">Account/Wallet No</span>
                       <span className="text-slate-800">{acc.accountNumber}</span>
                     </div>
                     {acc.iban && (
                       <div className="sm:col-span-2">
-                        <span className="text-[9px] text-slate-400 block">IBAN Code</span>
+                        <span className="text-[9px] text-slate-600 block">IBAN Code</span>
                         <span className="font-mono text-slate-800">{acc.iban}</span>
                       </div>
                     )}
                     {acc.branch && (
                       <div className="sm:col-span-2">
-                        <span className="text-[9px] text-slate-400 block">Branch Details</span>
+                        <span className="text-[9px] text-slate-600 block">Branch Details</span>
                         <span className="text-slate-700">{acc.branch}</span>
                       </div>
                     )}

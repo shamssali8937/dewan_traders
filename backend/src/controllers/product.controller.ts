@@ -8,6 +8,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { config } from '../config/config';
+import { uploadToCloudinary } from '../utils/cloudinary';
 
 // ─── Multer Storage Config ───────────────────────────────────────────
 const uploadDir = path.join(process.cwd(), config.upload.dir, 'products');
@@ -86,8 +87,9 @@ export const productController = {
     if (!req.file) {
       return res.status(400).json({ success: false, message: 'No image file provided' });
     }
-    const imageUrl = `/uploads/products/${req.file.filename}`;
-    logger.info(`Product image uploaded: ${imageUrl}`);
+    const localUrlFallback = `/uploads/products/${req.file.filename}`;
+    const imageUrl = await uploadToCloudinary(req.file.path, 'products', localUrlFallback);
+    logger.info(`Product image resolved: ${imageUrl}`);
     res.json(ApiResponse.ok('Image uploaded successfully', { imageUrl }));
   }),
 };

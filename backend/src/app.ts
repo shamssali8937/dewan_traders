@@ -25,7 +25,9 @@ import notificationRoutes from './routes/notification.routes';
 const app = express();
 
 // ─── Security ───────────────────────────
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+}));
 
 // ─── CORS ───────────────────────────────
 app.use(cors({

@@ -100,13 +100,13 @@ export default function RequestQuotePage() {
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Contact Name *</label>
-                    <input {...register('name')} placeholder="Johnathan Doe" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                    <input {...register('name')} placeholder="Johnathan Doe" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                     {errors.name && <p className="text-[10px] text-red-500 mt-1">{errors.name.message}</p>}
                   </div>
                   
                   <div>
                     <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Business Email *</label>
-                    <input {...register('email')} type="email" placeholder="john@globalfoods.com" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                    <input {...register('email')} type="email" placeholder="john@globalfoods.com" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                     {errors.email && <p className="text-[10px] text-red-500 mt-1">{errors.email.message}</p>}
                   </div>
                 </div>
@@ -114,12 +114,12 @@ export default function RequestQuotePage() {
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">WhatsApp / Phone</label>
-                    <input {...register('phone')} placeholder="+44 7911 123456" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                    <input {...register('phone')} placeholder="+44 7911 123456" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                   </div>
                   
                   <div>
                     <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Company Name *</label>
-                    <input {...register('company')} placeholder="Global Food Distributors Ltd" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                    <input {...register('company')} placeholder="Global Food Distributors Ltd" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                     {errors.company && <p className="text-[10px] text-red-500 mt-1">{errors.company.message}</p>}
                   </div>
                 </div>
@@ -140,7 +140,7 @@ export default function RequestQuotePage() {
                   
                   <div>
                     <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Target Quantity / Volume *</label>
-                    <input {...register('quantity')} placeholder="e.g. 2x 40ft Reefer Containers / 500 sets" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                    <input {...register('quantity')} placeholder="e.g. 2x 40ft Reefer Containers / 500 sets" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                     {errors.quantity && <p className="text-[10px] text-red-500 mt-1">{errors.quantity.message}</p>}
                   </div>
                 </div>
@@ -148,7 +148,7 @@ export default function RequestQuotePage() {
                 <div className="grid sm:grid-cols-3 gap-5">
                   <div className="sm:col-span-2">
                     <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Destination Discharge Port *</label>
-                    <input {...register('destinationPort')} placeholder="e.g. Port of Rotterdam, Netherlands" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                    <input {...register('destinationPort')} placeholder="e.g. Port of Rotterdam, Netherlands" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                     {errors.destinationPort && <p className="text-[10px] text-red-500 mt-1">{errors.destinationPort.message}</p>}
                   </div>
                   
@@ -164,7 +164,7 @@ export default function RequestQuotePage() {
 
                 <div>
                   <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Detailed Sourcing Requirements *</label>
-                  <textarea {...register('message')} rows={5} placeholder="Please detail size grades (e.g. 54-66-72 citrus counts), packaging configurations (e.g. 10kg telescopic cartons), certifications required, and targeted shipment date." className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 resize-none" />
+                  <textarea {...register('message')} rows={5} placeholder="Please detail size grades (e.g. 54-66-72 citrus counts), packaging configurations (e.g. 10kg telescopic cartons), certifications required, and targeted shipment date." className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 resize-none" />
                   {errors.message && <p className="text-[10px] text-red-500 mt-1">{errors.message.message}</p>}
                 </div>
 

@@ -63,6 +63,9 @@ export function useTrackOrder(orderNumber: string) {
     queryKey: ['track', orderNumber],
     queryFn: async () => {
       const res = await orderApi.trackOrder(orderNumber);
+      if (!res.data || res.data.success === false || !res.data.data) {
+        throw new Error(res.data?.message || 'Cargo tracking reference not found');
+      }
       return res.data.data;
     },
     enabled: !!orderNumber,

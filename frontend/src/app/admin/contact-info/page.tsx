@@ -76,24 +76,24 @@ export default function AdminContactInfoPage() {
             
             <div className="space-y-3.5">
               <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block">Street Address</label>
+                <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block">Street Address</label>
                 <input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="e.g. 12-B Industrial Area, Sialkot"
                   className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800" />
               </div>
               <div className="grid sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block">City</label>
+                  <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block">City</label>
                   <input value={city} onChange={(e) => setCity(e.target.value)} placeholder="Sialkot"
                     className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800" />
                 </div>
                 <div>
-                  <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block">Country</label>
+                  <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block">Country</label>
                   <input value={country} onChange={(e) => setCountry(e.target.value)} placeholder="Pakistan"
                     className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800" />
                 </div>
               </div>
               <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block">Working Hours</label>
+                <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block">Working Hours</label>
                 <input value={workingHours} onChange={(e) => setWorkingHours(e.target.value)} placeholder="Mon - Fri: 9:00 AM - 6:00 PM"
                   className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800" />
               </div>
@@ -106,17 +106,17 @@ export default function AdminContactInfoPage() {
             
             <div className="space-y-3.5">
               <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block">Primary Phone / WhatsApp</label>
+                <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block">Primary Phone / WhatsApp</label>
                 <input value={phone1} onChange={(e) => setPhone1(e.target.value)} placeholder="+92 52 1234567"
                   className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800" />
               </div>
               <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block">Secondary Phone / WhatsApp</label>
+                <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block">Secondary Phone / WhatsApp</label>
                 <input value={phone2} onChange={(e) => setPhone2(e.target.value)} placeholder="+92 300 1234567"
                   className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800" />
               </div>
               <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block">Direct WhatsApp (No prefix)</label>
+                <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block">Direct WhatsApp (No prefix)</label>
                 <input value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="923001234567"
                   className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800 font-mono" />
               </div>
@@ -129,12 +129,12 @@ export default function AdminContactInfoPage() {
             
             <div className="space-y-3.5">
               <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block">Primary Sourcing Email</label>
+                <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block">Primary Sourcing Email</label>
                 <input value={email1} onChange={(e) => setEmail1(e.target.value)} type="email" placeholder="info@dewantraders.com"
                   className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800" />
               </div>
               <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block">Logistics/Support Email</label>
+                <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block">Logistics/Support Email</label>
                 <input value={email2} onChange={(e) => setEmail2(e.target.value)} type="email" placeholder="export@dewantraders.com"
                   className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800" />
               </div>
@@ -147,22 +147,22 @@ export default function AdminContactInfoPage() {
             
             <div className="grid sm:grid-cols-2 gap-3.5">
               <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block">LinkedIn URL</label>
+                <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block">LinkedIn URL</label>
                 <input value={linkedin} onChange={(e) => setLinkedin(e.target.value)} placeholder="https://linkedin.com/company/..."
                   className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800" />
               </div>
               <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block">Facebook URL</label>
+                <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block">Facebook URL</label>
                 <input value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder="https://facebook.com/..."
                   className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800" />
               </div>
               <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block">Twitter URL</label>
+                <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block">Twitter URL</label>
                 <input value={twitter} onChange={(e) => setTwitter(e.target.value)} placeholder="https://twitter.com/..."
                   className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800" />
               </div>
               <div>
-                <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block">Instagram URL</label>
+                <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block">Instagram URL</label>
                 <input value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="https://instagram.com/..."
                   className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800" />
               </div>
@@ -174,7 +174,7 @@ export default function AdminContactInfoPage() {
         <div className="glass rounded-3xl p-6 border border-slate-100 bg-white shadow-sm space-y-4">
           <h3 className="text-slate-800 font-bold text-xs uppercase tracking-wider flex items-center gap-1.5"><MapPin size={14} className="text-primary" /> Map Integration</h3>
           <div>
-            <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block">Google Maps Embed Source Link (src parameter in iframe)</label>
+            <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block">Google Maps Embed Source Link (src parameter in iframe)</label>
             <input value={mapEmbed} onChange={(e) => setMapEmbed(e.target.value)} placeholder="https://www.google.com/maps/embed?pb=..."
               className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/40 text-slate-800 font-mono" />
           </div>

@@ -96,13 +96,13 @@ export default function PartnerPage() {
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Full Name *</label>
-                    <input {...register('name')} placeholder="Ahmed Al-Mansoori" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                    <input {...register('name')} placeholder="Ahmed Al-Mansoori" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                     {errors.name && <p className="text-[10px] text-red-500 mt-1">{errors.name.message}</p>}
                   </div>
                   
                   <div>
                     <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Direct Business Email *</label>
-                    <input {...register('email')} type="email" placeholder="ahmed@am-distributors.ae" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                    <input {...register('email')} type="email" placeholder="ahmed@am-distributors.ae" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                     {errors.email && <p className="text-[10px] text-red-500 mt-1">{errors.email.message}</p>}
                   </div>
                 </div>
@@ -110,13 +110,13 @@ export default function PartnerPage() {
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Direct Phone / WhatsApp *</label>
-                    <input {...register('phone')} placeholder="+971 50 123 4567" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                    <input {...register('phone')} placeholder="+971 50 123 4567" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                     {errors.phone && <p className="text-[10px] text-red-500 mt-1">{errors.phone.message}</p>}
                   </div>
                   
                   <div>
                     <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Company Name *</label>
-                    <input {...register('company')} placeholder="Al-Mansoori Foods & Trading Group" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                    <input {...register('company')} placeholder="Al-Mansoori Foods & Trading Group" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                     {errors.company && <p className="text-[10px] text-red-500 mt-1">{errors.company.message}</p>}
                   </div>
                 </div>
@@ -124,7 +124,7 @@ export default function PartnerPage() {
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Country of Operations *</label>
-                    <input {...register('country')} placeholder="e.g. United Arab Emirates" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                    <input {...register('country')} placeholder="e.g. United Arab Emirates" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                     {errors.country && <p className="text-[10px] text-red-500 mt-1">{errors.country.message}</p>}
                   </div>
                   
@@ -143,13 +143,13 @@ export default function PartnerPage() {
 
                 <div>
                   <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Target Commodities *</label>
-                  <input {...register('commodities')} placeholder="e.g. Fresh Citrus (Kinnow), Basmati Rice" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                  <input {...register('commodities')} placeholder="e.g. Fresh Citrus (Kinnow), Basmati Rice" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                   {errors.commodities && <p className="text-[10px] text-red-500 mt-1">{errors.commodities.message}</p>}
                 </div>
 
                 <div>
                   <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Outline Partnership Proposal & Capabilites *</label>
-                  <textarea {...register('message')} rows={5} placeholder="Briefly detail your regional sales volume, wholesale client base, warehousing logistics, and proposed collaboration model." className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 resize-none" />
+                  <textarea {...register('message')} rows={5} placeholder="Briefly detail your regional sales volume, wholesale client base, warehousing logistics, and proposed collaboration model." className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 resize-none" />
                   {errors.message && <p className="text-[10px] text-red-500 mt-1">{errors.message.message}</p>}
                 </div>
 

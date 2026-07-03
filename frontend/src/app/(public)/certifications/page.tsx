@@ -97,12 +97,12 @@ export default function CertificationsPage() {
                     <div className="text-[10px] text-primary font-bold">Auditing Authority: {item.issuer}</div>
                     
                     <div className="space-y-1">
-                      <div className="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Scope of Inspection</div>
+                      <div className="text-[9px] text-slate-600 uppercase tracking-widest font-bold">Scope of Inspection</div>
                       <p className="text-[11px] text-slate-500 leading-relaxed">{item.scope}</p>
                     </div>
 
                     <div className="space-y-1">
-                      <div className="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Export Purpose</div>
+                      <div className="text-[9px] text-slate-600 uppercase tracking-widest font-bold">Export Purpose</div>
                       <p className="text-[11px] text-slate-600 leading-relaxed font-semibold italic">{item.purpose}</p>
                     </div>
                   </div>

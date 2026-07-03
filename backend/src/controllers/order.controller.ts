@@ -8,6 +8,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { config } from '../config/config';
+import { uploadToCloudinary } from '../utils/cloudinary';
 
 // ─── Multer Storage Config for payments ───
 const uploadDir = path.join(process.cwd(), config.upload.dir, 'payments');
@@ -76,8 +77,11 @@ export const orderController = {
     if (!req.file) {
       return res.status(400).json({ success: false, message: 'Payment receipt screenshot file is required' });
     }
-    const order = await orderService.uploadPaymentProof(req.params.id as string, req.user!.id, req.file.filename);
-    logger.info(`Order ${order.orderNumber} payment proof uploaded by customer ${req.user?.email}`);
+    const localUrlFallback = `/uploads/payments/${req.file.filename}`;
+    const paymentProofUrl = await uploadToCloudinary(req.file.path, 'payments', localUrlFallback);
+
+    const order = await orderService.uploadPaymentProof(req.params.id as string, req.user!.id, paymentProofUrl);
+    logger.info(`Order ${order.orderNumber} payment proof resolved: ${paymentProofUrl} by customer ${req.user?.email}`);
     res.json(ApiResponse.ok('Payment receipt proof uploaded successfully', order));
   }),
 

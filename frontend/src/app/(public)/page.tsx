@@ -10,6 +10,8 @@ import { useFeaturedProducts } from '@/hooks/useProducts';
 import { useTestimonials } from '@/hooks/useCms';
 import { formatPrice, resolveImageUrl } from '@/lib/utils';
 import { useState } from 'react';
+import { useMarketStore } from '@/store/marketStore';
+import WorldShippingMap from '@/components/WorldShippingMap';
 
 const iconMap = {
   Leaf: Leaf,
@@ -80,12 +82,13 @@ export default function HomePage() {
   const { data: testimonials } = useTestimonials();
   const products = featuredData?.products || featuredData || [];
   const testimonialList = testimonials || [];
+  const { formatProductPrice, getProductUnit, getProductMoq } = useMarketStore();
 
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
   return (
     <div className="bg-white min-h-screen relative overflow-hidden pattern-dots-light">
-      
+
       {/* Soft gradient backgrounds - Stripe style */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="fluid-blob bg-sky-200 w-[500px] h-[500px] top-[-100px] right-[-50px]" />
@@ -96,7 +99,7 @@ export default function HomePage() {
       {/* ═══ HERO SECTION ═══════════════════════════════════════════ */}
       <section className="relative min-h-screen flex items-center justify-center pt-28 pb-16 z-10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-12 gap-12 items-center w-full">
-          
+
           {/* Hero Left Content */}
           <div className="lg:col-span-6 space-y-6 text-left">
             <motion.div
@@ -123,7 +126,7 @@ export default function HomePage() {
               transition={{ duration: 0.5, delay: 0.15 }}
               className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-lg"
             >
-              Dewan Traders is a premium supply agency. Under CEO **Sajjad Hussain Awan**, we export elite Sargodha mandarins, aged basmati rice, medical instruments, and sports gear directly to global markets.
+              Dewan Traders is a premium supply agency. Under CEO <b>Sajjad Hussain Awan</b>, we export elite Sargodha mandarins, aged basmati rice, medical instruments, and sports gear directly to global markets.
             </motion.p>
 
             {/* CTAs */}
@@ -149,46 +152,9 @@ export default function HomePage() {
             </motion.div>
           </div>
 
-          {/* Hero Right World Map */}
+          {/* Hero Right — Premium World Shipping Map */}
           <div className="lg:col-span-6 flex items-center justify-center relative">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6 }}
-              className="w-full glass rounded-3xl p-6 border border-slate-100 relative shadow-md bg-white/70 overflow-hidden"
-            >
-              <div className="absolute top-4 left-4 flex items-center gap-2 text-[10px] text-slate-400 uppercase tracking-widest font-semibold z-10">
-                <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-ping" /> Shipping Corridors
-              </div>
-
-              {/* Clean Map SVG */}
-              <svg viewBox="0 0 1000 500" className="w-full h-full text-slate-200" fill="currentColor">
-                <path d="M150,150 Q180,130 220,160 T300,180 T350,220 T400,280 T380,350 T280,320 Z" fill="rgba(15, 23, 42, 0.01)" stroke="rgba(15, 23, 42, 0.03)" strokeWidth="1" />
-                <path d="M450,100 Q500,80 550,120 T620,180 T680,120 T750,150 T800,220 T720,320 T650,420 Z" fill="rgba(15, 23, 42, 0.01)" stroke="rgba(15, 23, 42, 0.03)" strokeWidth="1" />
-                
-                {/* Shipping routes from Karachi */}
-                <g className="text-primary">
-                  <circle cx="520" cy="220" r="5" className="fill-primary" />
-                  <circle cx="520" cy="220" r="12" className="stroke-primary/30 fill-none animate-ping" />
-                  <text x="532" y="224" className="fill-slate-800 text-[10px] font-bold tracking-wider">PAKISTAN</text>
-
-                  {/* Route 1 */}
-                  <path d="M520,220 Q460,240 420,250" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4,4" />
-                  <circle cx="420" cy="250" r="4" className="fill-sky-500" />
-                  <text x="360" y="270" className="fill-slate-400 text-[8px] font-bold">MIDDLE EAST</text>
-
-                  {/* Route 2 */}
-                  <path d="M520,220 Q400,160 300,120" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4,4" />
-                  <circle cx="300" cy="120" r="4" className="fill-sky-500" />
-                  <text x="250" y="110" className="fill-slate-400 text-[8px] font-bold">EUROPE</text>
-
-                  {/* Route 3 */}
-                  <path d="M520,220 Q620,180 720,190" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4,4" />
-                  <circle cx="720" cy="190" r="4" className="fill-sky-500" />
-                  <text x="730" y="194" className="fill-slate-400 text-[8px] font-bold">EAST ASIA</text>
-                </g>
-              </svg>
-            </motion.div>
+            <WorldShippingMap />
           </div>
         </div>
       </section>
@@ -203,7 +169,7 @@ export default function HomePage() {
                   <Icon size={16} />
                 </div>
                 <div className="text-xl sm:text-2xl font-black text-slate-800">{value}</div>
-                <div className="text-[10px] text-slate-400 font-bold tracking-wider uppercase mt-1">{label}</div>
+                <div className="text-[10px] text-slate-600 font-bold tracking-wider uppercase mt-1">{label}</div>
                 <div className="text-[10px] text-primary font-semibold mt-0.5">{suffix}</div>
               </div>
             ))}
@@ -243,10 +209,10 @@ export default function HomePage() {
 
                   <h3 className="text-xs font-bold text-slate-800 tracking-wide uppercase mb-2">{cat.name}</h3>
                   <p className="text-[11px] text-slate-500 leading-relaxed mb-6 flex-1">{cat.description}</p>
-                  
+
                   <div className="flex items-center justify-between border-t border-slate-100 pt-4 mt-2">
-                    <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{cat.count}</span>
-                    <ChevronRight size={14} className="text-slate-400 group-hover:translate-x-1 transition-transform" />
+                    <span className="text-[9px] text-slate-600 font-bold uppercase tracking-wider">{cat.count}</span>
+                    <ChevronRight size={14} className="text-slate-600 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
               </Link>
@@ -277,7 +243,7 @@ export default function HomePage() {
                       {p.imageUrl ? (
                         <img src={resolveImageUrl(p.imageUrl)} alt={p.name} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
                       ) : (
-                        <Package size={36} className="text-slate-300" />
+                        <Package size={36} className="text-slate-500" />
                       )}
                     </div>
                     <div className="p-4 flex-1 flex flex-col justify-between">
@@ -286,10 +252,10 @@ export default function HomePage() {
                         <h3 className="text-xs font-bold text-slate-800 mt-1 truncate group-hover:text-primary transition-colors">{p.name}</h3>
                         <p className="text-[11px] text-slate-500 mt-2 line-clamp-2 leading-relaxed">{p.description}</p>
                       </div>
-                      
+
                       <div className="flex items-center justify-between border-t border-slate-100 pt-3.5 mt-4">
-                        <span className="text-xs font-black text-slate-800">{formatPrice(p.price)}<span className="text-[10px] text-slate-400 font-normal">/{p.unit}</span></span>
-                        <span className="text-[9px] text-slate-400 uppercase font-semibold">Min MOQ: {p.minOrderQty}</span>
+                        <span className="text-xs font-black text-slate-800">{formatProductPrice(p.slug, p.price)}<span className="text-[10px] text-slate-600 font-normal">/{getProductUnit(p.slug, p.unit)}</span></span>
+                        <span className="text-[9px] text-slate-600 uppercase font-semibold">Min MOQ: {getProductMoq(p.slug, p.minOrderQty)} {getProductUnit(p.slug, p.unit)}</span>
                       </div>
                     </div>
                   </div>
@@ -333,7 +299,7 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
-          
+
           <div className="relative">
             <div className="glass rounded-3xl p-6 border border-slate-100 bg-white/80 shadow-md">
               <h3 className="text-slate-800 font-bold text-xs uppercase tracking-wider mb-4 flex items-center gap-1.5">
@@ -365,7 +331,7 @@ export default function HomePage() {
               <span className="text-primary text-[10px] uppercase font-bold tracking-widest">Client Feedback</span>
               <h2 className="text-3xl font-black text-slate-900">What Our Partners Say</h2>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {testimonialList.map((t: any) => (
                 <div key={t.id} className="glass rounded-2xl p-6 border border-slate-100 flex flex-col justify-between bg-white shadow-sm card-hover">
@@ -381,7 +347,7 @@ export default function HomePage() {
                     </div>
                     <div>
                       <div className="text-xs font-bold text-slate-800">{t.name}</div>
-                      <div className="text-[10px] text-slate-400">{t.position}{t.company ? ` · ${t.company}` : ''}</div>
+                      <div className="text-[10px] text-slate-600">{t.position}{t.company ? ` · ${t.company}` : ''}</div>
                     </div>
                   </div>
                 </div>
@@ -440,7 +406,7 @@ export default function HomePage() {
             <p className="text-slate-500 text-xs max-w-sm mx-auto mb-8 leading-relaxed">
               Work directly with Dewan Traders trade operations desk under Sajjad Hussain Awan for wholesale shipping worksheets.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/quote"

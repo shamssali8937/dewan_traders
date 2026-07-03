@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Search, Truck, CheckCircle, Clock, RefreshCw, XCircle, MapPin,
@@ -9,6 +9,7 @@ import {
 import { useTrackOrder } from '@/hooks/useOrders';
 import { formatPrice, formatDate } from '@/lib/utils';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 const STATUS_STEP: Record<string, number> = {
   pending: 1, confirmed: 2, processing: 3, shipped: 4, delivered: 5, cancelled: 0,
@@ -30,6 +31,12 @@ export default function PublicTrackingPage() {
   const [orderNumber, setOrderNumber] = useState('');
 
   const { data: order, isLoading, error, isRefetching } = useTrackOrder(orderNumber);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error instanceof Error ? error.message : 'Cargo tracking reference not found. Please try again.');
+    }
+  }, [error]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,13 +74,13 @@ export default function PublicTrackingPage() {
         <form onSubmit={handleSearch} className="mb-10">
           <div className="glass rounded-2xl p-2 border border-slate-200/80 bg-white/95 shadow-md flex gap-2">
             <div className="relative flex-1">
-              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" />
               <input
                 type="text"
                 placeholder="Enter Order Reference Number..."
                 value={query}
                 onChange={e => setQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 bg-transparent text-slate-800 text-xs sm:text-sm font-bold uppercase tracking-wider placeholder:text-slate-300 placeholder:normal-case focus:outline-none"
+                className="w-full pl-11 pr-4 py-3 bg-transparent text-slate-800 text-xs sm:text-sm font-bold uppercase tracking-wider placeholder:text-slate-400 placeholder:normal-case focus:outline-none"
               />
             </div>
             <button type="submit" disabled={isLoading}
@@ -111,7 +118,7 @@ export default function PublicTrackingPage() {
               {/* Top Banner */}
               <div className="px-6 py-5 border-b border-slate-50 bg-slate-50/40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div>
-                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-widest block">Reference ID</span>
+                  <span className="text-[9px] text-slate-600 uppercase font-bold tracking-widest block">Reference ID</span>
                   <span className="text-sm font-black text-slate-800 font-mono">{order.orderNumber}</span>
                 </div>
                 {st && StIcon && (
@@ -145,12 +152,12 @@ export default function PublicTrackingPage() {
                           <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-[10px] font-black transition-all ${
                             done ? 'bg-primary border-primary text-white' :
                             active ? 'bg-white border-primary text-primary shadow-md shadow-primary/20' :
-                            'bg-white border-slate-200 text-slate-300'
+                            'bg-white border-slate-200 text-slate-500'
                           }`}>
                             {done ? <CheckCircle size={13} /> : stepNum}
                           </div>
                           <span className={`text-[9px] font-bold uppercase tracking-wider ${
-                            active ? 'text-primary' : done ? 'text-slate-600' : 'text-slate-300'
+                            active ? 'text-primary' : done ? 'text-slate-600' : 'text-slate-500'
                           }`}>{step}</span>
                         </div>
                       );
@@ -163,11 +170,11 @@ export default function PublicTrackingPage() {
               <div className="p-6 space-y-5">
                 <div className="grid grid-cols-2 gap-4 text-xs font-semibold text-slate-500">
                   <div className="space-y-1">
-                    <span className="text-[9px] text-slate-400 uppercase font-bold block">Logistics Date</span>
+                    <span className="text-[9px] text-slate-600 uppercase font-bold block">Logistics Date</span>
                     <span className="text-slate-800 flex items-center gap-1.5"><Calendar size={13} /> {formatDate(order.createdAt)}</span>
                   </div>
                   <div className="space-y-1">
-                    <span className="text-[9px] text-slate-400 uppercase font-bold block">Freight Tracking ID</span>
+                    <span className="text-[9px] text-slate-600 uppercase font-bold block">Freight Tracking ID</span>
                     <span className="text-primary font-bold font-mono uppercase">
                       {order.trackingNumber ? order.trackingNumber : 'Pending Assign'}
                     </span>
@@ -177,25 +184,25 @@ export default function PublicTrackingPage() {
                 <div className="grid grid-cols-2 gap-4 text-xs font-semibold text-slate-500 border-t border-slate-100 pt-4">
                   {order.shippingAddress && (
                     <div className="space-y-1 col-span-2">
-                      <span className="text-[9px] text-slate-400 uppercase font-bold block">Destination Address</span>
+                      <span className="text-[9px] text-slate-600 uppercase font-bold block">Destination Address</span>
                       <span className="text-slate-800 flex items-center gap-1.5"><MapPin size={13} className="text-primary shrink-0" /> {order.shippingAddress}</span>
                     </div>
                   )}
                   {order.estimatedDelivery && (
                     <div className="space-y-1">
-                      <span className="text-[9px] text-slate-400 uppercase font-bold block">Target Delivery Date</span>
+                      <span className="text-[9px] text-slate-600 uppercase font-bold block">Target Delivery Date</span>
                       <span className="text-slate-800 flex items-center gap-1.5"><Calendar size={13} className="text-primary shrink-0" /> {order.estimatedDelivery}</span>
                     </div>
                   )}
                   {order.paymentMethod && (
                     <div className="space-y-1">
-                      <span className="text-[9px] text-slate-400 uppercase font-bold block">Payment Method</span>
+                      <span className="text-[9px] text-slate-600 uppercase font-bold block">Payment Method</span>
                       <span className="text-slate-800 uppercase">{order.paymentMethod.replace('_', ' ')}</span>
                     </div>
                   )}
                   {parseNotes(order.notes).map((item: any, idx: number) => (
                     <div key={idx} className="space-y-1">
-                      <span className="text-[9px] text-slate-400 uppercase font-bold block">{item.label}</span>
+                      <span className="text-[9px] text-slate-600 uppercase font-bold block">{item.label}</span>
                       <span className="text-slate-800">{item.value}</span>
                     </div>
                   ))}
@@ -203,7 +210,7 @@ export default function PublicTrackingPage() {
 
                 {/* Items */}
                 <div className="border border-slate-100 rounded-2xl overflow-hidden bg-white">
-                  <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-100 text-[10px] text-slate-400 uppercase font-bold tracking-wider">
+                  <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-100 text-[10px] text-slate-600 uppercase font-bold tracking-wider">
                     Cargo Manifest
                   </div>
                   <div className="divide-y divide-slate-50">
@@ -213,10 +220,10 @@ export default function PublicTrackingPage() {
                           <Package size={14} className="text-primary" />
                           <div>
                             <p>{item.product?.name}</p>
-                            <p className="text-[10px] text-slate-400 font-semibold mt-0.5">{item.quantity} {item.product?.unit}</p>
+                            <p className="text-[10px] text-slate-600 font-semibold mt-0.5">{item.quantity} {item.product?.unit || 'units'}</p>
                           </div>
                         </div>
-                        <span>{formatPrice(item.total)}</span>
+                        <span>{formatPrice(item.total, 'PKR', order.notes)}</span>
                       </div>
                     ))}
                   </div>
@@ -226,7 +233,7 @@ export default function PublicTrackingPage() {
           </motion.div>
         ) : (
           <div className="glass rounded-3xl p-16 text-center border border-slate-100 bg-white/80 shadow-md space-y-4">
-            <Compass className="mx-auto text-slate-300 animate-spin-slow" size={44} />
+            <Compass className="mx-auto text-slate-500 animate-spin-slow" size={44} />
             <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider">Awaiting Cargo Reference</h3>
             <p className="text-slate-500 text-xs max-w-sm mx-auto leading-relaxed">
               Enter your trade invoice or logistics reference ID above to query current customs clearing and ocean route milestones.
@@ -235,7 +242,7 @@ export default function PublicTrackingPage() {
         )}
 
         {/* Footer Support */}
-        <div className="mt-12 text-center text-xs text-slate-400 font-semibold flex items-center justify-center gap-1">
+        <div className="mt-12 text-center text-xs text-slate-600 font-semibold flex items-center justify-center gap-1">
           <HelpCircle size={13} /> Need assistance? <Link href="/contact" className="text-primary hover:underline font-bold">Contact Export Helpdesk</Link>
         </div>
       </div>
