@@ -1,0 +1,56 @@
+# Render Blueprint Specification for Dewan Traders Monorepo
+services:
+  # 1. Backend Service (Node.js/Express)
+  - type: web
+    name: dewan-traders-backend
+    env: node
+    plan: free # Change to starter/standard if needed
+    rootDir: backend
+    buildCommand: pnpm install && pnpm prisma:generate && pnpm prisma:push && pnpm build
+    startCommand: pnpm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5001
+      - key: DATABASE_URL
+        fromDatabase:
+          name: dewan-traders-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: REFRESH_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        sync: false # Set this to the public URL of your frontend (e.g., https://dewan-traders-frontend.onrender.com)
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false # Set your Cloudinary cloud name
+      - key: CLOUDINARY_API_KEY
+        sync: false # Set your Cloudinary API key
+      - key: CLOUDINARY_API_SECRET
+        sync: false # Set your Cloudinary API secret
+
+  # 2. Frontend Service (Next.js App)
+  - type: web
+    name: dewan-traders-frontend
+    env: node
+    plan: free # Change to starter/standard if needed
+    rootDir: frontend
+    buildCommand: pnpm install && pnpm build
+    startCommand: pnpm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: NEXT_PUBLIC_SITE_NAME
+        value: "Dewan Traders"
+      - key: NEXT_PUBLIC_API_URL
+        sync: false # Set this to the public URL of your backend + /api (e.g., https://dewan-traders-backend.onrender.com/api)
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false # Set this to the public URL of your frontend (e.g., https://dewan-traders-frontend.onrender.com)
+
+databases:
+  # 3. PostgreSQL Database Service
+  - name: dewan-traders-db
+    plan: free # Free database expires after 90 days. Change to standard for production.
