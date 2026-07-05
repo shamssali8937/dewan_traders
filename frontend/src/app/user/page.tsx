@@ -280,7 +280,7 @@ export default function UserDashboard() {
       <aside className="w-64 border-r border-slate-200 bg-white flex flex-col justify-between shrink-0 sticky top-0 h-screen hidden md:flex">
         <div className="p-6 space-y-8 flex-1 overflow-y-auto">
           {/* Logo brand */}
-          <Link href="/" className="flex items-center group shrink-0 transition-transform hover:scale-[1.02] border-b border-slate-100 pb-5">
+          <Link href="/" className="flex items-center justify-center group shrink-0 transition-transform hover:scale-[1.02] border-b border-slate-100 pb-5">
             <DewanTradersLogo width={110} />
           </Link>
 

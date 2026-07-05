@@ -58,13 +58,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const SidebarContent = () => (
     <div className="flex flex-col h-full bg-white">
       {/* Logo */}
-      <div className={`flex items-center p-5 border-b border-slate-200/60 ${collapsed ? 'justify-center' : ''}`}>
+      <div className="flex items-center justify-center p-5 border-b border-slate-200/60">
         {collapsed ? (
           <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center bg-white shadow-sm border border-slate-100 p-0.5">
             <DewanTradersLogo width={24} iconOnly={true} />
           </div>
         ) : (
-          <Link href="/" className="transition-transform hover:scale-[1.02]">
+          <Link href="/" className="transition-transform hover:scale-[1.02] flex justify-center w-full">
             <DewanTradersLogo width={110} />
           </Link>
         )}
