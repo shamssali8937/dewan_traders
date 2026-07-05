@@ -60,8 +60,8 @@ function Counter({ target, suffix }: { target: number; suffix: string }) {
     });
     return ctrl.stop;
   }, [target, mv]);
-  if (target === 0) return <span className="text-sm font-black text-slate-900 leading-none">24/7</span>;
-  return <span className="text-sm font-black text-slate-900 leading-none">{val.toLocaleString()}{suffix}</span>;
+  if (target === 0) return <span className="text-xs font-black text-slate-900 leading-none">24/7</span>;
+  return <span className="text-xs font-black text-slate-900 leading-none">{val.toLocaleString()}{suffix}</span>;
 }
 
 // ─── SVG bezier arc between two projected points ──────────────
@@ -110,24 +110,24 @@ function CurvedRoute({
 
   return (
     <g>
-      {/* Static dashed arc */}
+      {/* Static dashed arc in Royal Blue */}
       <path
         ref={pathRef}
         d={d}
         fill="none"
-        stroke="#0EA5E9"
+        stroke="#1e40af"
         strokeWidth="0.6"
         strokeDasharray="3,5"
-        opacity="0.28"
+        opacity="0.25"
         strokeLinecap="round"
       />
-      {/* Moving glowing particle */}
+      {/* Moving glowing particle in Fresh Orange */}
       {pos && (
         <g>
-          <circle cx={pos.x} cy={pos.y} r="2.5" fill="#0EA5E9" opacity="0.95"
-            style={{ filter: 'drop-shadow(0 0 4px #0EA5E9)' }}
+          <circle cx={pos.x} cy={pos.y} r="2.5" fill="#f97316" opacity="0.95"
+            style={{ filter: 'drop-shadow(0 0 4px #f97316)' }}
           />
-          <circle cx={pos.x} cy={pos.y} r="5" fill="#0EA5E9" opacity="0.1" />
+          <circle cx={pos.x} cy={pos.y} r="5" fill="#f97316" opacity="0.15" />
         </g>
       )}
     </g>
@@ -148,22 +148,22 @@ function DestinationNode({
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
     >
-      {/* Expanding ripple */}
+      {/* Expanding ripple in Royal Blue */}
       <motion.circle
         r="8"
         fill="none"
-        stroke="#0EA5E9"
+        stroke="#1e40af"
         strokeWidth="0.6"
         initial={{ opacity: 0.5, scale: 0.5 }}
         animate={{ opacity: 0, scale: 2.5 }}
         transition={{ duration: 2.2, delay, repeat: Infinity, repeatDelay: 2.5, ease: 'easeOut' }}
       />
-      {/* Dot */}
+      {/* Dot in Royal Blue */}
       <circle
         r={hov ? 4 : 3}
-        fill="#0EA5E9"
+        fill="#1e40af"
         opacity={0.9}
-        style={{ filter: 'drop-shadow(0 0 3px #0EA5E9)', transition: 'r 0.2s ease' }}
+        style={{ filter: 'drop-shadow(0 0 3px #1e40af)', transition: 'r 0.2s ease' }}
       />
       <circle r="1.2" fill="white" />
       {/* Label */}
@@ -171,9 +171,9 @@ function DestinationNode({
         x={6} y={-5}
         fontSize="4.5"
         fontWeight="700"
-        fill="#94a3b8"
+        fill="#4b5563"
         letterSpacing="0.08em"
-        fontFamily="Inter, system-ui, sans-serif"
+        fontFamily="Outfit, Inter, system-ui, sans-serif"
       >
         {label}
       </text>
@@ -185,13 +185,13 @@ function DestinationNode({
 function PakistanMarker() {
   return (
     <g>
-      {/* Pulsing rings */}
+      {/* Pulsing rings in Emerald Green */}
       {[14, 22, 32].map((r, i) => (
         <motion.circle
           key={r}
           r={r}
           fill="none"
-          stroke="#0EA5E9"
+          stroke="#0b5e3a"
           strokeWidth="0.7"
           initial={{ opacity: 0.6, scale: 0.7 }}
           animate={{ opacity: 0, scale: 1.6 }}
@@ -199,18 +199,18 @@ function PakistanMarker() {
         />
       ))}
       {/* Glow */}
-      <circle r="9" fill="#0EA5E9" opacity="0.12" style={{ filter: 'blur(2px)' }} />
+      <circle r="9" fill="#0b5e3a" opacity="0.15" style={{ filter: 'blur(2px)' }} />
       {/* Main dot */}
-      <circle r="6" fill="#0EA5E9" opacity="0.9" style={{ filter: 'drop-shadow(0 0 8px #0EA5E9)' }} />
+      <circle r="6" fill="#0b5e3a" opacity="0.9" style={{ filter: 'drop-shadow(0 0 8px #0b5e3a)' }} />
       <circle r="3" fill="white" />
       {/* Label */}
       <text
         x={10} y={3}
         fontSize="7"
         fontWeight="800"
-        fill="#0f172a"
+        fill="#111827"
         letterSpacing="0.14em"
-        fontFamily="Inter, system-ui, sans-serif"
+        fontFamily="Outfit, Inter, system-ui, sans-serif"
       >
         PAKISTAN
       </text>
@@ -218,9 +218,9 @@ function PakistanMarker() {
         x={10} y={12}
         fontSize="4.5"
         fontWeight="600"
-        fill="#64748b"
+        fill="#4b5563"
         letterSpacing="0.1em"
-        fontFamily="Inter, system-ui, sans-serif"
+        fontFamily="Outfit, Inter, system-ui, sans-serif"
       >
         EXPORT HUB · KARACHI
       </text>
@@ -263,17 +263,17 @@ export default function WorldShippingMap() {
       initial={{ opacity: 0, scale: 0.97, y: 12 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full rounded-3xl border border-slate-100/80 relative overflow-hidden"
+      className="w-full rounded-3xl border border-slate-200/50 relative overflow-hidden"
       style={{
         background: 'rgba(255,255,255,0.85)',
         backdropFilter: 'blur(20px)',
-        boxShadow: '0 8px 40px -8px rgba(15,23,42,0.08), 0 2px 12px -2px rgba(14,165,233,0.06)',
+        boxShadow: '0 8px 40px -8px rgba(11,94,58,0.04), 0 2px 12px -2px rgba(11,94,58,0.02)',
       }}
     >
       {/* Live indicator */}
       <div className="absolute top-4 left-5 z-20 flex items-center gap-2 text-[9px] text-slate-600 uppercase tracking-[0.15em] font-bold">
         <motion.span
-          className="w-1.5 h-1.5 rounded-full bg-sky-500 inline-block"
+          className="w-1.5 h-1.5 rounded-full bg-emerald-600 inline-block"
           animate={{ opacity: [1, 0.3, 1] }}
           transition={{ duration: 1.6, repeat: Infinity }}
         />
@@ -288,14 +288,14 @@ export default function WorldShippingMap() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.7 + i * 0.12 }}
-            className="flex items-center gap-2 rounded-xl px-2.5 py-2 border border-slate-100 bg-white/90 shadow-sm backdrop-blur-sm"
+            className="flex items-center gap-2 rounded-xl px-2.5 py-2 border border-slate-100 bg-white/95 shadow-sm backdrop-blur-sm"
           >
-            <div className="w-6 h-6 rounded-lg bg-sky-50 border border-sky-100/80 flex items-center justify-center text-sky-500 shrink-0">
+            <div className="w-6 h-6 rounded-lg bg-emerald-50 border border-emerald-100/50 flex items-center justify-center text-emerald-700 shrink-0">
               <s.Icon size={12} />
             </div>
             <div>
               <Counter target={s.value} suffix={s.suffix} />
-              <div className="text-[8px] text-slate-600 font-semibold uppercase tracking-wider">{s.label}</div>
+              <div className="text-[8px] text-slate-500 font-semibold uppercase tracking-wider">{s.label}</div>
             </div>
           </motion.div>
         ))}
@@ -309,8 +309,8 @@ export default function WorldShippingMap() {
       >
         <defs>
           <radialGradient id="pkGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#0EA5E9" stopOpacity="0.2" />
-            <stop offset="100%" stopColor="#0EA5E9" stopOpacity="0" />
+            <stop offset="0%" stopColor="#0b5e3a" stopOpacity="0.20" />
+            <stop offset="100%" stopColor="#0b5e3a" stopOpacity="0" />
           </radialGradient>
         </defs>
 
@@ -321,12 +321,12 @@ export default function WorldShippingMap() {
               <Geography
                 key={geo.rsmKey}
                 geography={geo}
-                fill="#F1F5F9"
-                stroke="#E2E8F0"
+                fill="#f3f4f6"
+                stroke="#e5e7eb"
                 strokeWidth={0.4}
                 style={{
                   default: { outline: 'none' },
-                  hover: { fill: '#E0F2FE', outline: 'none' },
+                  hover: { fill: '#e6f4ea', outline: 'none' },
                   pressed: { outline: 'none' },
                 }}
               />
@@ -354,7 +354,7 @@ export default function WorldShippingMap() {
       </ComposableMap>
 
       {/* Bottom watermark */}
-      <div className="absolute bottom-3.5 left-5 text-[7.5px] text-slate-500 uppercase tracking-[0.15em] font-semibold">
+      <div className="absolute bottom-3.5 left-5 text-[7.5px] text-slate-400 uppercase tracking-[0.15em] font-semibold">
         Dewan Traders · Sargodha, Pakistan · Est. 1998
       </div>
     </motion.div>

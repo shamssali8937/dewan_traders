@@ -24,7 +24,7 @@ function useMediaQuery(query: string) {
 function NoiseTexture() {
   return (
     <div
-      className="absolute inset-0 pointer-events-none select-none opacity-[0.015]"
+      className="absolute inset-0 pointer-events-none select-none opacity-[0.012]"
       style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
         backgroundRepeat: 'repeat',
@@ -37,17 +37,17 @@ function NoiseTexture() {
 function FloatingBlobs({ isReduced }: { isReduced: boolean }) {
   const blobConfigs = useMemo(() => {
     const allBlobs = [
-      { color: 'bg-sky-200/20', size: 'w-[45vw] h-[45vw]', x: [-60, 60], y: [-40, 40], scale: [0.95, 1.05], duration: 42 },
-      { color: 'bg-cyan-100/30', size: 'w-[40vw] h-[40vw]', x: [80, -40], y: [60, -30], scale: [1, 0.9], duration: 48 },
-      { color: 'bg-slate-100/40', size: 'w-[50vw] h-[50vw]', x: [-30, 40], y: [80, -60], scale: [0.9, 1.1], duration: 55 },
-      { color: 'bg-blue-100/15', size: 'w-[35vw] h-[35vw]', x: [50, -50], y: [-60, 40], scale: [1.05, 0.95], duration: 36 },
-      { color: 'bg-sky-100/25', size: 'w-[48vw] h-[48vw]', x: [-80, 20], y: [-20, 80], scale: [0.95, 1.05], duration: 60 },
+      { color: 'bg-primary/10', size: 'w-[45vw] h-[45vw]', x: [-60, 60], y: [-40, 40], scale: [0.95, 1.05], duration: 42 },
+      { color: 'bg-secondary/10', size: 'w-[40vw] h-[40vw]', x: [80, -40], y: [60, -30], scale: [1, 0.9], duration: 48 },
+      { color: 'bg-accent/5', size: 'w-[50vw] h-[50vw]', x: [-30, 40], y: [80, -60], scale: [0.9, 1.1], duration: 55 },
+      { color: 'bg-secondary/5', size: 'w-[35vw] h-[35vw]', x: [50, -50], y: [-60, 40], scale: [1.05, 0.95], duration: 36 },
+      { color: 'bg-primary/5', size: 'w-[48vw] h-[48vw]', x: [-80, 20], y: [-20, 80], scale: [0.95, 1.05], duration: 60 },
     ];
     return isReduced ? allBlobs.slice(0, 2) : allBlobs;
   }, [isReduced]);
 
   return (
-    <div className="absolute inset-0 pointer-events-none select-none overflow-hidden blur-[120px] mix-blend-multiply">
+    <div className="absolute inset-0 pointer-events-none select-none overflow-hidden blur-[120px] mix-blend-multiply opacity-75">
       {blobConfigs.map((blob, idx) => (
         <motion.div
           key={idx}
@@ -86,7 +86,7 @@ function GradientAurora({ mouseX, mouseY }: { mouseX: any; mouseY: any }) {
         background: useTransform(
           [x, y],
           ([currX, currY]) =>
-            `radial-gradient(circle 500px at ${currX}px ${currY}px, rgba(14, 165, 233, 0.12), transparent 70%)`
+            `radial-gradient(circle 500px at ${currX}px ${currY}px, var(--color-primary-dark) 8%, transparent 70%)`
         ),
       }}
     />
@@ -114,7 +114,7 @@ function ParticleField({ isMobile, isReduced }: { isMobile: boolean; isReduced: 
       {particles.map((p) => (
         <motion.div
           key={p.id}
-          className="absolute rounded-full bg-sky-400/40"
+          className="absolute rounded-full bg-secondary/30"
           style={{
             left: `${p.x}%`,
             top: `${p.y}%`,
@@ -160,9 +160,9 @@ function AnimatedGrid({ scrollY }: { scrollY: any }) {
 // ─── Light Rays (Layer 6) ──────────────────────────────────────
 function LightRays() {
   return (
-    <div className="absolute inset-0 pointer-events-none select-none overflow-hidden opacity-[0.02]">
+    <div className="absolute inset-0 pointer-events-none select-none overflow-hidden opacity-[0.015]">
       <motion.div
-        className="absolute w-[200%] h-[30%] -left-[50%] -top-[10%] bg-gradient-to-b from-sky-400 via-transparent to-transparent blur-[60px]"
+        className="absolute w-[200%] h-[30%] -left-[50%] -top-[10%] bg-gradient-to-b from-primary/20 via-transparent to-transparent blur-[60px]"
         style={{ rotate: -25 }}
         animate={{
           y: [-20, 60, -20],
@@ -203,7 +203,7 @@ function NetworkLines({ isMobile, isReduced }: { isMobile: boolean; isReduced: b
             y1={`${node.y1}%`}
             x2={`${node.x2}%`}
             y2={`${node.y2}%`}
-            stroke="#0EA5E9"
+            stroke="var(--color-primary)"
             strokeWidth="0.8"
             strokeDasharray="4 6"
             initial={{ pathLength: 0, opacity: 0 }}
@@ -222,7 +222,7 @@ function NetworkLines({ isMobile, isReduced }: { isMobile: boolean; isReduced: b
             cx={`${node.x1}%`}
             cy={`${node.y1}%`}
             r="2"
-            fill="#0EA5E9"
+            fill="var(--color-primary)"
             animate={{
               r: [2, 4, 2],
               opacity: [0.3, 0.9, 0.3],

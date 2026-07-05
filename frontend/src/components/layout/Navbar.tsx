@@ -14,6 +14,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useMarketStore } from '@/store/marketStore';
 import SearchModal from './SearchModal';
 import MobileMenu from './MobileMenu';
+import DewanTradersLogo from '@/components/dewan_trader_logo';
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -21,6 +22,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [activeLanguage, setActiveLanguage] = useState<'EN' | 'UR'>('EN');
   
   const { user, isAuthenticated } = useAuthStore();
   const { logout } = useAuth();
@@ -50,34 +52,34 @@ export default function Navbar() {
   }, [pathname]);
 
   const activeLinkClass = (href: string) => {
-    const isActive = pathname === href || pathname.startsWith(href + '/');
+    const isActive = pathname === href || (href !== '/' && pathname.startsWith(href));
     return isActive 
-      ? 'text-primary font-bold after:scale-x-100' 
-      : 'text-slate-700 hover:text-primary font-semibold after:scale-x-0';
+      ? 'text-primary font-bold after:scale-x-100 font-sans' 
+      : 'text-slate-600 hover:text-primary font-semibold after:scale-x-0 font-sans';
   };
 
   const productDropdownItems = [
-    { label: 'Fresh Fruits', href: '/catalog/fruits', icon: Citrus, desc: 'Premium grade-1 Sargodha Kinnows, sweet Chaunsa Mangoes & sweet citrus.' },
-    { label: 'Vegetables', href: '/catalog/vegetables', icon: Carrot, desc: 'Fresh export-grade onions, Mozika potatoes & garlic bulbs.' },
+    { label: 'Fresh Fruits', href: '/catalog/fruits', icon: Citrus, desc: 'Premium grade-1 Sargodha Kinnows, sweet Chaunsa Mangoes & citrus.' },
+    { label: 'Vegetables', href: '/catalog/vegetables', icon: Carrot, desc: 'Export-grade onions, certified potatoes & organic produce.' },
     { label: 'Premium Rice', href: '/catalog/rice', icon: Wheat, desc: 'Aged long-grain Super Kernel Basmati and parboiled Sella rice.' },
-    { label: 'Sports Goods', href: '/catalog/sports', icon: Trophy, desc: 'FIFA-quality thermo-bonded match footballs & willow cricket bats.' },
-    { label: 'Surgical Instruments', href: '/catalog/surgical', icon: Scissors, desc: 'Sialkot medical scissors, hemostatic forceps & sterile knife sets.' }
+    { label: 'Sports Goods', href: '/catalog/sports', icon: Trophy, desc: 'Match-quality cricket bats, thermo-bonded match footballs & gear.' },
+    { label: 'Surgical Instruments', href: '/catalog/surgical', icon: Scissors, desc: 'Precision medical scissors, forceps & hospital equipment.' }
   ];
 
   const servicesDropdownItems = [
-    { label: 'Import Services', href: '/services#import', icon: PackageOpen, desc: 'Strategic sourcing & domestic distribution pipelines.' },
-    { label: 'Export Services', href: '/services#export', icon: Ship, desc: 'Cold-chain consolidated packhouses & export handling.' },
-    { label: 'Global Logistics', href: '/services#logistics', icon: Truck, desc: 'Refrigerated and dry container sea/air freight booking.' },
-    { label: 'Customs Documentation', href: '/services#customs', icon: FileSpreadsheet, desc: 'SGS quality checks, customs clearances & phytosanitary documents.' },
-    { label: 'Packaging Solutions', href: '/services#packaging', icon: Warehouse, desc: 'Reinforced transit packing & moisture-proof treatments.' },
-    { label: 'Warehousing', href: '/services#warehousing', icon: Warehouse, desc: 'Industrial multi-temperature storage depots.' }
+    { label: 'Import Services', href: '/services#import', icon: PackageOpen, desc: 'Strategic sourcing & domestic clearance pipelines.' },
+    { label: 'Export Services', href: '/services#export', icon: Ship, desc: 'Cold-chain packaging consolidated packhouses & export.' },
+    { label: 'Global Freight', href: '/services#logistics', icon: Truck, desc: 'Refrigerated and dry container booking.' },
+    { label: 'Customs Clearance', href: '/services#customs', icon: FileSpreadsheet, desc: 'SGS quality checks, clearances & sanitary documents.' },
+    { label: 'Packaging Solutions', href: '/services#packaging', icon: Warehouse, desc: 'Reinforced B2B transit packaging & moisture controls.' },
+    { label: 'International Shipping', href: '/services#warehousing', icon: Ship, desc: 'Sea reefers and air freight logistics booking.' }
   ];
 
   const resourcesDropdownItems = [
-    { label: 'Export Journal (Blog)', href: '/journal', icon: BookOpen, desc: 'Agritech insights & global trade compliance updates.' },
+    { label: 'Export Journal', href: '/journal', icon: BookOpen, desc: 'Agritech insights & global trade compliance updates.' },
     { label: 'FAQs Portal', href: '/faqs', icon: HelpCircle, desc: 'Answers to custom clearing, payment modes & MOQs.' },
     { label: 'Certifications', href: '/certifications', icon: Award, desc: 'ISO 22000, FDA register, and SGS laboratory grades.' },
-    { label: 'Media Gallery', href: '/gallery', icon: Image, desc: 'Vitals from our processing plants, fields, and packing docks.' },
+    { label: 'Media Gallery', href: '/gallery', icon: Image, desc: 'Processing plants, active fields, and packing docks.' },
     { label: 'Download Catalog', href: '/catalog', icon: Download, desc: 'Export specifications PDF and price list overview.' }
   ];
 
@@ -86,52 +88,60 @@ export default function Navbar() {
       <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
         
         {/* 1. Header Utility Bar */}
-        <div className="hidden lg:flex items-center justify-between px-8 py-2 bg-slate-900 text-[10px] text-slate-300 font-semibold tracking-wider border-b border-white/5">
-          <div className="flex items-center gap-5">
-            <a href="tel:+92483700000" className="flex items-center gap-1.5 hover:text-white transition-colors">
-              <Phone size={11} className="text-primary" /> +92-48-3700000
+        <div className="hidden lg:flex items-center justify-between px-10 py-2.5 bg-slate-950 text-[10px] text-slate-300 font-semibold tracking-wider border-b border-white/5 shadow-sm">
+          <div className="flex items-center gap-6">
+            <a href="tel:+92483700000" className="flex items-center gap-2 hover:text-white transition-colors">
+              <Phone size={10} className="text-primary" /> +92-48-3700000
             </a>
-            <a href="mailto:info@dewantraders.com" className="flex items-center gap-1.5 hover:text-white transition-colors">
-              <Mail size={11} className="text-primary" /> info@dewantraders.com
+            <a href="mailto:info@dewantraders.com" className="flex items-center gap-2 hover:text-white transition-colors">
+              <Mail size={10} className="text-primary" /> info@dewantraders.com
             </a>
-            <span className="text-slate-400">|</span>
-            <span className="text-slate-400">Sargodha B2B Export Hub</span>
+            <span className="text-slate-700">|</span>
+            <span className="text-slate-400 font-sans tracking-wide">B2B Enterprise Export Portal</span>
           </div>
 
           <div className="flex items-center gap-6">
-            <Link href="/track" className="hover:text-white transition-colors flex items-center gap-1">
-              <ClipboardList size={11} className="text-primary" /> Track Order Cargo
+            <Link href="/track" className="hover:text-white transition-colors flex items-center gap-1.5">
+              <ClipboardList size={11} className="text-primary" /> Cargo Tracking
             </Link>
-            <span className="text-slate-500">|</span>
+            <span className="text-slate-700">|</span>
             
             {/* Country Selector Switcher */}
             {mounted && (
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-2">
                 <Globe size={11} className="text-primary" />
-                <span>Experience:</span>
-                <button
-                  onClick={() => setRegion('PK')}
-                  className={`px-1.5 py-0.5 rounded transition-all font-bold ${
-                    region === 'PK' ? 'bg-primary text-white text-[9px]' : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  PK (₨)
-                </button>
-                <button
-                  onClick={() => setRegion('INT')}
-                  className={`px-1.5 py-0.5 rounded transition-all font-bold ${
-                    region === 'INT' ? 'bg-primary text-white text-[9px]' : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  INT ($)
-                </button>
+                <span className="text-[9px] text-slate-400">Trading Region:</span>
+                <div className="bg-slate-900 border border-slate-800 p-0.5 rounded-lg flex gap-0.5">
+                  <button
+                    onClick={() => setRegion('PK')}
+                    className={`px-2 py-0.5 rounded transition-all font-bold text-[9px] uppercase ${
+                      region === 'PK' ? 'bg-primary text-white' : 'text-slate-500 hover:text-slate-300'
+                    }`}
+                  >
+                    PK (₨)
+                  </button>
+                  <button
+                    onClick={() => setRegion('INT')}
+                    className={`px-2 py-0.5 rounded transition-all font-bold text-[9px] uppercase ${
+                      region === 'INT' ? 'bg-primary text-white' : 'text-slate-500 hover:text-slate-300'
+                    }`}
+                  >
+                    INT ($)
+                  </button>
+                </div>
               </div>
             )}
             
-            <span className="text-slate-500">|</span>
-            <span className="flex items-center gap-1 text-slate-300">
-              Language: <span className="font-bold text-white">English</span>
-            </span>
+            <span className="text-slate-700">|</span>
+            <div className="flex items-center gap-1">
+              <span className="text-[9px] text-slate-400">Language:</span>
+              <button 
+                onClick={() => setActiveLanguage(activeLanguage === 'EN' ? 'UR' : 'EN')}
+                className="hover:text-white transition-colors font-bold text-[10px] text-slate-300 uppercase bg-slate-900 border border-slate-800 px-1.5 py-0.5 rounded"
+              >
+                {activeLanguage === 'EN' ? 'English' : 'اردو'}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -139,24 +149,18 @@ export default function Navbar() {
         <nav
           className={`flex items-center justify-between px-6 lg:px-12 transition-all duration-300 ${
             scrolled
-              ? 'py-3 bg-white/90 backdrop-blur-xl shadow-lg border-b border-slate-100'
-              : 'py-5 bg-white/50 backdrop-blur-sm border-b border-slate-200/20'
+              ? 'py-3.5 bg-white/90 backdrop-blur-xl shadow-lg border-b border-slate-200/50'
+              : 'py-5 bg-white/60 backdrop-blur-md border-b border-slate-200/20'
           }`}
         >
           {/* Logo brand */}
-          <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-sky-600 flex items-center justify-center font-black text-white text-lg shadow-md shadow-primary/10 transition-transform group-hover:scale-105">
-              D
-            </div>
-            <div className="leading-tight">
-              <div className="font-bold text-slate-900 text-sm tracking-widest uppercase">DEWAN</div>
-              <div className="text-[9px] text-primary font-bold tracking-[0.25em] uppercase">TRADERS</div>
-            </div>
+          <Link href="/" className="flex items-center group shrink-0 transition-transform hover:scale-[1.02]">
+            <DewanTradersLogo width={110} />
           </Link>
 
           {/* Desktop Navigation Links (UX optimized layout) */}
-          <div className="hidden lg:flex items-center gap-6">
-            <Link href="/" className={`relative py-2 text-xs uppercase tracking-wider transition-all duration-200 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-primary after:transition-transform after:duration-200 ${activeLinkClass('/')}`}>
+          <div className="hidden lg:flex items-center gap-8">
+            <Link href="/" className={`relative py-2 text-xs uppercase font-extrabold tracking-wider transition-all duration-200 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-primary after:transition-transform after:duration-200 ${activeLinkClass('/')}`}>
               Home
             </Link>
 
@@ -167,8 +171,8 @@ export default function Navbar() {
               onMouseLeave={() => setActiveDropdown(null)}
             >
               <button
-                className={`flex items-center gap-1 py-2 text-xs uppercase tracking-wider transition-all duration-200 ${
-                  pathname.startsWith('/catalog') ? 'text-primary font-bold' : 'text-slate-700 hover:text-primary font-semibold'
+                className={`flex items-center gap-1.5 py-2 text-xs uppercase font-extrabold tracking-wider transition-all duration-200 ${
+                  pathname.startsWith('/catalog') ? 'text-primary' : 'text-slate-600 hover:text-primary'
                 }`}
               >
                 Products
@@ -181,18 +185,22 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 pt-3 w-[640px] z-50"
+                    className="absolute top-full left-1/2 -translate-x-1/2 pt-3 w-[660px] z-50"
                   >
-                    <div className="bg-white rounded-3xl p-5 shadow-2xl border border-slate-100 grid grid-cols-2 gap-4">
+                    <div className="bg-white rounded-3xl p-6 shadow-2xl border border-slate-200/60 grid grid-cols-2 gap-4">
+                      <div className="col-span-2 pb-2 border-b border-slate-100 flex items-center justify-between">
+                        <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Export Channels</span>
+                        <Link href="/catalog" className="text-[10px] text-primary font-bold hover:underline">View All Commodities &rarr;</Link>
+                      </div>
                       {productDropdownItems.map((item) => {
                         const Icon = item.icon;
                         return (
                           <Link
                             key={item.href}
                             href={item.href}
-                            className="flex items-start gap-3 p-3.5 rounded-2xl hover:bg-slate-50 transition-all group/item"
+                            className="flex items-start gap-3.5 p-3 rounded-2xl hover:bg-slate-50 transition-all group/item border border-transparent hover:border-slate-100"
                           >
-                            <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-primary group-hover/item:bg-primary group-hover/item:text-white transition-all shrink-0">
+                            <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-100/50 flex items-center justify-center text-primary group-hover/item:bg-primary group-hover/item:text-white transition-all shrink-0">
                               <Icon size={16} />
                             </div>
                             <div className="min-w-0">
@@ -202,10 +210,10 @@ export default function Navbar() {
                           </Link>
                         );
                       })}
-                      <div className="col-span-2 bg-slate-50 p-3 rounded-2xl flex items-center justify-between text-[10px] font-bold text-slate-600">
-                        <span>Check out our global standards and certifications</span>
-                        <Link href="/certifications" className="text-primary hover:underline flex items-center gap-0.5">
-                          View Certifications &rarr;
+                      <div className="col-span-2 bg-slate-50 border border-slate-100 p-3.5 rounded-2xl flex items-center justify-between text-[10px] font-bold text-slate-600">
+                        <span>Quality inspection audited by global laboratories (SGS, ISO).</span>
+                        <Link href="/certifications" className="text-primary hover:underline flex items-center gap-1 uppercase tracking-wider text-[9px]">
+                          Compliance Matrix &rarr;
                         </Link>
                       </div>
                     </div>
@@ -214,7 +222,7 @@ export default function Navbar() {
               </AnimatePresence>
             </div>
 
-            <Link href="/about" className={`relative py-2 text-xs uppercase tracking-wider transition-all duration-200 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-primary after:transition-transform after:duration-200 ${activeLinkClass('/about')}`}>
+            <Link href="/about" className={`relative py-2 text-xs uppercase font-extrabold tracking-wider transition-all duration-200 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-primary after:transition-transform after:duration-200 ${activeLinkClass('/about')}`}>
               About
             </Link>
 
@@ -225,8 +233,8 @@ export default function Navbar() {
               onMouseLeave={() => setActiveDropdown(null)}
             >
               <button
-                className={`flex items-center gap-1 py-2 text-xs uppercase tracking-wider transition-all duration-200 ${
-                  pathname.startsWith('/services') ? 'text-primary font-bold' : 'text-slate-700 hover:text-primary font-semibold'
+                className={`flex items-center gap-1.5 py-2 text-xs uppercase font-extrabold tracking-wider transition-all duration-200 ${
+                  pathname.startsWith('/services') ? 'text-primary' : 'text-slate-600 hover:text-primary'
                 }`}
               >
                 Services
@@ -239,18 +247,22 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 pt-3 w-[640px] z-50"
+                    className="absolute top-full left-1/2 -translate-x-1/2 pt-3 w-[660px] z-50"
                   >
-                    <div className="bg-white rounded-3xl p-5 shadow-2xl border border-slate-100 grid grid-cols-2 gap-4">
+                    <div className="bg-white rounded-3xl p-6 shadow-2xl border border-slate-200/60 grid grid-cols-2 gap-4">
+                      <div className="col-span-2 pb-2 border-b border-slate-100 flex items-center justify-between">
+                        <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Logistics & Trade Sourcing</span>
+                        <Link href="/services" className="text-[10px] text-primary font-bold hover:underline">Explore Services &rarr;</Link>
+                      </div>
                       {servicesDropdownItems.map((item) => {
                         const Icon = item.icon;
                         return (
                           <Link
                             key={item.href}
                             href={item.href}
-                            className="flex items-start gap-3 p-3.5 rounded-2xl hover:bg-slate-50 transition-all group/item"
+                            className="flex items-start gap-3.5 p-3 rounded-2xl hover:bg-slate-50 transition-all group/item border border-transparent hover:border-slate-100"
                           >
-                            <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-primary group-hover/item:bg-primary group-hover/item:text-white transition-all shrink-0">
+                            <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100/50 flex items-center justify-center text-secondary group-hover/item:bg-secondary group-hover/item:text-white transition-all shrink-0">
                               <Icon size={16} />
                             </div>
                             <div className="min-w-0">
@@ -273,10 +285,10 @@ export default function Navbar() {
               onMouseLeave={() => setActiveDropdown(null)}
             >
               <button
-                className={`flex items-center gap-1 py-2 text-xs uppercase tracking-wider transition-all duration-200 ${
+                className={`flex items-center gap-1.5 py-2 text-xs uppercase font-extrabold tracking-wider transition-all duration-200 ${
                   pathname.startsWith('/journal') || pathname.startsWith('/faqs') || pathname.startsWith('/certifications') || pathname.startsWith('/gallery')
-                    ? 'text-primary font-bold'
-                    : 'text-slate-700 hover:text-primary font-semibold'
+                    ? 'text-primary'
+                    : 'text-slate-600 hover:text-primary'
                 }`}
               >
                 Resources
@@ -289,18 +301,21 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 pt-3 w-[640px] z-50"
+                    className="absolute top-full left-1/2 -translate-x-1/2 pt-3 w-[660px] z-50"
                   >
-                    <div className="bg-white rounded-3xl p-5 shadow-2xl border border-slate-100 grid grid-cols-2 gap-4">
+                    <div className="bg-white rounded-3xl p-6 shadow-2xl border border-slate-200/60 grid grid-cols-2 gap-4">
+                      <div className="col-span-2 pb-2 border-b border-slate-100">
+                        <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Resource Center</span>
+                      </div>
                       {resourcesDropdownItems.map((item) => {
                         const Icon = item.icon;
                         return (
                           <Link
                             key={item.href}
                             href={item.href}
-                            className="flex items-start gap-3 p-3.5 rounded-2xl hover:bg-slate-50 transition-all group/item"
+                            className="flex items-start gap-3.5 p-3 rounded-2xl hover:bg-slate-50 transition-all group/item border border-transparent hover:border-slate-100"
                           >
-                            <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-primary group-hover/item:bg-primary group-hover/item:text-white transition-all shrink-0">
+                            <div className="w-9 h-9 rounded-xl bg-orange-50 border border-orange-100/50 flex items-center justify-center text-primary group-hover/item:bg-primary group-hover/item:text-white transition-all shrink-0">
                               <Icon size={16} />
                             </div>
                             <div className="min-w-0">
@@ -316,7 +331,7 @@ export default function Navbar() {
               </AnimatePresence>
             </div>
 
-            <Link href="/contact" className={`relative py-2 text-xs uppercase tracking-wider transition-all duration-200 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-primary after:transition-transform after:duration-200 ${activeLinkClass('/contact')}`}>
+            <Link href="/contact" className={`relative py-2 text-xs uppercase font-extrabold tracking-wider transition-all duration-200 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-primary after:transition-transform after:duration-200 ${activeLinkClass('/contact')}`}>
               Contact
             </Link>
           </div>
@@ -326,10 +341,10 @@ export default function Navbar() {
             {/* Elastic Search button */}
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="p-2.5 rounded-full hover:bg-slate-100 text-slate-700 transition-all"
-              title="Search imports & exports"
+              className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-700 transition-all border border-slate-200/10 hover:border-slate-200"
+              title="Search Sourced Products"
             >
-              <Search size={16} />
+              <Search size={15} />
             </button>
 
             {/* Profile Dropdown */}
@@ -340,9 +355,9 @@ export default function Navbar() {
                 onMouseLeave={() => setIsProfileOpen(false)}
               >
                 <button
-                  className="flex items-center gap-2 px-3 py-2 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200/60 transition-all text-xs font-bold text-slate-800"
+                  className="flex items-center gap-2 px-3 py-2 bg-white hover:bg-slate-50 rounded-xl border border-slate-200 transition-all text-xs font-bold text-slate-800 shadow-sm"
                 >
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-primary to-sky-500 text-white font-black text-[10px] flex items-center justify-center uppercase shadow-inner">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-primary to-secondary text-white font-extrabold text-[9px] flex items-center justify-center uppercase shadow-inner">
                     {user.name[0]}
                   </div>
                   <span className="max-w-[80px] truncate">{user.name.split(' ')[0]}</span>
@@ -358,43 +373,37 @@ export default function Navbar() {
                       transition={{ duration: 0.1 }}
                       className="absolute right-0 top-full pt-2 w-48 z-50"
                     >
-                      <div className="bg-white rounded-2xl p-2 shadow-2xl border border-slate-100 flex flex-col">
-                        <div className="px-3.5 py-2.5 border-b border-slate-100 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                          Account Menu
+                      <div className="bg-white rounded-2xl p-2 shadow-2xl border border-slate-200/80 flex flex-col">
+                        <div className="px-3.5 py-2 border-b border-slate-100 text-[9px] font-black text-slate-400 uppercase tracking-wider">
+                          Account Console
                         </div>
                         <Link
                           href={user.role === 'admin' || user.role === 'manager' ? '/admin' : '/user'}
-                          className="flex items-center gap-2 px-3 py-2.5 text-xs font-bold text-slate-700 hover:text-primary hover:bg-slate-50 rounded-xl transition-all"
+                          className="flex items-center gap-2 px-3.5 py-2 text-xs font-bold text-slate-700 hover:text-primary hover:bg-slate-50 rounded-xl transition-all"
                         >
                           <User size={13} className="text-slate-400" /> Dashboard
                         </Link>
                         <Link
-                          href={user.role === 'admin' || user.role === 'manager' ? '/admin/orders' : '/user/orders'}
-                          className="flex items-center gap-2 px-3 py-2.5 text-xs font-bold text-slate-700 hover:text-primary hover:bg-slate-50 rounded-xl transition-all"
+                          href={user.role === 'admin' || user.role === 'manager' ? '/admin/orders' : '/user?tab=orders'}
+                          className="flex items-center gap-2 px-3.5 py-2 text-xs font-bold text-slate-700 hover:text-primary hover:bg-slate-50 rounded-xl transition-all"
                         >
-                          <Package size={13} className="text-slate-400" /> Orders History
+                          <Package size={13} className="text-slate-400" /> My Orders
                         </Link>
                         <Link
-                          href={user.role === 'admin' || user.role === 'manager' ? '/admin' : '/user?tab=overview'}
-                          className="flex items-center gap-2 px-3 py-2.5 text-xs font-bold text-slate-700 hover:text-primary hover:bg-slate-50 rounded-xl transition-all"
+                          href={user.role === 'admin' || user.role === 'manager' ? '/admin/inquiries' : '/user?tab=overview'}
+                          className="flex items-center gap-2 px-3.5 py-2 text-xs font-bold text-slate-700 hover:text-primary hover:bg-slate-50 rounded-xl transition-all"
                         >
-                          <Heart size={13} className="text-slate-400" /> Sourcing Wishlist
+                          <ClipboardList size={13} className="text-slate-400" /> Inquiry History
                         </Link>
                         <Link
-                          href={user.role === 'admin' || user.role === 'manager' ? '/admin/inquiries' : '/user?tab=notifications'}
-                          className="flex items-center gap-2 px-3 py-2.5 text-xs font-bold text-slate-700 hover:text-primary hover:bg-slate-50 rounded-xl transition-all"
+                          href={user.role === 'admin' || user.role === 'manager' ? '/admin' : '/user?tab=notifications'}
+                          className="flex items-center gap-2 px-3.5 py-2 text-xs font-bold text-slate-700 hover:text-primary hover:bg-slate-50 rounded-xl transition-all"
                         >
                           <Bell size={13} className="text-slate-400" /> Notifications
                         </Link>
-                        <Link
-                          href={user.role === 'admin' || user.role === 'manager' ? '/admin/market-config' : '/user?tab=profile'}
-                          className="flex items-center gap-2 px-3 py-2.5 text-xs font-bold text-slate-700 hover:text-primary hover:bg-slate-50 rounded-xl transition-all"
-                        >
-                          <Settings size={13} className="text-slate-400" /> settings
-                        </Link>
                         <button
                           onClick={() => logout()}
-                          className="flex items-center gap-2 px-3 py-2.5 text-xs font-bold text-red-500 hover:bg-red-50 rounded-xl transition-all border-t border-slate-50 mt-1"
+                          className="flex items-center gap-2 px-3.5 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-xl transition-all border-t border-slate-100 mt-1"
                         >
                           <LogOut size={13} /> Log Out
                         </button>
@@ -404,19 +413,27 @@ export default function Navbar() {
                 </AnimatePresence>
               </div>
             ) : (
-              <Link
-                href="/auth/login"
-                className="text-xs font-bold text-slate-700 hover:text-primary px-3 py-2 rounded-xl transition-all"
-              >
-                Sign In
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/auth/login"
+                  className="text-xs font-bold text-slate-700 hover:text-primary px-3 py-2.5 rounded-xl border border-transparent hover:border-slate-200 transition-all"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/auth/register"
+                  className="text-xs font-bold text-slate-700 hover:text-primary px-3 py-2.5 rounded-xl border border-slate-200 transition-all"
+                >
+                  Register
+                </Link>
+              </div>
             )}
 
             <Link
               href="/quote"
-              className="text-xs font-black px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-sky-600 hover:from-primary-hover hover:to-sky-700 text-white transition-all shadow-md shadow-primary/10 uppercase tracking-wide shrink-0"
+              className="text-xs font-bold px-5 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary hover:from-primary-hover hover:to-secondary-hover text-white transition-all shadow-md shadow-primary/10 uppercase tracking-wider shrink-0"
             >
-              Get Quote
+              Submit RFQ
             </Link>
           </div>
 
@@ -424,17 +441,17 @@ export default function Navbar() {
           <div className="flex lg:hidden items-center gap-2 shrink-0">
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="p-2 rounded-lg hover:bg-slate-50 text-slate-700"
+              className="p-2.5 rounded-xl hover:bg-slate-50 text-slate-700 border border-transparent hover:border-slate-200"
               aria-label="Search"
             >
-              <Search size={18} />
+              <Search size={16} />
             </button>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-lg hover:bg-slate-50 text-slate-700"
+              className="p-2.5 rounded-xl hover:bg-slate-50 text-slate-700 border border-transparent hover:border-slate-200"
               aria-label="Open menu"
             >
-              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </nav>
@@ -456,7 +473,7 @@ export default function Navbar() {
       />
       
       {/* Spacer to prevent header content collision */}
-      <div className="h-14 lg:h-22" />
+      <div className="h-14 lg:h-[108px]" />
     </>
   );
 }

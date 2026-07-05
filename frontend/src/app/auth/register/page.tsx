@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { Eye, EyeOff, Building2, User, UserPlus, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import DewanTradersLogo from '@/components/dewan_trader_logo';
 
 const schema = z.object({
   name: z.string().min(2, 'Full name required'),
@@ -55,12 +56,8 @@ export default function RegisterPage() {
       >
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-sky-600 flex items-center justify-center font-black text-white text-xl shadow-md shadow-primary/10">D</div>
-            <div className="text-left leading-tight">
-              <div className="font-bold text-slate-800 text-sm tracking-widest uppercase">DEWAN TRADERS</div>
-              <div className="text-[10px] text-primary font-bold tracking-widest uppercase">Import & Export</div>
-            </div>
+          <Link href="/" className="inline-block transition-transform hover:scale-[1.02]">
+            <DewanTradersLogo width={150} className="mx-auto" />
           </Link>
         </div>
 

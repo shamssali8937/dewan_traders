@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import DewanTradersLogo from '@/components/dewan_trader_logo';
 import { Mail, Phone, MapPin, Globe, Linkedin, ArrowUpRight } from 'lucide-react';
 
 export default function Footer() {
@@ -12,14 +13,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-2 md:grid-cols-5 gap-10 mb-16 relative z-10">
         {/* Brand column */}
         <div className="col-span-2 space-y-6">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center font-black text-white text-lg shadow-md shadow-primary/10">
-              D
-            </div>
-            <div className="leading-tight">
-              <div className="font-bold text-slate-900 text-sm tracking-widest uppercase">DEWAN</div>
-              <div className="text-[9px] text-primary font-bold tracking-[0.25em] uppercase">TRADERS</div>
-            </div>
+          <Link href="/" className="inline-block transition-transform hover:scale-[1.02]">
+            <DewanTradersLogo width={130} />
           </Link>
           <p className="text-slate-500 leading-relaxed text-[11px] max-w-sm">
             Bridging Pakistan's finest resources with global markets. Sourcing directly from certified orchards and Sialkot manufacturing hubs under strict international quality guidelines.
