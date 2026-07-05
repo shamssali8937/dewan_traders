@@ -51,7 +51,7 @@ export default function ForgotPasswordPage() {
               <p className="text-slate-500 text-xs leading-relaxed max-w-xs mx-auto">
                 If <span className="font-bold text-slate-700">{email}</span> is registered, a password reset link has been sent. Check your inbox and spam folder.
               </p>
-              <p className="text-[10px] text-slate-400 font-semibold">The link expires in 1 hour.</p>
+              <p className="text-[10px] text-slate-600 font-semibold">The link expires in 1 hour.</p>
               <Link href="/auth/login"
                 className="inline-flex items-center gap-1.5 text-primary text-xs font-bold hover:underline mt-2">
                 <ArrowLeft size={12} /> Back to Login
@@ -68,16 +68,16 @@ export default function ForgotPasswordPage() {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block font-bold">Email Address</label>
+                  <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block font-bold">Email Address</label>
                   <div className="relative">
-                    <Mail size={13} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <Mail size={13} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-600" />
                     <input
                       type="email"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
                       required
                       placeholder="your@email.com"
-                      className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-slate-800 placeholder:text-slate-300"
+                      className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-slate-800 placeholder:text-slate-400"
                     />
                   </div>
                 </div>
@@ -88,7 +88,7 @@ export default function ForgotPasswordPage() {
                 </button>
               </form>
 
-              <p className="text-center text-[11px] text-slate-400 mt-5">
+              <p className="text-center text-[11px] text-slate-600 mt-5">
                 Remember your password?{' '}
                 <Link href="/auth/login" className="text-primary font-bold hover:underline">Sign In</Link>
               </p>

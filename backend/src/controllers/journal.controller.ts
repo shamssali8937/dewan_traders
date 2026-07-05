@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { journalService } from '../services/journal.service';
 import { asyncHandler } from '../utils/asyncHandler';
 import { ApiResponse } from '../utils/ApiResponse';
+import { AuthRequest } from '../middlewares/auth.middleware';
+import { logger } from '../utils/logger';
 
 export const journalController = {
   getAll: asyncHandler(async (req: Request, res: Response) => {
@@ -28,18 +30,21 @@ export const journalController = {
     res.json(ApiResponse.ok('Post retrieved', post));
   }),
 
-  create: asyncHandler(async (req: Request, res: Response) => {
+  create: asyncHandler(async (req: AuthRequest, res: Response) => {
     const post = await journalService.create(req.body);
+    logger.info(`Journal post created: "${post.title}" by ${req.user?.email}`);
     res.status(201).json(ApiResponse.created('Post created', post));
   }),
 
-  update: asyncHandler(async (req: Request, res: Response) => {
+  update: asyncHandler(async (req: AuthRequest, res: Response) => {
     const post = await journalService.update(req.params.id as string, req.body);
+    logger.info(`Journal post updated: "${post.title}" by ${req.user?.email}`);
     res.json(ApiResponse.ok('Post updated', post));
   }),
 
-  delete: asyncHandler(async (req: Request, res: Response) => {
+  delete: asyncHandler(async (req: AuthRequest, res: Response) => {
     await journalService.delete(req.params.id as string);
+    logger.warn(`Journal post deleted: ID ${req.params.id} by ${req.user?.email}`);
     res.json(ApiResponse.ok('Post deleted'));
   }),
 };

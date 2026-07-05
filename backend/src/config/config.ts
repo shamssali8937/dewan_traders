@@ -4,7 +4,7 @@ dotenv.config();
 export const config = {
   port: parseInt(process.env.PORT || '5001', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
-  isDev: process.env.NODE_ENV === 'development',
+  isDev: (process.env.NODE_ENV || 'development') === 'development',
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3001',
   jwt: {
     secret: process.env.JWT_SECRET || 'fallback_secret',
@@ -16,4 +16,9 @@ export const config = {
     dir: process.env.UPLOAD_DIR || 'uploads',
     maxSize: parseInt(process.env.MAX_FILE_SIZE || '5242880', 10),
   },
+  cloudinary: {
+    cloudName: (process.env.CLOUDINARY_CLOUD_NAME || '').replace(/^["']|["']$/g, ''),
+    apiKey: (process.env.CLOUDINARY_API_KEY || '').replace(/^["']|["']$/g, ''),
+    apiSecret: (process.env.CLOUDINARY_API_SECRET || '').replace(/^["']|["']$/g, ''),
+  }
 };

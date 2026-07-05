@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { mockDb } from './mockDb';
-
+import { useAuthStore } from '../store/authStore';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
 
 export const api = axios.create({
@@ -119,6 +119,14 @@ async function handleMockRequest(config: any) {
       }
       const res = mockDb.getMyOrders(userId);
       responseData = { success: true, data: res };
+    } else if (url.startsWith('/orders/track/')) {
+      const orderNumber = url.replace('/orders/track/', '');
+      const order = mockDb.getOrders().orders.find(o => o.orderNumber === orderNumber);
+      if (!order) {
+        responseData = { success: false, message: 'Cargo tracking reference not found' };
+      } else {
+        responseData = { success: true, data: order };
+      }
     } else if (url.startsWith('/orders/')) {
       const id = url.split('/')[2];
       if (url.endsWith('/status')) {
@@ -239,7 +247,16 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await api.post('/auth/refresh');
+        const refreshResponse = await api.post('/auth/refresh');
+        const accessToken = refreshResponse.data?.data?.accessToken;
+
+        if (accessToken) {
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('accessToken', accessToken);
+          }
+          useAuthStore.getState().setToken(accessToken);
+        }
+
         processQueue(null);
         return api(originalRequest);
       } catch (refreshError) {

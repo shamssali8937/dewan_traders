@@ -89,8 +89,9 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relations
-  orders    Order[]
-  inquiries Inquiry[]
+  orders        Order[]
+  inquiries     Inquiry[]
+  notifications Notification[]
 
   @@map("users")
 }
@@ -162,9 +163,16 @@ model Order {
   shippingAddress String?
   billingAddress  String?
   trackingNumber  String?
+  estimatedDelivery String?
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
+
+  paymentMethod          String?
+  paymentProofUrl        String?
+  paymentProofUploadedAt DateTime?
+  paymentProofStatus     String?       @default("pending_upload")
+  paymentProofNotes      String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -210,6 +218,8 @@ model Inquiry {
 
   userId String?
   user   User?   @relation(fields: [userId], references: [id])
+
+  replies InquiryReply[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -304,3 +314,56 @@ model Testimonial {
 
   @@map("testimonials")
 }
+
+// ─────────────────────────────────────────
+// INQUIRY REPLIES
+// ─────────────────────────────────────────
+
+model InquiryReply {
+  id        String   @id @default(cuid())
+  inquiryId String
+  inquiry   Inquiry  @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  message   String
+  sender    String   // "admin" or "user"
+  createdAt DateTime @default(now())
+
+  @@map("inquiry_replies")
+}
+
+// ─────────────────────────────────────────
+// NOTIFICATIONS
+// ─────────────────────────────────────────
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String   // Target user ID
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      String   // e.g., "order_placed", "payment_uploaded", "payment_verified", "processing", "shipped", "delivered", "admin_message", "inquiry_reply"
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
+}
+
+// ─────────────────────────────────────────
+// PAYMENT ACCOUNTS
+// ─────────────────────────────────────────
+
+model PaymentAccount {
+  id             String   @id @default(cuid())
+  type           String   // "bank", "easypaisa", "jazzcash"
+  bankName       String?  // for bank type
+  accountTitle   String
+  accountNumber  String   // account number or phone number
+  iban           String?  // optional for bank
+  branch         String?  // optional for bank
+  qrCodeUrl      String?  // optional
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("payment_accounts")
+}
+

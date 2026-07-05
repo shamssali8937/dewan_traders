@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { Eye, EyeOff, LogIn, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import DewanTradersLogo from '@/components/dewan_trader_logo';
 
 const schema = z.object({
   email: z.string().email('Valid email required'),
@@ -39,12 +40,8 @@ export default function LoginPage() {
       >
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-sky-600 flex items-center justify-center font-black text-white text-xl shadow-md shadow-primary/10">D</div>
-            <div className="text-left leading-tight">
-              <div className="font-bold text-slate-800 text-sm tracking-widest uppercase">DEWAN TRADERS</div>
-              <div className="text-[10px] text-primary font-bold tracking-widest uppercase">Import & Export</div>
-            </div>
+          <Link href="/" className="inline-block transition-transform hover:scale-[1.02]">
+            <DewanTradersLogo width={150} className="mx-auto" />
           </Link>
         </div>
 
@@ -56,7 +53,7 @@ export default function LoginPage() {
             <div>
               <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Email Address *</label>
               <input {...register('email')} type="email" placeholder="you@company.com"
-                className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
               {errors.email && <p className="text-[10px] text-red-500 mt-1">{errors.email.message}</p>}
             </div>
 
@@ -64,9 +61,9 @@ export default function LoginPage() {
               <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Password *</label>
               <div className="relative">
                 <input {...register('password')} type={showPass ? 'text' : 'password'} placeholder="••••••••"
-                  className="w-full px-3 py-2.5 pr-11 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+                  className="w-full px-3 py-2.5 pr-11 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
                 <button type="button" onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors">
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-700 transition-colors">
                   {showPass ? <EyeOff size={14} /> : <Eye size={14} />}
                 </button>
               </div>
@@ -92,7 +89,7 @@ export default function LoginPage() {
             <p className="font-semibold text-slate-600 mt-0.5">Password: <span className="font-mono text-primary select-all">Admin@123</span></p>
           </div>
 
-          <p className="text-center text-xs text-slate-400 mt-6">
+          <p className="text-center text-xs text-slate-600 mt-6">
             Don't have a trade account?{' '}
             <Link href="/auth/register" className="text-primary hover:underline font-bold uppercase tracking-wide">
               Register here

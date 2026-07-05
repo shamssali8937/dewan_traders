@@ -9,6 +9,8 @@ router.post('/', inquiryController.create);
 
 // Admin only
 router.get('/', authenticate, authorize('admin', 'manager'), inquiryController.getAll);
+// Admin/User replies
+router.post('/:id/reply', authenticate, inquiryController.createReply);
 router.get('/:id', authenticate, authorize('admin', 'manager'), inquiryController.getById);
 router.patch('/:id/status', authenticate, authorize('admin', 'manager'), inquiryController.updateStatus);
 router.delete('/:id', authenticate, authorize('admin'), inquiryController.delete);

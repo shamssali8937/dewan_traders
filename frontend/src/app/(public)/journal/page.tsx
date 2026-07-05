@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Clock, Sparkles } from 'lucide-react';
 import { useJournalPosts } from '@/hooks/useCms';
-import { formatDate } from '@/lib/utils';
+import { formatDate, resolveImageUrl } from '@/lib/utils';
 
 export default function JournalPage() {
   const { data, isLoading } = useJournalPosts();
@@ -54,7 +54,7 @@ export default function JournalPage() {
           <div className="text-center py-20">
             <div className="text-4xl mb-3">📰</div>
             <h3 className="text-xs font-bold text-slate-800 uppercase">No articles published</h3>
-            <p className="text-slate-400 text-xs mt-1">Check back soon for custom trade market reports.</p>
+            <p className="text-slate-600 text-xs mt-1">Check back soon for custom trade market reports.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -70,9 +70,9 @@ export default function JournalPage() {
                     {/* Feature Image */}
                     <div className="h-48 bg-slate-50 flex items-center justify-center border-b border-slate-100 relative overflow-hidden shrink-0">
                       {post.imageUrl ? (
-                        <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
+                        <img src={resolveImageUrl(post.imageUrl)} alt={post.title} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
                       ) : (
-                        <div className="text-slate-300 text-3xl font-bold">📰</div>
+                        <div className="text-slate-500 text-3xl font-bold">📰</div>
                       )}
                     </div>
                     
@@ -94,11 +94,11 @@ export default function JournalPage() {
                       </div>
                       
                       <div className="flex items-center justify-between pt-3 border-t border-slate-100 mt-2">
-                        <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-semibold uppercase">
+                        <div className="flex items-center gap-1.5 text-[10px] text-slate-600 font-semibold uppercase">
                           <Clock size={11} className="text-primary shrink-0" />
                           {post.readTime ? `${post.readTime} min read` : formatDate(post.publishedAt || new Date())}
                         </div>
-                        <span className="text-slate-400 group-hover:text-primary transition-colors flex items-center gap-0.5 uppercase font-bold text-[9px] tracking-wider">
+                        <span className="text-slate-600 group-hover:text-primary transition-colors flex items-center gap-0.5 uppercase font-bold text-[9px] tracking-wider">
                           Read Article <ArrowRight size={10} className="group-hover:translate-x-0.5 transition-transform" />
                         </span>
                       </div>

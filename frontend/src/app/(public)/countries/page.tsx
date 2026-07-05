@@ -92,7 +92,7 @@ export default function CountriesPage() {
                     </span>
                   </div>
 
-                  <p className="text-slate-400 text-[9px] uppercase tracking-widest font-bold mb-2">Covered Territories</p>
+                  <p className="text-slate-600 text-[9px] uppercase tracking-widest font-bold mb-2">Covered Territories</p>
                   <div className="flex flex-wrap gap-1.5 mb-6">
                     {item.countries.map((country) => (
                       <span key={country} className="text-[10px] px-2 py-0.5 bg-white border border-slate-200 text-slate-700 rounded-full font-semibold shadow-sm">
@@ -106,7 +106,7 @@ export default function CountriesPage() {
                     <div className="flex gap-3.5 items-start">
                       <Anchor size={14} className="text-primary shrink-0 mt-0.5" />
                       <div>
-                        <div className="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Standard Discharge Ports</div>
+                        <div className="text-[9px] text-slate-600 uppercase tracking-widest font-bold">Standard Discharge Ports</div>
                         <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">{item.ports.join(', ')}</p>
                       </div>
                     </div>
@@ -114,7 +114,7 @@ export default function CountriesPage() {
                     <div className="flex gap-3.5 items-start">
                       <Clock size={14} className="text-primary shrink-0 mt-0.5" />
                       <div>
-                        <div className="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Average Transit Lead-Time</div>
+                        <div className="text-[9px] text-slate-600 uppercase tracking-widest font-bold">Average Transit Lead-Time</div>
                         <p className="text-[11px] text-slate-700 mt-1 font-bold">{item.transit}</p>
                       </div>
                     </div>
@@ -122,7 +122,7 @@ export default function CountriesPage() {
                     <div className="flex gap-3.5 items-start">
                       <Ship size={14} className="text-primary shrink-0 mt-0.5" />
                       <div>
-                        <div className="text-[9px] text-slate-400 uppercase tracking-widest font-bold">Key Sourced Lines</div>
+                        <div className="text-[9px] text-slate-600 uppercase tracking-widest font-bold">Key Sourced Lines</div>
                         <p className="text-[11px] text-slate-600 mt-1 font-semibold italic">{item.commodities.join(', ')}</p>
                       </div>
                     </div>

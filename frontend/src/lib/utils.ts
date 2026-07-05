@@ -5,9 +5,39 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatPrice(price: number | string, currency = 'PKR'): string {
+export function formatPrice(price: number | string, currency = 'PKR', notes?: string | null): string {
   const num = typeof price === 'string' ? parseFloat(price) : price;
-  return `${currency} ${num.toLocaleString('en-PK')}`;
+  if (isNaN(num)) return typeof price === 'string' ? price : '';
+
+  let activeCurrency = currency;
+  
+  // Check if we can infer the currency from the order notes/logistics contract
+  if (notes) {
+    const uppercaseNotes = notes.toUpperCase();
+    if (
+      uppercaseNotes.includes('MARKET: INTERNATIONAL') || 
+      uppercaseNotes.includes('USD') || 
+      uppercaseNotes.includes('EXPORT CONTAINER') || 
+      uppercaseNotes.includes('GLOBAL') ||
+      uppercaseNotes.includes('INCOTERM')
+    ) {
+      activeCurrency = 'USD';
+    } else if (
+      uppercaseNotes.includes('MARKET: DOMESTIC') || 
+      uppercaseNotes.includes('PKR') || 
+      uppercaseNotes.includes('LOCAL PACKAGING') || 
+      uppercaseNotes.includes('PAKISTAN')
+    ) {
+      activeCurrency = 'PKR';
+    }
+  }
+
+  if (activeCurrency === 'USD') {
+    return `$${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }
+  
+  // Display PKR in the standard Pakistani format with Rs prefix
+  return `₨ ${Math.round(num).toLocaleString('en-PK')}`;
 }
 
 export function formatDate(date: string | Date): string {
@@ -54,3 +84,17 @@ export const CATEGORY_ICONS: Record<string, string> = {
   surgical: 'Scissors',
   sports: 'Trophy',
 };
+
+export function resolveImageUrl(url?: string | null): string {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  if (url.startsWith('/images/') || url.startsWith('images/')) {
+    return url.startsWith('/') ? url : `/${url}`;
+  }
+  
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
+  const baseUrl = apiUrl.replace(/\/api$/, '');
+  
+  const relativePath = url.startsWith('/') ? url : `/${url}`;
+  return `${baseUrl}${relativePath}`;
+}

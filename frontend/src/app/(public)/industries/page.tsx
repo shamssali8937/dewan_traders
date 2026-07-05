@@ -102,14 +102,14 @@ export default function IndustriesPage() {
               </div>
               <div className="space-y-4 border-t border-slate-100 pt-4 mt-2">
                 <div>
-                  <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-2">Key Items Supplied</p>
+                  <p className="text-[9px] text-slate-600 font-bold uppercase tracking-wider mb-2">Key Items Supplied</p>
                   <div className="flex flex-wrap gap-1.5">
                     {products.map((p) => (
                       <span key={p} className="text-[10px] px-2 py-0.5 bg-white border border-slate-200 text-slate-700 rounded-full font-medium shadow-sm">{p}</span>
                     ))}
                   </div>
                 </div>
-                <div className="text-[10px] text-slate-400 font-semibold italic border-t border-slate-50 pt-2">
+                <div className="text-[10px] text-slate-600 font-semibold italic border-t border-slate-50 pt-2">
                   Client Profile: {clients}
                 </div>
               </div>

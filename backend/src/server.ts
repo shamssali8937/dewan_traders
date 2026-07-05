@@ -17,12 +17,12 @@ async function startServer() {
   app.listen(PORT, () => {
     console.log(`
 ╔══════════════════════════════════════════════╗
-║      DEWAN TRADERS API SERVER               ║
-║      Sargodha, Pakistan                     ║
+║      DEWAN TRADERS API SERVER               
+║      Sargodha, Pakistan                      ║
 ╠══════════════════════════════════════════════╣
-║  Status  : Running                          ║
-║  Port    : ${PORT}                               ║
-║  Env     : ${config.nodeEnv.padEnd(36)}║
+║  Status  : Running                           ║
+║  Port    : ${PORT}                           
+║  Env     : ${config.nodeEnv.padEnd(36)}
 ╚══════════════════════════════════════════════╝
     `);
   });

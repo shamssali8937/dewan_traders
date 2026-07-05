@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { QueryProvider } from '@/lib/QueryProvider';
 import { Toaster } from 'sonner';
+import AnimatedBackground from '@/components/AnimatedBackground';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -68,9 +69,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="geo.position" content="32.0836;72.6711" />
         <meta name="ICBM" content="32.0836, 72.6711" />
       </head>
-      <body className={`${inter.variable} font-sans antialiased bg-slate-950 text-white`} suppressHydrationWarning>
+      <body className={`${inter.variable} font-sans antialiased bg-white text-slate-900`} suppressHydrationWarning>
         <QueryProvider>
-          {children}
+          {/* Global Ambient Background Animation */}
+          <AnimatedBackground />
+
+
+          <div className="relative z-10">
+            {children}
+          </div>
+
           <Toaster
             position="top-right"
             toastOptions={{

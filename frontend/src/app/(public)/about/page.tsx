@@ -30,7 +30,7 @@ const team = [
 export default function AboutPage() {
   return (
     <div className="bg-white min-h-screen pt-24 relative overflow-hidden pattern-dots-light">
-      
+
       {/* Background Decorators */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="fluid-blob bg-sky-100 w-[400px] h-[400px] top-[10%] left-[5%]" />
@@ -54,23 +54,23 @@ export default function AboutPage() {
               <span className="gradient-text-sky">Founded in Pakistan</span>
             </h1>
             <p className="text-slate-600 text-sm leading-relaxed mb-8 max-w-2xl">
-              Dewan Traders is a premier Pakistani import-export enterprise. Guided by **Sajjad Hussain Awan**, we coordinate sourcing, safety compliance, packaging, and shipping transit loops for commodity and industrial accounts globally.
+              Dewan Traders is a premier Pakistani import-export enterprise. Guided by <b>Sajjad Hussain Awan</b>, we coordinate sourcing, safety compliance, packaging, and shipping transit loops for commodity and industrial accounts globally.
             </p>
-            
+
             <div className="flex gap-8 border-t border-slate-100 pt-6">
               <div>
                 <div className="text-2xl font-black text-primary">35+</div>
-                <div className="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">Markets Served</div>
+                <div className="text-[9px] text-slate-600 font-bold uppercase tracking-wider mt-0.5">Markets Served</div>
               </div>
               <div className="w-px bg-slate-100" />
               <div>
                 <div className="text-2xl font-black text-primary">200+</div>
-                <div className="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">B2B Clients</div>
+                <div className="text-[9px] text-slate-600 font-bold uppercase tracking-wider mt-0.5">B2B Clients</div>
               </div>
               <div className="w-px bg-slate-100" />
               <div>
                 <div className="text-2xl font-black text-primary">20+</div>
-                <div className="text-[9px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">Years Legacy</div>
+                <div className="text-[9px] text-slate-600 font-bold uppercase tracking-wider mt-0.5">Years Legacy</div>
               </div>
             </div>
           </motion.div>
@@ -93,7 +93,7 @@ export default function AboutPage() {
                 Under ISO 9001, CE Mark, and HACCP compliance auditing models, Dewan Traders coordinates complete supply security.
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {values.map(({ icon: Icon, title, desc }) => (
                 <div key={title} className="glass rounded-2xl p-5 border border-slate-100 bg-white">
@@ -116,11 +116,11 @@ export default function AboutPage() {
             <span className="text-primary text-[10px] uppercase font-bold tracking-widest">Chronology</span>
             <h2 className="text-3xl font-black text-slate-900 mt-2">Our Growth Journey</h2>
           </div>
-          
+
           <div className="relative">
             {/* Timeline Line */}
             <div className="absolute left-8 top-0 bottom-0 w-px bg-gradient-to-b from-primary via-sky-300 to-transparent" />
-            
+
             <div className="space-y-8">
               {timeline.map((item, idx) => (
                 <motion.div
@@ -135,7 +135,7 @@ export default function AboutPage() {
                   <div className="absolute left-4 w-8 h-8 rounded-xl bg-white border border-primary text-primary flex items-center justify-center -translate-x-1/2 text-[10px] font-black font-mono shadow-sm">
                     {item.year}
                   </div>
-                  
+
                   {/* Timeline Card */}
                   <div className="glass rounded-2xl p-5 flex-1 bg-white/70 border border-slate-100 card-hover">
                     <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide mb-1">{item.title}</h3>
@@ -157,7 +157,7 @@ export default function AboutPage() {
             </span>
             <h2 className="text-3xl font-black text-slate-900 mt-2">Executive Leadership</h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {team.map((member) => (
               <div key={member.name} className="glass rounded-3xl p-6 text-center card-hover border border-slate-100 bg-white flex flex-col items-center">
@@ -166,17 +166,17 @@ export default function AboutPage() {
                   {member.image ? (
                     <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-400 text-lg font-bold">
+                    <div className="w-full h-full flex items-center justify-center text-slate-600 text-lg font-bold">
                       {member.name.split(' ').map(n => n[0]).join('')}
                     </div>
                   )}
                 </div>
-                
+
                 <h3 className="text-xs font-bold text-slate-800 tracking-wide">{member.name}</h3>
                 <div className="inline-block px-2.5 py-0.5 rounded-full bg-sky-50 border border-sky-100 text-primary text-[9px] uppercase font-bold tracking-widest mt-2">
                   {member.role}
                 </div>
-                <p className="text-[10px] text-slate-400 mt-4 leading-relaxed flex-1">{member.bio}</p>
+                <p className="text-[10px] text-slate-600 mt-4 leading-relaxed flex-1">{member.bio}</p>
               </div>
             ))}
           </div>

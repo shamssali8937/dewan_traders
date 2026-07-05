@@ -19,6 +19,7 @@ export function useAllOrders(params?: Record<string, unknown>) {
       const res = await orderApi.getAll(params);
       return res.data.data;
     },
+    refetchInterval: 5000, // poll every 5s
   });
 }
 
@@ -39,7 +40,7 @@ export function usePlaceOrder() {
     mutationFn: (data: unknown) => orderApi.create(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['orders'] });
-      toast.success('Order placed successfully!');
+      toast.success('Order placed successfully! We will contact you through Email or WhatsApp.');
     },
     onError: (err: any) => toast.error(err?.response?.data?.message || 'Failed to place order'),
   });
@@ -48,7 +49,7 @@ export function usePlaceOrder() {
 export function useUpdateOrderStatus() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, ...data }: { id: string; status: string; trackingNumber?: string }) =>
+    mutationFn: ({ id, ...data }: { id: string; status: string; trackingNumber?: string; estimatedDelivery?: string }) =>
       orderApi.updateStatus(id, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['orders'] });
@@ -56,3 +57,19 @@ export function useUpdateOrderStatus() {
     },
   });
 }
+
+export function useTrackOrder(orderNumber: string) {
+  return useQuery({
+    queryKey: ['track', orderNumber],
+    queryFn: async () => {
+      const res = await orderApi.trackOrder(orderNumber);
+      if (!res.data || res.data.success === false || !res.data.data) {
+        throw new Error(res.data?.message || 'Cargo tracking reference not found');
+      }
+      return res.data.data;
+    },
+    enabled: !!orderNumber,
+    retry: false,
+  });
+}
+

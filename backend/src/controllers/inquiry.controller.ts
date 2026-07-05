@@ -39,6 +39,14 @@ export const inquiryController = {
     res.json(ApiResponse.ok('Inquiry updated', inquiry));
   }),
 
+  createReply: asyncHandler(async (req: AuthRequest, res: Response) => {
+    const { message } = req.body;
+    const sender = ['admin', 'manager'].includes(req.user!.role) ? 'admin' : 'user';
+    const reply = await inquiryService.createReply(req.params.id as string, message, sender);
+    logger.info(`Inquiry reply created for ID: ${req.params.id} by ${req.user?.email}`);
+    res.status(201).json(ApiResponse.created('Reply sent successfully', reply));
+  }),
+
   delete: asyncHandler(async (req: AuthRequest, res: Response) => {
     await inquiryService.delete(req.params.id as string);
     logger.warn(`Inquiry ${req.params.id} deleted by ${req.user?.email}`);

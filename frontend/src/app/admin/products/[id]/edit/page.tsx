@@ -8,6 +8,11 @@ import { useProduct, useUpdateProduct, useCategories } from '@/hooks/useProducts
 import { useRouter } from 'next/navigation';
 import { Send, ArrowLeft, Package, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { resolveImageUrl } from '@/lib/utils';
+import { useState } from 'react';
+import { productApi } from '@/services/endpoints';
+import { toast } from 'sonner';
+import { Image as ImageIcon, Loader } from 'lucide-react';
 
 const productSchema = z.object({
   name: z.string().min(2, 'Name is required'),
@@ -20,6 +25,7 @@ const productSchema = z.object({
   isActive: z.boolean(),
   isFeatured: z.boolean(),
   description: z.string().optional(),
+  origin: z.string().optional(),
 });
 
 type ProductFormData = z.infer<typeof productSchema>;
@@ -30,6 +36,9 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const { data: product, isLoading: isProductLoading } = useProduct(id);
   const { data: categories } = useCategories();
   const { mutate: updateProduct, isPending } = useUpdateProduct();
+
+  const [imagesList, setImagesList] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
@@ -48,9 +57,39 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         isActive: product.isActive,
         isFeatured: product.isFeatured,
         description: product.description || '',
+        origin: product.origin || 'Pakistan',
       });
+      if (product.images && product.images.length > 0) {
+        setImagesList(product.images);
+      } else if (product.imageUrl) {
+        setImagesList([product.imageUrl]);
+      } else {
+        setImagesList([]);
+      }
     }
   }, [product, reset]);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+    try {
+      const uploadedUrls: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const formData = new FormData();
+        formData.append('image', files[i]);
+        const res = await productApi.uploadImage(formData);
+        uploadedUrls.push(res.data.data.imageUrl);
+      }
+      setImagesList(prev => [...prev, ...uploadedUrls]);
+      toast.success('Images uploaded successfully!');
+    } catch {
+      toast.error('Failed to upload some images.');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const onSubmit = (data: ProductFormData) => {
     updateProduct({
@@ -58,6 +97,8 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
       data: {
         ...data,
         price: parseFloat(data.price),
+        imageUrl: imagesList[0] || undefined,
+        images: imagesList,
       }
     }, {
       onSuccess: () => router.push('/admin/products')
@@ -126,7 +167,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-5">
+          <div className="grid sm:grid-cols-3 gap-5">
             <div>
               <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Stock Capacity *</label>
               <input {...register('stock', { valueAsNumber: true })} type="number" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
@@ -137,6 +178,12 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
               <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Minimum Order Qty (MOQ) *</label>
               <input {...register('minOrderQty', { valueAsNumber: true })} type="number" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
               {errors.minOrderQty && <p className="text-[10px] text-red-500 mt-1">{errors.minOrderQty.message}</p>}
+            </div>
+
+            <div>
+              <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Origin Country</label>
+              <input {...register('origin')} placeholder="e.g. Pakistan" className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200" />
+              {errors.origin && <p className="text-[10px] text-red-500 mt-1">{errors.origin.message}</p>}
             </div>
           </div>
 
@@ -153,8 +200,61 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           </div>
 
           <div>
+            <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Product Pictures (Select multiple) *</label>
+            <div className="flex flex-wrap gap-3 items-center">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={uploading}
+                className="hidden"
+                id="edit-product-image-file"
+                multiple
+              />
+              <label
+                htmlFor="edit-product-image-file"
+                className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer hover:bg-slate-100 transition-all disabled:opacity-50"
+              >
+                {uploading ? (
+                  <>
+                    <Loader size={13} className="animate-spin text-primary" /> Uploading...
+                  </>
+                ) : (
+                  <>
+                    <ImageIcon size={13} /> Upload Image Files
+                  </>
+                )}
+              </label>
+
+              {imagesList.map((url, idx) => (
+                <div key={idx} className="w-16 h-16 rounded-xl border border-slate-150 overflow-hidden bg-slate-50 relative shrink-0 group">
+                  <img
+                    src={resolveImageUrl(url)}
+                    alt={`Preview ${idx + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImagesList(prev => prev.filter((_, i) => i !== idx));
+                    }}
+                    className="absolute inset-0 bg-red-650/90 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold"
+                  >
+                    Remove
+                  </button>
+                  {idx === 0 && (
+                    <span className="absolute bottom-0 inset-x-0 bg-primary/95 text-white text-[8px] font-black uppercase text-center py-0.5 tracking-wider">
+                      Cover
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
             <label className="text-[10px] text-slate-500 uppercase font-semibold mb-1.5 block">Product Description</label>
-            <textarea {...register('description')} rows={4} placeholder="Detailed product summary, origin characteristics, and freight options..." className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 resize-none" />
+            <textarea {...register('description')} rows={4} placeholder="Detailed product summary, origin characteristics, and freight options..." className="w-full px-3 py-2.5 bg-white rounded-xl text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-primary/40 border border-slate-200 resize-none" />
           </div>
 
           <button type="submit" disabled={isPending} className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-primary to-sky-600 hover:from-primary-hover hover:to-sky-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md shadow-primary/10 transition-all disabled:opacity-60">

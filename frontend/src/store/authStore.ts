@@ -9,7 +9,14 @@ export interface User {
   userType: string;
   phone?: string | null;
   companyName?: string | null;
+  companyReg?: string | null;
+  taxNumber?: string | null;
+  businessType?: string | null;
+  address?: string | null;
   city?: string | null;
+  country?: string | null;
+  postalCode?: string | null;
+  website?: string | null;
 }
 
 interface AuthState {
@@ -53,7 +60,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'dewan-auth',
-      partialize: (state) => ({ user: state.user, accessToken: state.accessToken }),
+      partialize: (state) => ({ user: state.user, accessToken: state.accessToken, isAuthenticated: state.isAuthenticated }),
     }
   )
 );

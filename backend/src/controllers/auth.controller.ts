@@ -87,4 +87,10 @@ export const authController = {
     logger.info('Password reset successful');
     res.json(ApiResponse.ok('Password reset successfully. Please log in.'));
   }),
+
+  updateProfile: asyncHandler(async (req: AuthRequest, res: Response) => {
+    const user = await authService.updateProfile(req.user!.id, req.body);
+    logger.info(`User profile updated for ID: ${user.id} by ${user.email}`);
+    res.json(ApiResponse.ok('Profile updated successfully', user));
+  }),
 };

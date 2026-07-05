@@ -66,35 +66,35 @@ function ResetPasswordForm() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block font-bold">New Password</label>
+              <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block font-bold">New Password</label>
               <div className="relative">
-                <Lock size={13} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Lock size={13} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-600" />
                 <input
                   type={showPw ? 'text' : 'password'}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   required minLength={8}
                   placeholder="Min. 8 characters"
-                  className="w-full pl-10 pr-10 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-slate-800 placeholder:text-slate-300"
+                  className="w-full pl-10 pr-10 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-slate-800 placeholder:text-slate-400"
                 />
                 <button type="button" onClick={() => setShowPw(!showPw)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700">
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-600 hover:text-slate-700">
                   {showPw ? <EyeOff size={13} /> : <Eye size={13} />}
                 </button>
               </div>
             </div>
 
             <div>
-              <label className="text-[10px] text-slate-400 uppercase tracking-widest mb-1.5 block font-bold">Confirm Password</label>
+              <label className="text-[10px] text-slate-600 uppercase tracking-widest mb-1.5 block font-bold">Confirm Password</label>
               <div className="relative">
-                <Lock size={13} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Lock size={13} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-600" />
                 <input
                   type={showPw ? 'text' : 'password'}
                   value={confirm}
                   onChange={e => setConfirm(e.target.value)}
                   required
                   placeholder="Repeat password"
-                  className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-slate-800 placeholder:text-slate-300"
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-slate-800 placeholder:text-slate-400"
                 />
               </div>
             </div>
@@ -105,7 +105,7 @@ function ResetPasswordForm() {
             </button>
           </form>
 
-          <p className="text-center text-[11px] text-slate-400 mt-5">
+          <p className="text-center text-[11px] text-slate-600 mt-5">
             <Link href="/auth/login" className="text-primary font-bold hover:underline">Back to Login</Link>
           </p>
         </>

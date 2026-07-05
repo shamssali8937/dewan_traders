@@ -68,3 +68,22 @@ export function useAuth() {
     isLogoutLoading: logoutMutation.isPending,
   };
 }
+
+export function useUpdateProfile() {
+  const { login } = useAuthStore();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (data: any) => authApi.updateProfile(data),
+    onSuccess: (res) => {
+      const updatedUser = res.data.data;
+      const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') || '' : '';
+      login(updatedUser, token);
+      qc.invalidateQueries({ queryKey: ['auth', 'me'] });
+      toast.success('Profile updated successfully!');
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message || 'Failed to update profile');
+    },
+  });
+}
+

@@ -113,6 +113,36 @@ async function main() {
   }
   console.log('✅ Testimonials seeded');
 
+  // ─── Payment Accounts ───
+  const paymentAccounts = [
+    {
+      type: 'bank',
+      bankName: 'Meezan Bank',
+      accountTitle: 'Dewan Traders Private Limited',
+      accountNumber: '9902010482810',
+      iban: 'PK49MEZN009902010482810',
+      branch: 'Sargodha Main Branch (Code 099)',
+      isActive: true,
+    },
+    {
+      type: 'easypaisa',
+      accountTitle: 'Sajjad Hussain Awan',
+      accountNumber: '03001234567',
+      isActive: true,
+    },
+    {
+      type: 'jazzcash',
+      accountTitle: 'Sajjad Hussain Awan',
+      accountNumber: '03097654321',
+      isActive: true,
+    },
+  ];
+
+  for (const pa of paymentAccounts) {
+    await prisma.paymentAccount.create({ data: pa });
+  }
+  console.log('✅ Payment Accounts seeded');
+
   console.log('\n🎉 Database seeded successfully!');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('Admin Email   : admin@dewantraders.com');
