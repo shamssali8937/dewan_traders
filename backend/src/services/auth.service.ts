@@ -131,10 +131,13 @@ export const authService = {
     const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
     const resetExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
-    // Store hashed token in refreshToken field (reusing column to avoid schema change)
+    // Store hashed token in dedicated column (does NOT overwrite refreshToken / active session)
     await prisma.user.update({
       where: { id: user.id },
-      data: { refreshToken: `reset:${hashedToken}:${resetExpiry.toISOString()}` },
+      data: {
+        passwordResetToken: hashedToken,
+        passwordResetExpiry: resetExpiry,
+      },
     });
 
     return { email: user.email, name: user.name, resetToken };
@@ -142,22 +145,23 @@ export const authService = {
 
   async resetPassword(token: string, newPassword: string) {
     const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
-    const searchToken = `reset:${hashedToken}:`;
 
     const user = await prisma.user.findFirst({
-      where: { refreshToken: { startsWith: searchToken } },
+      where: { passwordResetToken: hashedToken },
     });
 
-    if (!user || !user.refreshToken) throw ApiError.badRequest('Invalid or expired reset token');
+    if (!user || !user.passwordResetExpiry) {
+      throw ApiError.badRequest('Invalid or expired reset token');
+    }
 
-    const parts = user.refreshToken.split(':');
-    const expiry = new Date(parts[2]);
-    if (expiry < new Date()) throw ApiError.badRequest('Reset token has expired. Please request a new one.');
+    if (user.passwordResetExpiry < new Date()) {
+      throw ApiError.badRequest('Reset token has expired. Please request a new one.');
+    }
 
     const hashed = await bcrypt.hash(newPassword, 12);
     await prisma.user.update({
       where: { id: user.id },
-      data: { password: hashed, refreshToken: null },
+      data: { password: hashed, passwordResetToken: null, passwordResetExpiry: null },
     });
   },
 

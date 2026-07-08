@@ -4,65 +4,153 @@ import './globals.css';
 import { QueryProvider } from '@/lib/QueryProvider';
 import { Toaster } from 'sonner';
 import AnimatedBackground from '@/components/AnimatedBackground';
+import JsonLd from '@/components/seo/JsonLd';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://dewantraders.com';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dewantrade.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Dewan Traders — Import & Export, Sargodha Pakistan',
-    template: '%s | Dewan Traders',
+    default: 'Dewan Traders | Import & Export Company — Sargodha, Pakistan',
+    template: '%s | Dewan Traders Pakistan',
   },
   description:
-    'Dewan Traders is a Sargodha-based premium import & export company by Sajjad Hussain Awan, specializing in fresh fruits, vegetables, premium rice, surgical instruments, and sports equipment from Pakistan.',
+    'Dewan Traders is a trusted B2B import & export company based in Sargodha, Punjab, Pakistan. We export premium Kinnow mandarins, Basmati rice, fresh vegetables, surgical instruments from Sialkot, and sports goods globally. Contact us for wholesale trade enquiries.',
   keywords: [
-    'Dewan Traders', 'import export Pakistan', 'Sargodha exporter',
-    'Kinnow mandarin export', 'Basmati rice export', 'surgical instruments Sialkot',
-    'sports goods Pakistan', 'fresh fruits export', 'vegetables export',
-    'Sajjad Hussain Awan'
+    'Dewan Traders', 'Dewan Traders Sargodha', 'import export Pakistan',
+    'Kinnow exporter Pakistan', 'Kinnow mandarin wholesale', 'Sargodha Kinnow',
+    'Basmati rice exporter Pakistan', 'Pakistan rice export',
+    'fresh fruit export Pakistan', 'mango exporter Pakistan',
+    'vegetable exporter Pakistan', 'potato exporter Pakistan',
+    'surgical instruments exporter Sialkot', 'sports goods exporter Pakistan',
+    'Pakistan B2B trade supplier', 'agricultural exporter Punjab Pakistan',
+    'halal food exporter Pakistan', 'Pakistan export company',
+    'Sajjad Hussain Awan', 'import export Sargodha Punjab',
   ],
   authors: [{ name: 'Dewan Traders', url: SITE_URL }],
   creator: 'Dewan Traders',
   publisher: 'Dewan Traders',
+  category: 'Business',
+  classification: 'Import Export',
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true },
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: SITE_URL,
     siteName: 'Dewan Traders',
-    title: 'Dewan Traders — Premium Import & Export from Pakistan',
+    title: 'Dewan Traders | Premium Import & Export — Pakistan',
     description:
-      'Sourcing excellence since 1998. Fresh Fruits, Vegetables, Premium Rice, Surgical Items & Sports Goods — direct from Pakistan to the world.',
+      'B2B export of Kinnow mandarins, Basmati rice, fresh fruits & vegetables, surgical instruments, and sports goods from Pakistan. Est. 2005.',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Dewan Traders — Import & Export Company',
+        alt: 'Dewan Traders — Pakistan Import & Export Company',
+        type: 'image/png',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Dewan Traders — Premium Import & Export from Pakistan',
-    description: 'Fresh Fruits, Vegetables, Rice, Surgical & Sports Goods from Pakistan.',
-    images: ['/og-image.jpg'],
+    title: 'Dewan Traders | Premium Import & Export — Pakistan',
+    description: 'B2B export of Kinnow, Basmati rice, fruits, vegetables, surgical & sports goods from Pakistan.',
+    images: ['/og-image.png'],
   },
   alternates: {
     canonical: SITE_URL,
+    languages: { 'en-US': SITE_URL },
   },
   icons: {
-    icon: [
-      { url: '/images/logo.png', type: 'image/png' },
-    ],
+    icon: [{ url: '/images/logo.png', type: 'image/png' }],
     apple: '/images/logo.png',
     shortcut: '/images/logo.png',
+  },
+  verification: {
+    // Add your Google Search Console verification code here after registering:
+    // google: 'YOUR_GOOGLE_VERIFICATION_CODE',
+  },
+};
+
+// ─── Global Structured Data Schemas ──────────────────────────────────────────
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': ['Organization', 'LocalBusiness'],
+  name: 'Dewan Traders',
+  alternateName: 'Dewan Trade',
+  url: SITE_URL,
+  logo: `${SITE_URL}/images/logo.png`,
+  image: `${SITE_URL}/og-image.png`,
+  description:
+    'Dewan Traders is a premium B2B import & export company in Sargodha, Punjab, Pakistan, specializing in Kinnow mandarins, Basmati rice, fresh produce, surgical instruments, and sports goods.',
+  foundingDate: '2005',
+  founder: { '@type': 'Person', name: 'Sajjad Hussain Awan' },
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '38-A, Mansoorabad',
+    addressLocality: 'Sargodha',
+    addressRegion: 'Punjab',
+    postalCode: '40100',
+    addressCountry: 'PK',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 32.0836,
+    longitude: 72.6711,
+  },
+  contactPoint: [
+    {
+      '@type': 'ContactPoint',
+      telephone: '+92-345-6776075',
+      contactType: 'customer service',
+      availableLanguage: ['English', 'Urdu'],
+      areaServed: 'Worldwide',
+    },
+    {
+      '@type': 'ContactPoint',
+      email: 'awantransportuae@gmail.com',
+      contactType: 'sales',
+    },
+  ],
+  sameAs: [
+    'https://www.facebook.com/dewantraders',
+    'https://www.linkedin.com/company/dewan-traders',
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Export Products',
+    itemListElement: [
+      { '@type': 'Offer', itemOffered: { '@type': 'Product', name: 'Kinnow Mandarin' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Product', name: 'Basmati Rice' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Product', name: 'Fresh Vegetables' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Product', name: 'Surgical Instruments' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Product', name: 'Sports Goods' } },
+    ],
+  },
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Dewan Traders',
+  url: SITE_URL,
+  description: 'Pakistan import & export company — Kinnow, Basmati rice, surgical instruments, sports goods',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: { '@type': 'EntryPoint', urlTemplate: `${SITE_URL}/catalog?search={search_term_string}` },
+    'query-input': 'required name=search_term_string',
   },
 };
 
@@ -71,16 +159,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
+        {/* Geographic SEO tags */}
         <meta name="geo.region" content="PK-PB" />
-        <meta name="geo.placename" content="Sargodha, Pakistan" />
+        <meta name="geo.placename" content="Sargodha, Punjab, Pakistan" />
         <meta name="geo.position" content="32.0836;72.6711" />
         <meta name="ICBM" content="32.0836, 72.6711" />
+        {/* Language */}
+        <meta httpEquiv="content-language" content="en" />
+        {/* Structured Data */}
+        <JsonLd data={organizationSchema} />
+        <JsonLd data={websiteSchema} />
       </head>
       <body className={`${inter.variable} font-sans antialiased bg-white text-slate-900`} suppressHydrationWarning>
         <QueryProvider>
           {/* Global Ambient Background Animation */}
           <AnimatedBackground />
-
 
           <div className="relative z-10">
             {children}

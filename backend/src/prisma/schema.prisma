@@ -73,6 +73,10 @@ model User {
   isActive     Boolean  @default(true)
   refreshToken String?
 
+  // Password reset (dedicated fields — never reuse refreshToken for this)
+  passwordResetToken  String?
+  passwordResetExpiry DateTime?
+
   // Company-specific fields
   companyName   String?
   companyReg    String?

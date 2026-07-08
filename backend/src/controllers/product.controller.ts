@@ -23,10 +23,14 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (_req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  const allowed = ['.jpg', '.jpeg', '.png', '.webp', '.avif'];
+  const allowedExts = ['.jpg', '.jpeg', '.png', '.webp', '.avif'];
+  const allowedMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
   const ext = path.extname(file.originalname).toLowerCase();
-  if (allowed.includes(ext)) cb(null, true);
-  else cb(new Error('Only image files (jpg, png, webp) are allowed'));
+  if (allowedExts.includes(ext) && allowedMimes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file: only image files (jpg, png, webp, avif) are allowed'));
+  }
 };
 
 export const upload = multer({

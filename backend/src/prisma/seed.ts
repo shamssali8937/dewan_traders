@@ -145,8 +145,8 @@ async function main() {
 
   console.log('\n🎉 Database seeded successfully!');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('Admin Email   : admin@dewantraders.com');
-  console.log('Admin Password: Admin@123');
+  console.log('Admin Email: admin@dewantraders.com');
+  console.log('⚠️  Change the admin password immediately after first login.');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 }
 

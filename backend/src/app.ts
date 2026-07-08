@@ -59,6 +59,26 @@ const authLimiter = rateLimit({
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/forgot-password', authLimiter);
 
+// ─── Registration Rate Limit ─────────────────────────────────────────
+const registerLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5, // max 5 registrations per IP per 15 min
+  message: { success: false, message: 'Too many registration attempts. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api/auth/register', registerLimiter);
+
+// ─── Inquiry Spam Rate Limit ──────────────────────────────────────────
+const inquiryLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10, // max 10 inquiries per IP per 15 min
+  message: { success: false, message: 'Too many inquiries submitted. Please wait before trying again.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api/inquiries', inquiryLimiter);
+
 // ─── Body Parsers ────────────────────────
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -113,32 +133,18 @@ app.use('/uploads', express.static(path.join(process.cwd(), config.upload.dir)))
 
 // ─── Enhanced Health Check ────────────────────────
 app.get('/api/health', async (_req, res) => {
-  const start = Date.now();
   let dbStatus = 'ok';
-  let dbLatency = 0;
-
   try {
     await prisma.$queryRaw`SELECT 1`;
-    dbLatency = Date.now() - start;
   } catch {
     dbStatus = 'unavailable';
   }
-
-  const health = {
+  res.status(dbStatus === 'ok' ? 200 : 503).json({
     success: true,
     service: 'Dewan Traders API',
-    version: '1.0.0',
-    environment: config.nodeEnv,
+    status: dbStatus === 'ok' ? 'healthy' : 'degraded',
     timestamp: new Date().toISOString(),
-    uptime: `${Math.floor(process.uptime())}s`,
-    database: { status: dbStatus, latency: `${dbLatency}ms` },
-    memory: {
-      used: `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`,
-      total: `${Math.round(process.memoryUsage().heapTotal / 1024 / 1024)}MB`,
-    },
-  };
-
-  res.status(dbStatus === 'ok' ? 200 : 503).json(health);
+  });
 });
 
 // ─── API Routes ──────────────────────────

@@ -23,10 +23,14 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (_req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  const allowed = ['.jpg', '.jpeg', '.png', '.pdf'];
+  const allowedExts = ['.jpg', '.jpeg', '.png', '.pdf'];
+  const allowedMimes = ['image/jpeg', 'image/png', 'application/pdf'];
   const ext = path.extname(file.originalname).toLowerCase();
-  if (allowed.includes(ext)) cb(null, true);
-  else cb(new Error('Only image files (jpg, jpeg, png) or PDF are allowed'));
+  if (allowedExts.includes(ext) && allowedMimes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file: only image files (jpg, jpeg, png) or PDF are allowed'));
+  }
 };
 
 export const uploadPaymentProof = multer({
