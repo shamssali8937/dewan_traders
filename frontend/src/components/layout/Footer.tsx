@@ -22,15 +22,15 @@ export default function Footer() {
           <div className="space-y-2.5 text-[11px]">
             <div className="flex items-center gap-2">
               <MapPin size={13} className="text-primary shrink-0" />
-              <span>Satellite Town, Sargodha, Punjab, Pakistan</span>
+              <span>38-A, Mansoorabad, Sargodha, Punjab, 40100, Pakistan</span>
             </div>
             <div className="flex items-center gap-2">
               <Phone size={13} className="text-primary shrink-0" />
-              <a href="tel:+92483700000" className="hover:text-primary transition-colors">+92-48-3700000</a>
+              <a href="https://wa.me/923456776075" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">+92 345 6776075</a>
             </div>
             <div className="flex items-center gap-2">
               <Mail size={13} className="text-primary shrink-0" />
-              <a href="mailto:info@dewantraders.com" className="hover:text-primary transition-colors">info@dewantraders.com</a>
+              <a href="mailto:awantransportuae@gmail.com" className="hover:text-primary transition-colors">awantransportuae@gmail.com</a>
             </div>
           </div>
         </div>

@@ -61,9 +61,9 @@ export default function ContactPage() {
           {/* Contact Details Column */}
           <div className="lg:col-span-2 space-y-5">
             {[
-              { icon: MapPin, title: 'Office Address', lines: ['Satellite Town, Sargodha', 'Punjab, Pakistan'], color: 'text-orange-500 bg-orange-50 border-orange-100' },
-              { icon: Phone, title: 'Phone / WhatsApp', lines: ['+92-48-3700000', '+92-300-1234567'], color: 'text-emerald-500 bg-emerald-50 border-emerald-100' },
-              { icon: Mail, title: 'Email Address', lines: ['info@dewantraders.com', 'export@dewantraders.com'], color: 'text-sky-500 bg-sky-50 border-sky-100' },
+              { icon: MapPin, title: 'Office Address', lines: ['38-A, Mansoorabad, Sargodha', 'Punjab, 40100, Pakistan'], color: 'text-orange-500 bg-orange-50 border-orange-100' },
+              { icon: Phone, title: 'Phone / WhatsApp', lines: ['+92 345 6776075'], color: 'text-emerald-500 bg-emerald-50 border-emerald-100' },
+              { icon: Mail, title: 'Email Address', lines: ['awantransportuae@gmail.com'], color: 'text-sky-500 bg-sky-50 border-sky-100' },
               { icon: Clock, title: 'Trading Hours', lines: ['Mon–Sat: 9:00 AM – 6:00 PM', 'Sunday: Closed (PKT)'], color: 'text-indigo-500 bg-indigo-50 border-indigo-100' },
             ].map(({ icon: Icon, title, lines, color }) => (
               <div key={title} className="glass rounded-2xl p-5 flex gap-4 bg-white/70 border border-slate-100 shadow-sm">
@@ -72,7 +72,23 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide mb-1">{title}</h3>
-                  {lines.map((l) => <p key={l} className="text-xs text-slate-500 leading-relaxed font-semibold">{l}</p>)}
+                  {lines.map((l) => {
+                    if (title === 'Phone / WhatsApp') {
+                      return (
+                        <a key={l} href="https://wa.me/923456776075" target="_blank" rel="noopener noreferrer" className="block text-xs text-slate-500 hover:text-primary transition-colors leading-relaxed font-semibold">
+                          {l}
+                        </a>
+                      );
+                    }
+                    if (title === 'Email Address') {
+                      return (
+                        <a key={l} href={`mailto:${l}`} className="block text-xs text-slate-500 hover:text-primary transition-colors leading-relaxed font-semibold">
+                          {l}
+                        </a>
+                      );
+                    }
+                    return <p key={l} className="text-xs text-slate-500 leading-relaxed font-semibold">{l}</p>;
+                  })}
                 </div>
               </div>
             ))}

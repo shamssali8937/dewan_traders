@@ -342,11 +342,11 @@ export default function MobileMenu({
 
             {/* Corporate Contact footer */}
             <div className="space-y-2 pt-3 border-t border-slate-100 text-[10px] text-slate-500">
+              <a href="https://wa.me/923456776075" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-primary transition-colors">
+                <Phone size={11} className="text-slate-400" /> +92 345 6776075
+              </a>
               <div className="flex items-center gap-2">
-                <Phone size={11} className="text-slate-400" /> +92-48-3700000
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail size={11} className="text-slate-400" /> info@dewantraders.com
+                <Mail size={11} className="text-slate-400" /> awantransportuae@gmail.com
               </div>
               <div className="font-medium text-[9px] tracking-wide">Sargodha, Punjab, Pakistan — B2B Consolidation Packhouse</div>
             </div>
