@@ -90,11 +90,11 @@ export default function Navbar() {
         {/* 1. Header Utility Bar */}
         <div className="hidden lg:flex items-center justify-between px-10 py-2.5 bg-slate-950 text-[10px] text-slate-300 font-semibold tracking-wider border-b border-white/5 shadow-sm">
           <div className="flex items-center gap-6">
-            <a href="tel:+92483700000" className="flex items-center gap-2 hover:text-white transition-colors">
-              <Phone size={10} className="text-primary" /> +92-48-3700000
+            <a href="https://wa.me/923456776075" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">
+              <Phone size={10} className="text-primary" /> +92 345 6776075
             </a>
-            <a href="mailto:info@dewantraders.com" className="flex items-center gap-2 hover:text-white transition-colors">
-              <Mail size={10} className="text-primary" /> info@dewantraders.com
+            <a href="mailto:awantransportuae@gmail.com" className="flex items-center gap-2 hover:text-white transition-colors">
+              <Mail size={10} className="text-primary" /> awantransportuae@gmail.com
             </a>
             <span className="text-slate-700">|</span>
             <span className="text-slate-400 font-sans tracking-wide">B2B Enterprise Export Portal</span>

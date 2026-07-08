@@ -57,6 +57,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: SITE_URL,
   },
+  icons: {
+    icon: [
+      { url: '/images/logo.png', type: 'image/png' },
+    ],
+    apple: '/images/logo.png',
+    shortcut: '/images/logo.png',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -45,14 +45,14 @@ const initialJournal = [
 ];
 
 const initialContact = {
-  address: 'Satellite Town, Sargodha, Punjab, Pakistan',
+  address: '38-A, Mansoorabad, Sargodha, Punjab, 40100, Pakistan',
   city: 'Sargodha',
   country: 'Pakistan',
-  phone1: '+92-48-3700000',
-  phone2: '+92-300-1234567',
-  email1: 'info@dewantraders.com',
-  email2: 'export@dewantraders.com',
-  whatsapp: '+92-300-1234567',
+  phone1: '+92 345 6776075',
+  phone2: '+92 345 6776075',
+  email1: 'awantransportuae@gmail.com',
+  email2: 'awantransportuae@gmail.com',
+  whatsapp: '+923456776075',
   workingHours: 'Mon–Sat: 9:00 AM – 6:00 PM (PKT)',
 };
 
