@@ -12,12 +12,52 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const FROM = `"Dewan Traders" <${process.env.SMTP_USER || 'noreply@dewantraders.com'}>`;
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'sajjad@dewantraders.com';
+const getFrontendUrl = (): string => {
+  if (Array.isArray(config.frontendUrl)) {
+    return config.frontendUrl[0] || 'http://localhost:3001';
+  }
+  return (config.frontendUrl as string) || 'http://localhost:3001';
+};
+
+const FROM = `"Dewan Traders" <${process.env.FROM_EMAIL || 'onboarding@resend.dev'}>`;
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'awantransportuae@gmail.com';
 
 export const mailer = {
+  async sendVerificationEmail(to: string, name: string, token: string) {
+    try {
+      const frontendBaseUrl = (process.env.FRONTEND_URL || 'http://localhost:3001').split(',')[0].trim();
+      const verifyUrl = `${frontendBaseUrl}/auth/verify-email?token=${token}`;
+      await transporter.sendMail({
+        from: FROM,
+        to,
+        subject: 'Verify your email address — Dewan Traders',
+        html: `
+          <div style="font-family:Arial,sans-serif;max-width:580px;margin:auto;padding:32px;border:1px solid #e2e8f0;border-radius:12px">
+            <h2 style="color:#0284c7;margin-bottom:8px">Verify your email address</h2>
+            <p style="color:#475569;font-size:14px;line-height:1.6">
+              Thank you for signing up at <strong>Dewan Traders</strong>. Before you can log in and place B2B orders or request quotations, we need to verify your email.
+            </p>
+            <div style="margin:24px 0">
+              <a href="${verifyUrl}" style="display:inline-block;padding:12px 24px;background:linear-gradient(135deg,#0284c7,#0ea5e9);color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
+                Verify Email Address
+              </a>
+            </div>
+            <p style="color:#64748b;font-size:12px;line-height:1.5">
+              Or copy and paste this link in your browser:<br/>
+              <a href="${verifyUrl}" style="color:#0284c7;word-break:break-all">${verifyUrl}</a>
+            </p>
+            <p style="color:#94a3b8;font-size:11px;margin-top:24px">Dewan Traders — Sargodha, Punjab, Pakistan</p>
+          </div>`,
+      });
+      logger.info(`Verification email sent to ${to}`);
+    } catch (err) {
+      logger.error(`Failed to send verification email to ${to}: ${err}`);
+    }
+  },
+
   async sendWelcome(to: string, name: string) {
     try {
+      const frontendBaseUrl = (process.env.FRONTEND_URL || 'http://localhost:3001').split(',')[0].trim();
       await transporter.sendMail({
         from: FROM,
         to,
@@ -29,7 +69,7 @@ export const mailer = {
               Your buyer account on <strong>Dewan Traders</strong> is ready. You can now browse our export catalog,
               request bulk quotations, and track your shipments from your personal dashboard.
             </p>
-            <a href="${config.frontendUrl}/user" style="display:inline-block;margin-top:20px;padding:12px 24px;background:linear-gradient(135deg,#0284c7,#0ea5e9);color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
+            <a href="${frontendBaseUrl}/user" style="display:inline-block;margin-top:20px;padding:12px 24px;background:linear-gradient(135deg,#0284c7,#0ea5e9);color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
               Go to My Dashboard
             </a>
             <p style="color:#94a3b8;font-size:11px;margin-top:24px">Dewan Traders — Sargodha, Punjab, Pakistan</p>
@@ -120,7 +160,7 @@ export const mailer = {
 
             <p style="color:#475569;font-size:13px">Our team will verify the payment and contact you through Email or WhatsApp for shipment confirmation.</p>
             
-            <a href="${config.frontendUrl}/user" style="display:inline-block;margin-top:16px;padding:12px 24px;background:linear-gradient(135deg,#0284c7,#0ea5e9);color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
+            <a href="${getFrontendUrl()}/user" style="display:inline-block;margin-top:16px;padding:12px 24px;background:linear-gradient(135deg,#0284c7,#0ea5e9);color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
               Upload Payment Screenshot
             </a>
             <p style="color:#94a3b8;font-size:11px;margin-top:24px">Dewan Traders — Sargodha, Punjab, Pakistan</p>
@@ -152,7 +192,7 @@ export const mailer = {
               <tr><td style="padding:6px 0;font-weight:bold">Value:</td><td>PKR ${Number(data.total).toLocaleString()}</td></tr>
               <tr><td style="padding:6px 0;font-weight:bold">Payment Method:</td><td style="text-transform:capitalize">${data.paymentMethod}</td></tr>
             </table>
-            <a href="${config.frontendUrl}/admin/orders/${data.id}" style="display:inline-block;padding:12px 24px;background:#e11d48;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
+            <a href="${getFrontendUrl()}/admin/orders/${data.id}" style="display:inline-block;padding:12px 24px;background:#e11d48;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
               Open Order details page
             </a>
           </div>`,
@@ -174,7 +214,7 @@ export const mailer = {
             <h2 style="color:#0d9488">Payment Receipt Submitted</h2>
             <p style="color:#475569;font-size:14px">Customer <strong>${data.customerName}</strong> uploaded a payment screenshot for order <strong>${data.orderNumber}</strong>.</p>
             <p style="color:#475569;font-size:14px">Please review the proof details page to approve or reject the payment credentials.</p>
-            <a href="${config.frontendUrl}/admin/orders/${data.orderId}" style="display:inline-block;margin-top:16px;padding:12px 24px;background:#0d9488;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
+            <a href="${getFrontendUrl()}/admin/orders/${data.orderId}" style="display:inline-block;margin-top:16px;padding:12px 24px;background:#0d9488;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
               Verify Payment Screenshot
             </a>
           </div>`,
@@ -196,7 +236,7 @@ export const mailer = {
             <h2 style="color:#10b981">Payment Verified Successfully</h2>
             <p style="color:#475569;font-size:14px">Hi ${name}, your payment for order <strong>${orderNumber}</strong> has been approved.</p>
             <p style="color:#475569;font-size:14px">Your order is now being processed and cleared for dispatch.</p>
-            <a href="${config.frontendUrl}/user" style="display:inline-block;margin-top:16px;padding:12px 24px;background:#10b981;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
+            <a href="${getFrontendUrl()}/user" style="display:inline-block;margin-top:16px;padding:12px 24px;background:#10b981;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
               View Order Timeline
             </a>
             <p style="color:#94a3b8;font-size:11px;margin-top:24px">Dewan Traders — Sargodha, Punjab, Pakistan</p>
@@ -221,7 +261,7 @@ export const mailer = {
               Reason: <strong>${reason}</strong>
             </div>
             <p style="color:#475569;font-size:14px">Please upload a valid bank transfer transaction screenshot or contact support.</p>
-            <a href="${config.frontendUrl}/user" style="display:inline-block;margin-top:16px;padding:12px 24px;background:#ef4444;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
+            <a href="${getFrontendUrl()}/user" style="display:inline-block;margin-top:16px;padding:12px 24px;background:#ef4444;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
               Upload New Receipt
             </a>
             <p style="color:#94a3b8;font-size:11px;margin-top:24px">Dewan Traders — Sargodha, Punjab, Pakistan</p>
@@ -264,7 +304,7 @@ export const mailer = {
             <div style="background:#f0fdf4;border:1px solid #bbf7d0;padding:16px;border-radius:8px;color:#15803d;font-size:13px;margin:16px 0">
               Tracking Reference No: <strong style="font-family:monospace">${trackingNumber}</strong>
             </div>
-            <a href="${config.frontendUrl}/track?number=${orderNumber}" style="display:inline-block;padding:12px 24px;background:#0d9488;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
+            <a href="${getFrontendUrl()}/track?number=${orderNumber}" style="display:inline-block;padding:12px 24px;background:#0d9488;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
               Track Shipment Progress
             </a>
             <p style="color:#94a3b8;font-size:11px;margin-top:24px">Dewan Traders — Sargodha, Punjab, Pakistan</p>
@@ -348,7 +388,7 @@ export const mailer = {
             <h2 style="color:#0284c7">Inquiry Received</h2>
             <p style="color:#475569;font-size:14px">Hi ${name}, we have received your inquiry about <strong>${subject}</strong>.</p>
             <p style="color:#475569;font-size:14px">Sajjad Hussain Awan and our export team will review your request and respond within <strong>24 hours</strong>.</p>
-            <a href="${config.frontendUrl}/contact" style="display:inline-block;margin-top:16px;padding:12px 24px;background:linear-gradient(135deg,#0284c7,#0ea5e9);color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
+            <a href="${getFrontendUrl()}/contact" style="display:inline-block;margin-top:16px;padding:12px 24px;background:linear-gradient(135deg,#0284c7,#0ea5e9);color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
               Visit Our Website
             </a>
             <p style="color:#94a3b8;font-size:11px;margin-top:24px">Dewan Traders — Sargodha, Punjab, Pakistan</p>
@@ -376,7 +416,7 @@ export const mailer = {
               <tr><td style="padding:6px 0;font-weight:bold">Product:</td><td>${inquiry.productName || 'General'}</td></tr>
               <tr><td style="padding:6px 0;font-weight:bold;vertical-align:top">Message:</td><td>${inquiry.message}</td></tr>
             </table>
-            <a href="${config.frontendUrl}/admin/inquiries" style="display:inline-block;margin-top:20px;padding:12px 24px;background:linear-gradient(135deg,#0284c7,#0ea5e9);color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
+            <a href="${getFrontendUrl()}/admin/inquiries" style="display:inline-block;margin-top:20px;padding:12px 24px;background:linear-gradient(135deg,#0284c7,#0ea5e9);color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
               View in Admin Panel
             </a>
           </div>`,
@@ -387,7 +427,7 @@ export const mailer = {
   },
 
   async sendPasswordReset(to: string, name: string, resetToken: string) {
-    const resetUrl = `${config.frontendUrl}/auth/reset-password?token=${resetToken}`;
+    const resetUrl = `${getFrontendUrl()}/auth/reset-password?token=${resetToken}`;
     try {
       await transporter.sendMail({
         from: FROM,

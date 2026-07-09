@@ -1,17 +1,83 @@
 import { prisma } from '../config/database';
 import { ApiError } from '../utils/ApiError';
 
+// B2B Enterprise Pricing Map matching frontend pricing.ts
+const PRICING_MAP: Record<string, { pkPrice: number; intPrice: number }> = {
+  'kinnow-mandarin': { pkPrice: 120, intPrice: 9.00 },
+  'mango-chaunsa': { pkPrice: 350, intPrice: 18.00 },
+  'blood-orange': { pkPrice: 220, intPrice: 11.00 },
+  'guava': { pkPrice: 180, intPrice: 12.00 },
+  'red-onion': { pkPrice: 150, intPrice: 380.00 },
+  'potato': { pkPrice: 84, intPrice: 320.00 },
+  'tomato': { pkPrice: 160, intPrice: 8.00 },
+  'garlic': { pkPrice: 450, intPrice: 18.00 },
+  'super-kernel-basmati': { pkPrice: 490, intPrice: 1250.00 },
+  '1121-sella-basmati': { pkPrice: 530, intPrice: 1350.00 },
+  'surgical-scissors-set': { pkPrice: 2200, intPrice: 12.50 },
+  'forceps-set': { pkPrice: 2800, intPrice: 15.00 },
+  'scalpel-set': { pkPrice: 1800, intPrice: 9.50 },
+  'cricket-bat': { pkPrice: 8500, intPrice: 45.00 },
+  'football': { pkPrice: 3800, intPrice: 18.00 },
+  'hockey-stick': { pkPrice: 5500, intPrice: 28.00 }
+};
+
+const ALIASES: Record<string, string> = {
+  'kinnow': 'kinnow-mandarin',
+  'mango': 'mango-chaunsa',
+  'fresh-onion': 'red-onion',
+  'red-onions': 'red-onion',
+  'super-kernel-basmati-rice': 'super-kernel-basmati',
+  '1121-sella-basmati-rice': '1121-sella-basmati',
+  'surgical-scissors': 'surgical-scissors-set',
+  'hemostatic-forceps-set': 'forceps-set',
+  'scalpel-handles-blades': 'scalpel-set',
+  'surgical-knife-set': 'scalpel-set',
+  'english-willow-cricket-bat': 'cricket-bat',
+  'thermo-bonded-football': 'football',
+  'composite-hockey-stick': 'hockey-stick'
+};
+
+function getProductB2bPrice(slug: string, isInternational: boolean, fallback: number): number {
+  const clean = slug.toLowerCase().trim();
+  let targetKey = clean;
+  if (PRICING_MAP[clean]) {
+    targetKey = clean;
+  } else if (ALIASES[clean]) {
+    targetKey = ALIASES[clean];
+  } else {
+    for (const key of Object.keys(PRICING_MAP)) {
+      if (clean.includes(key) || key.includes(clean)) {
+        targetKey = key;
+        break;
+      }
+    }
+  }
+  
+  const pricing = PRICING_MAP[targetKey];
+  if (!pricing) return fallback;
+  return isInternational ? pricing.intPrice : pricing.pkPrice;
+}
+
 export const orderService = {
   async create(userId: string, data: any) {
     const { items, notes, shippingAddress, billingAddress, paymentMethod } = data;
 
+    const isInternational = notes ? (
+      notes.includes('Market: International') ||
+      notes.includes('International') ||
+      notes.includes('USD') ||
+      notes.includes('Container') ||
+      notes.includes('Incoterm')
+    ) : false;
+
     // Calculate packing surcharge multiplier
     let packingMultiplier = 1.0;
     if (notes && typeof notes === 'string') {
-      if (notes.includes('Container Type: 40ft_reefer')) packingMultiplier = 1.25;
-      else if (notes.includes('Container Type: 20ft_reefer')) packingMultiplier = 1.15;
-      else if (notes.includes('Container Type: 40ft_dry')) packingMultiplier = 1.08;
-      else if (notes.includes('Container Type: 20ft_dry')) packingMultiplier = 1.04;
+      const notesUpper = notes.toUpperCase();
+      if (notesUpper.includes('4FT_REEFER') || notesUpper.includes('40FT_REEFER')) packingMultiplier = 1.25;
+      else if (notesUpper.includes('2FT_REEFER') || notesUpper.includes('20FT_REEFER')) packingMultiplier = 1.15;
+      else if (notesUpper.includes('4FT_DRY') || notesUpper.includes('40FT_DRY')) packingMultiplier = 1.08;
+      else if (notesUpper.includes('2FT_DRY') || notesUpper.includes('20FT_DRY')) packingMultiplier = 1.04;
     }
 
     // Calculate totals
@@ -22,7 +88,8 @@ export const orderService = {
       const product = await prisma.product.findUnique({ where: { id: item.productId } });
       if (!product) throw ApiError.notFound(`Product ${item.productId} not found`);
 
-      const adjustedPrice = Number(product.price) * packingMultiplier;
+      const basePrice = getProductB2bPrice(product.slug, isInternational, Number(product.price));
+      const adjustedPrice = basePrice * packingMultiplier;
       const itemTotal = adjustedPrice * item.quantity;
       subtotal += itemTotal;
       orderItems.push({
@@ -34,8 +101,39 @@ export const orderService = {
       });
     }
 
+    // Calculate dynamic shipping, delivery, and docs surcharges
+    let shippingCost = 0;
+    if (isInternational) {
+      let containerBaseCost = 0;
+      const notesUpper = notes ? notes.toUpperCase() : '';
+      if (notesUpper.includes('20FT_REEFER')) containerBaseCost = 1800;
+      else if (notesUpper.includes('40FT_REEFER')) containerBaseCost = 2800;
+      else if (notesUpper.includes('20FT_DRY')) containerBaseCost = 1000;
+      else if (notesUpper.includes('40FT_DRY')) containerBaseCost = 1500;
+      else if (notesUpper.includes('BULK_LOOSE') || notesUpper.includes('BULK/LOOSE')) containerBaseCost = 400;
+
+      let docClearanceCost = 0;
+      if (notesUpper.includes('DOCS')) docClearanceCost += 150;
+      if (notesUpper.includes('CUSTOMS')) docClearanceCost += 250;
+
+      shippingCost = containerBaseCost + docClearanceCost;
+    } else {
+      let localPackagingTotal = 0;
+      if (notes && notes.includes('Packaging: Premium Packaging')) {
+        localPackagingTotal = 1500;
+      }
+
+      let localDeliveryTotal = 0;
+      if (notes) {
+        if (notes.includes('Delivery: EXPRESS')) localDeliveryTotal = 600;
+        else if (notes.includes('Delivery: STANDARD')) localDeliveryTotal = 250;
+      }
+
+      shippingCost = localPackagingTotal + localDeliveryTotal;
+    }
+
     const tax = subtotal * 0;
-    const total = subtotal + tax;
+    const total = subtotal + shippingCost;
     const orderNumber = `DT-${Date.now()}`;
 
     const order = await prisma.order.create({
@@ -44,6 +142,7 @@ export const orderService = {
         userId,
         subtotal,
         tax,
+        shippingCost,
         total,
         notes,
         shippingAddress,

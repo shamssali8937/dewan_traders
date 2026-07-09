@@ -199,16 +199,9 @@ async function handleMockRequest(config: any) {
 }
 
 // ─── Request Interceptor ─────────────────────────────────────────
+// Auth is handled via httpOnly cookies set by the backend — no localStorage token needed.
 api.interceptors.request.use(
-  (config) => {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('accessToken');
-      if (token && config.headers) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    }
-    return config;
-  },
+  (config) => config,
   (error) => Promise.reject(error)
 );
 
@@ -229,6 +222,10 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    // In production, never fall back to mock — reject properly
+    if (process.env.NODE_ENV === 'production') {
+      return Promise.reject(error);
+    }
     // Check if network error or connection refused (backend server is down)
     if (!error.response || error.code === 'ERR_NETWORK' || error.response.status >= 500) {
       return handleMockRequest(originalRequest);
@@ -251,9 +248,7 @@ api.interceptors.response.use(
         const accessToken = refreshResponse.data?.data?.accessToken;
 
         if (accessToken) {
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('accessToken', accessToken);
-          }
+          // Token is managed via httpOnly cookie by the backend — no localStorage needed
           useAuthStore.getState().setToken(accessToken);
         }
 
@@ -262,7 +257,6 @@ api.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError, null);
         if (typeof window !== 'undefined') {
-          localStorage.removeItem('accessToken');
           window.location.href = '/auth/login';
         }
         return Promise.reject(refreshError);

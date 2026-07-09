@@ -82,12 +82,6 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Demo credentials */}
-          <div className="mt-6 p-4 bg-sky-50 border border-sky-100 rounded-2xl text-[11px] text-sky-800">
-            <p className="font-bold uppercase tracking-wider mb-1.5">Demo Admin Credentials</p>
-            <p className="font-semibold text-slate-600">Email: <span className="font-mono text-primary select-all">admin@dewantraders.com</span></p>
-            <p className="font-semibold text-slate-600 mt-0.5">Password: <span className="font-mono text-primary select-all">Admin@123</span></p>
-          </div>
 
           <p className="text-center text-xs text-slate-600 mt-6">
             Don't have a trade account?{' '}

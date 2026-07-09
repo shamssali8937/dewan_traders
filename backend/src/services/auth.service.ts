@@ -42,6 +42,7 @@ export const authService = {
     const existing = await prisma.user.findUnique({ where: { email: input.email } });
     if (existing) throw ApiError.conflict('Email already in use');
 
+    const verifyToken = crypto.randomBytes(32).toString('hex');
     const hashed = await bcrypt.hash(input.password, 12);
     const user = await prisma.user.create({
       data: {
@@ -56,23 +57,30 @@ export const authService = {
         taxNumber: input.taxNumber,
         address: input.address,
         city: input.city,
+        isEmailVerified: false,
+        emailVerifyToken: verifyToken,
       },
       select: {
         id: true, name: true, email: true, role: true,
         userType: true, phone: true, companyName: true,
-        createdAt: true,
+        createdAt: true, isEmailVerified: true,
       },
     });
 
-    const { accessToken, refreshToken } = generateTokens(user.id, user.email, user.role);
-    await prisma.user.update({ where: { id: user.id }, data: { refreshToken } });
+    // Send verification email via Resend SMTP
+    const { mailer } = require('../utils/mailer');
+    mailer.sendVerificationEmail(user.email, user.name, verifyToken);
 
-    return { user, accessToken, refreshToken };
+    return { user };
   },
 
   async login(input: LoginInput) {
     const user = await prisma.user.findUnique({ where: { email: input.email } });
     if (!user || !user.isActive) throw ApiError.unauthorized('Invalid credentials');
+
+    if (!user.isEmailVerified) {
+      throw ApiError.forbidden('Please verify your email before logging in. Check your inbox for the verification link.');
+    }
 
     const isMatch = await bcrypt.compare(input.password, user.password);
     if (!isMatch) throw ApiError.unauthorized('Invalid credentials');
@@ -82,6 +90,38 @@ export const authService = {
 
     const { password: _, ...userWithoutPassword } = user;
     return { user: userWithoutPassword, accessToken, refreshToken };
+  },
+
+  async verifyEmail(token: string) {
+    const user = await prisma.user.findFirst({
+      where: { emailVerifyToken: token },
+    });
+
+    if (!user) {
+      throw ApiError.badRequest('Invalid or expired email verification token.');
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        isEmailVerified: true,
+        emailVerifyToken: null,
+      },
+      select: {
+        id: true, name: true, email: true, role: true,
+        userType: true, phone: true, companyName: true,
+        createdAt: true, isEmailVerified: true,
+      },
+    });
+
+    // Send welcome email (non-blocking)
+    const { mailer } = require('../utils/mailer');
+    mailer.sendWelcome(updatedUser.email, updatedUser.name);
+
+    const { accessToken, refreshToken } = generateTokens(updatedUser.id, updatedUser.email, updatedUser.role);
+    await prisma.user.update({ where: { id: updatedUser.id }, data: { refreshToken } });
+
+    return { user: updatedUser, accessToken, refreshToken };
   },
 
   async refreshToken(token: string) {
@@ -131,10 +171,13 @@ export const authService = {
     const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
     const resetExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
-    // Store hashed token in refreshToken field (reusing column to avoid schema change)
+    // Store hashed token in dedicated column (does NOT overwrite refreshToken / active session)
     await prisma.user.update({
       where: { id: user.id },
-      data: { refreshToken: `reset:${hashedToken}:${resetExpiry.toISOString()}` },
+      data: {
+        passwordResetToken: hashedToken,
+        passwordResetExpiry: resetExpiry,
+      },
     });
 
     return { email: user.email, name: user.name, resetToken };
@@ -142,22 +185,23 @@ export const authService = {
 
   async resetPassword(token: string, newPassword: string) {
     const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
-    const searchToken = `reset:${hashedToken}:`;
 
     const user = await prisma.user.findFirst({
-      where: { refreshToken: { startsWith: searchToken } },
+      where: { passwordResetToken: hashedToken },
     });
 
-    if (!user || !user.refreshToken) throw ApiError.badRequest('Invalid or expired reset token');
+    if (!user || !user.passwordResetExpiry) {
+      throw ApiError.badRequest('Invalid or expired reset token');
+    }
 
-    const parts = user.refreshToken.split(':');
-    const expiry = new Date(parts[2]);
-    if (expiry < new Date()) throw ApiError.badRequest('Reset token has expired. Please request a new one.');
+    if (user.passwordResetExpiry < new Date()) {
+      throw ApiError.badRequest('Reset token has expired. Please request a new one.');
+    }
 
     const hashed = await bcrypt.hash(newPassword, 12);
     await prisma.user.update({
       where: { id: user.id },
-      data: { password: hashed, refreshToken: null },
+      data: { password: hashed, passwordResetToken: null, passwordResetExpiry: null },
     });
   },
 
