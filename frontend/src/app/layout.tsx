@@ -79,8 +79,7 @@ export const metadata: Metadata = {
     shortcut: '/images/logo.png',
   },
   verification: {
-    // Add your Google Search Console verification code here after registering:
-    // google: 'YOUR_GOOGLE_VERIFICATION_CODE',
+    google: 'h6UM8mFKWkVSZlfG8QFSve4zgzVYjypQtAZXPVb6NA4',
   },
 };
 

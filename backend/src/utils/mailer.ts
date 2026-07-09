@@ -19,7 +19,7 @@ const getFrontendUrl = (): string => {
   return (config.frontendUrl as string) || 'http://localhost:3001';
 };
 
-const FROM = `"Dewan Traders" <${process.env.FROM_EMAIL || 'onboarding@resend.dev'}>`;
+const FROM = `"Dewan Traders" <${process.env.FROM_EMAIL || 'noreply@dewantrade.com'}>`;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'awantransportuae@gmail.com';
 
 export const mailer = {
@@ -101,7 +101,7 @@ export const mailer = {
 
       let paymentInstructionHtml = '';
       const methodLabel = paymentMethod === 'bank_transfer' ? 'Bank Transfer' : paymentMethod === 'easypaisa' ? 'EasyPaisa' : 'JazzCash';
-      
+
       const filteredAccounts = paymentAccounts.filter(acc => acc.type === (paymentMethod === 'bank_transfer' ? 'bank' : paymentMethod));
 
       if (filteredAccounts.length > 0) {

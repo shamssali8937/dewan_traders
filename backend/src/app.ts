@@ -24,6 +24,9 @@ import notificationRoutes from './routes/notification.routes';
 
 const app = express();
 
+// Trust reverse proxy (Render, Heroku, Nginx, Cloudflare) for rate limiting client IPs
+app.set('trust proxy', 1);
+
 // ─── Security ───────────────────────────
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
