@@ -30,14 +30,29 @@ export function useAuth() {
 
   const registerMutation = useMutation({
     mutationFn: (data: RegisterInput) => authApi.register(data),
-    onSuccess: (res) => {
-      const { user, accessToken } = res.data.data;
-      login(user, accessToken);
-      toast.success('Account created successfully!');
-      router.push('/user');
+    onSuccess: () => {
+      toast.success('Account created successfully! Please check your email inbox to verify your account.');
+      router.push('/auth/login?registered=true');
     },
     onError: (err: any) => {
       toast.error(err?.response?.data?.message || 'Registration failed');
+    },
+  });
+
+  const verifyEmailMutation = useMutation({
+    mutationFn: (token: string) => authApi.verifyEmail(token),
+    onSuccess: (res) => {
+      const { user, accessToken } = res.data.data;
+      login(user, accessToken);
+      toast.success(`Email verified successfully! Welcome to Dewan Traders, ${user.name}.`);
+      if (user.role === 'admin' || user.role === 'manager') {
+        router.push('/admin');
+      } else {
+        router.push('/user');
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message || 'Verification failed. The link may have expired or is invalid.');
     },
   });
 
@@ -63,9 +78,11 @@ export function useAuth() {
     login: loginMutation.mutate,
     register: registerMutation.mutate,
     logout: logoutMutation.mutate,
+    verifyEmail: verifyEmailMutation.mutate,
     isLoginLoading: loginMutation.isPending,
     isRegisterLoading: registerMutation.isPending,
     isLogoutLoading: logoutMutation.isPending,
+    isVerifyingEmail: verifyEmailMutation.isPending,
   };
 }
 

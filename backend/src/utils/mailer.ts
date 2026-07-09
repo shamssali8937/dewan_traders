@@ -12,12 +12,45 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const FROM = `"Dewan Traders" <${process.env.SMTP_USER || 'noreply@dewantraders.com'}>`;
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'sajjad@dewantraders.com';
+const FROM = `"Dewan Traders" <${process.env.FROM_EMAIL || 'onboarding@resend.dev'}>`;
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'awantransportuae@gmail.com';
 
 export const mailer = {
+  async sendVerificationEmail(to: string, name: string, token: string) {
+    try {
+      const frontendBaseUrl = (process.env.FRONTEND_URL || 'http://localhost:3001').split(',')[0].trim();
+      const verifyUrl = `${frontendBaseUrl}/auth/verify-email?token=${token}`;
+      await transporter.sendMail({
+        from: FROM,
+        to,
+        subject: 'Verify your email address — Dewan Traders',
+        html: `
+          <div style="font-family:Arial,sans-serif;max-width:580px;margin:auto;padding:32px;border:1px solid #e2e8f0;border-radius:12px">
+            <h2 style="color:#0284c7;margin-bottom:8px">Verify your email address</h2>
+            <p style="color:#475569;font-size:14px;line-height:1.6">
+              Thank you for signing up at <strong>Dewan Traders</strong>. Before you can log in and place B2B orders or request quotations, we need to verify your email.
+            </p>
+            <div style="margin:24px 0">
+              <a href="${verifyUrl}" style="display:inline-block;padding:12px 24px;background:linear-gradient(135deg,#0284c7,#0ea5e9);color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
+                Verify Email Address
+              </a>
+            </div>
+            <p style="color:#64748b;font-size:12px;line-height:1.5">
+              Or copy and paste this link in your browser:<br/>
+              <a href="${verifyUrl}" style="color:#0284c7;word-break:break-all">${verifyUrl}</a>
+            </p>
+            <p style="color:#94a3b8;font-size:11px;margin-top:24px">Dewan Traders — Sargodha, Punjab, Pakistan</p>
+          </div>`,
+      });
+      logger.info(`Verification email sent to ${to}`);
+    } catch (err) {
+      logger.error(`Failed to send verification email to ${to}: ${err}`);
+    }
+  },
+
   async sendWelcome(to: string, name: string) {
     try {
+      const frontendBaseUrl = (process.env.FRONTEND_URL || 'http://localhost:3001').split(',')[0].trim();
       await transporter.sendMail({
         from: FROM,
         to,
@@ -29,7 +62,7 @@ export const mailer = {
               Your buyer account on <strong>Dewan Traders</strong> is ready. You can now browse our export catalog,
               request bulk quotations, and track your shipments from your personal dashboard.
             </p>
-            <a href="${config.frontendUrl}/user" style="display:inline-block;margin-top:20px;padding:12px 24px;background:linear-gradient(135deg,#0284c7,#0ea5e9);color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
+            <a href="${frontendBaseUrl}/user" style="display:inline-block;margin-top:20px;padding:12px 24px;background:linear-gradient(135deg,#0284c7,#0ea5e9);color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px">
               Go to My Dashboard
             </a>
             <p style="color:#94a3b8;font-size:11px;margin-top:24px">Dewan Traders — Sargodha, Punjab, Pakistan</p>

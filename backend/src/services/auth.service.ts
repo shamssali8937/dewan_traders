@@ -42,6 +42,7 @@ export const authService = {
     const existing = await prisma.user.findUnique({ where: { email: input.email } });
     if (existing) throw ApiError.conflict('Email already in use');
 
+    const verifyToken = crypto.randomBytes(32).toString('hex');
     const hashed = await bcrypt.hash(input.password, 12);
     const user = await prisma.user.create({
       data: {
@@ -56,23 +57,30 @@ export const authService = {
         taxNumber: input.taxNumber,
         address: input.address,
         city: input.city,
+        isEmailVerified: false,
+        emailVerifyToken: verifyToken,
       },
       select: {
         id: true, name: true, email: true, role: true,
         userType: true, phone: true, companyName: true,
-        createdAt: true,
+        createdAt: true, isEmailVerified: true,
       },
     });
 
-    const { accessToken, refreshToken } = generateTokens(user.id, user.email, user.role);
-    await prisma.user.update({ where: { id: user.id }, data: { refreshToken } });
+    // Send verification email via Resend SMTP
+    const { mailer } = require('../utils/mailer');
+    mailer.sendVerificationEmail(user.email, user.name, verifyToken);
 
-    return { user, accessToken, refreshToken };
+    return { user };
   },
 
   async login(input: LoginInput) {
     const user = await prisma.user.findUnique({ where: { email: input.email } });
     if (!user || !user.isActive) throw ApiError.unauthorized('Invalid credentials');
+
+    if (!user.isEmailVerified) {
+      throw ApiError.forbidden('Please verify your email before logging in. Check your inbox for the verification link.');
+    }
 
     const isMatch = await bcrypt.compare(input.password, user.password);
     if (!isMatch) throw ApiError.unauthorized('Invalid credentials');
@@ -82,6 +90,38 @@ export const authService = {
 
     const { password: _, ...userWithoutPassword } = user;
     return { user: userWithoutPassword, accessToken, refreshToken };
+  },
+
+  async verifyEmail(token: string) {
+    const user = await prisma.user.findFirst({
+      where: { emailVerifyToken: token },
+    });
+
+    if (!user) {
+      throw ApiError.badRequest('Invalid or expired email verification token.');
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        isEmailVerified: true,
+        emailVerifyToken: null,
+      },
+      select: {
+        id: true, name: true, email: true, role: true,
+        userType: true, phone: true, companyName: true,
+        createdAt: true, isEmailVerified: true,
+      },
+    });
+
+    // Send welcome email (non-blocking)
+    const { mailer } = require('../utils/mailer');
+    mailer.sendWelcome(updatedUser.email, updatedUser.name);
+
+    const { accessToken, refreshToken } = generateTokens(updatedUser.id, updatedUser.email, updatedUser.role);
+    await prisma.user.update({ where: { id: updatedUser.id }, data: { refreshToken } });
+
+    return { user: updatedUser, accessToken, refreshToken };
   },
 
   async refreshToken(token: string) {

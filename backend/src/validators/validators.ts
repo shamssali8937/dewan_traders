@@ -47,6 +47,11 @@ export const validateResetPassword = [
   validate,
 ];
 
+export const validateVerifyEmail = [
+  body('token').notEmpty().withMessage('Verification token is required'),
+  validate,
+];
+
 // ─── Inquiry Validators ──────────────────────────────────────────────────
 export const validateCreateInquiry = [
   body('name').trim().notEmpty().withMessage('Name is required').isLength({ max: 100 }),

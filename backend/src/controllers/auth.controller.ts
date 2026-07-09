@@ -16,14 +16,10 @@ const COOKIE_OPTIONS = {
 export const authController = {
   register: asyncHandler(async (req: Request, res: Response) => {
     const result = await authService.register(req.body);
-    logger.info(`New user registered: ${result.user.email} (${result.user.role})`);
-    // Send welcome email (non-blocking)
-    mailer.sendWelcome(result.user.email, result.user.name);
+    logger.info(`New user registered: ${result.user.email} (Verification pending)`);
     res
-      .cookie('accessToken', result.accessToken, { ...COOKIE_OPTIONS, maxAge: 15 * 60 * 1000 })
-      .cookie('refreshToken', result.refreshToken, { ...COOKIE_OPTIONS, maxAge: 7 * 24 * 60 * 60 * 1000 })
       .status(201)
-      .json(ApiResponse.created('Registration successful', result.user));
+      .json(ApiResponse.created('Registration successful. Please verify your email.', result.user));
   }),
 
   login: asyncHandler(async (req: Request, res: Response) => {
@@ -92,5 +88,18 @@ export const authController = {
     const user = await authService.updateProfile(req.user!.id, req.body);
     logger.info(`User profile updated for ID: ${user.id} by ${user.email}`);
     res.json(ApiResponse.ok('Profile updated successfully', user));
+  }),
+
+  verifyEmail: asyncHandler(async (req: Request, res: Response) => {
+    const { token } = req.body;
+    if (!token) {
+      return res.status(400).json({ success: false, message: 'Token is required' });
+    }
+    const result = await authService.verifyEmail(token);
+    logger.info(`Email verified successfully for user: ${result.user.email}`);
+    res
+      .cookie('accessToken', result.accessToken, { ...COOKIE_OPTIONS, maxAge: 15 * 60 * 1000 })
+      .cookie('refreshToken', result.refreshToken, { ...COOKIE_OPTIONS, maxAge: 7 * 24 * 60 * 60 * 1000 })
+      .json(ApiResponse.ok('Email verified successfully', { user: result.user, accessToken: result.accessToken }));
   }),
 };

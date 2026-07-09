@@ -6,12 +6,16 @@ import {
   validateLogin,
   validateForgotPassword,
   validateResetPassword,
+  validateVerifyEmail,
 } from '../validators/validators';
 
 const router = Router();
 
 // POST /api/auth/register
 router.post('/register', validateRegister, authController.register);
+
+// POST /api/auth/verify-email
+router.post('/verify-email', validateVerifyEmail, authController.verifyEmail);
 
 // POST /api/auth/login
 router.post('/login', validateLogin, authController.login);
