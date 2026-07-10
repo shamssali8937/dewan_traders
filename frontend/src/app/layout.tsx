@@ -163,6 +163,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="geo.placename" content="Sargodha, Punjab, Pakistan" />
         <meta name="geo.position" content="32.0836;72.6711" />
         <meta name="ICBM" content="32.0836, 72.6711" />
+        {/* Bing Webmaster Tools Verification */}
+        <meta name="msvalidate.01" content="586DFBED7966D14796E82D37B91CB34C" />
         {/* Language */}
         <meta httpEquiv="content-language" content="en" />
         {/* Structured Data */}
