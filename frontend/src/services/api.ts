@@ -199,9 +199,20 @@ async function handleMockRequest(config: any) {
 }
 
 // ─── Request Interceptor ─────────────────────────────────────────
-// Auth is handled via httpOnly cookies set by the backend — no localStorage token needed.
+// Primary auth: attach accessToken from Zustand store as Bearer header.
+// This ensures authenticated requests work across different domains in production
+// (Vercel frontend → Render backend) where cross-origin cookies may be blocked.
+// The backend also accepts cookies as a fallback (req.cookies?.accessToken).
 api.interceptors.request.use(
-  (config) => config,
+  (config) => {
+    // Get token from Zustand store (persisted in localStorage via zustand/persist)
+    const token = useAuthStore.getState().accessToken;
+    if (token) {
+      config.headers = config.headers || {};
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
   (error) => Promise.reject(error)
 );
 
@@ -248,8 +259,11 @@ api.interceptors.response.use(
         const accessToken = refreshResponse.data?.data?.accessToken;
 
         if (accessToken) {
-          // Token is managed via httpOnly cookie by the backend — no localStorage needed
+          // Persist new token in Zustand store (also saves to localStorage via zustand/persist)
           useAuthStore.getState().setToken(accessToken);
+          // Immediately attach the new token to the retried request header
+          originalRequest.headers = originalRequest.headers || {};
+          originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
         }
 
         processQueue(null);
