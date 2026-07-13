@@ -9,8 +9,11 @@ import { mailer } from '../utils/mailer';
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
+  // 'none' is required for cross-domain cookies (Vercel frontend → Render backend).
+  // 'strict' would block the cookie from ever being sent to a different origin.
+  // sameSite: 'none' requires secure: true (HTTPS), which is always true in production.
+  sameSite: config.isDev ? ('lax' as const) : ('none' as const),
   secure: !config.isDev,
-  sameSite: 'strict' as const,
 };
 
 export const authController = {
