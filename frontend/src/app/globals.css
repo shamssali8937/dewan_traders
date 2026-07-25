@@ -25,6 +25,51 @@
 
   /* ─── Typography ────────────────────────────────────────── */
   --font-sans: 'Inter', 'Outfit', system-ui, sans-serif;
+
+  /* ─── Tailwind Legacy Color Overrides ─────────────────── */
+  /* Re-maps all hardcoded legacy colors to logo-matched brand colors.
+     This ensures 100% color coverage across all third-party pages,
+     forms, dynamic content, and secondary buttons automatically. */
+
+  /* sky-* -> Brand Green */
+  --color-sky-50: rgba(14, 107, 69, 0.05);
+  --color-sky-100: rgba(14, 107, 69, 0.12);
+  --color-sky-200: rgba(14, 107, 69, 0.20);
+  --color-sky-500: #0E6B45;
+  --color-sky-600: #0B5537;
+  --color-sky-700: #094D31;
+
+  /* blue-* -> Brand Green */
+  --color-blue-50: rgba(14, 107, 69, 0.05);
+  --color-blue-100: rgba(14, 107, 69, 0.12);
+  --color-blue-200: rgba(14, 107, 69, 0.20);
+  --color-blue-500: #0E6B45;
+  --color-blue-600: #0B5537;
+  --color-blue-700: #094D31;
+
+  /* emerald-* -> Brand Green */
+  --color-emerald-50: rgba(14, 107, 69, 0.05);
+  --color-emerald-100: rgba(14, 107, 69, 0.12);
+  --color-emerald-150: rgba(14, 107, 69, 0.18);
+  --color-emerald-200: rgba(14, 107, 69, 0.22);
+  --color-emerald-500: #0E6B45;
+  --color-emerald-600: #0B5537;
+  --color-emerald-700: #094D31;
+
+  /* teal-* -> Brand Orange */
+  --color-teal-50: rgba(244, 122, 22, 0.05);
+  --color-teal-100: rgba(244, 122, 22, 0.12);
+  --color-teal-400: #F47A16;
+  --color-teal-500: #F47A16;
+  --color-teal-600: #D96A10;
+
+  /* cyan-* -> Brand Orange */
+  --color-cyan-50: rgba(244, 122, 22, 0.05);
+  --color-cyan-100: rgba(244, 122, 22, 0.12);
+  --color-cyan-200: rgba(244, 122, 22, 0.20);
+  --color-cyan-500: #F47A16;
+  --color-cyan-600: #D96A10;
+  --color-cyan-700: #B85A0D;
 }
 
 :root {

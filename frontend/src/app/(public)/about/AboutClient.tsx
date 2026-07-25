@@ -21,10 +21,10 @@ const values = [
 ];
 
 const team = [
-  { name: 'Sajjad Hussain Awan', role: 'CEO & Founder', image: '/images/owner_sajjad.png', bio: 'Over two decades of international trade operations and supply management experience.' },
-  { name: 'Ahmed Dewan', role: 'Director of Trade Operations', bio: 'Specializes in Middle East and EU customs compliance and shipping lane clearance.' },
-  { name: 'Fatima Malik', role: 'Lead Quality Auditor', bio: 'Coordinates phytosanitary compliance and laboratory metal checks for surgical lines.' },
-  { name: 'Usman Tariq', role: 'Director of Logistics', bio: 'Handles terminal scheduling, container packing, and global freight forwarding.' },
+  { name: 'Sajjad Hussain Awan', role: 'CEO & Founder', image: '/images/d.png', bio: 'Over two decades of international trade operations and supply management experience.' },
+  // { name: 'Ahmed Dewan', role: 'Director of Trade Operations', bio: 'Specializes in Middle East and EU customs compliance and shipping lane clearance.' },
+  // { name: 'Fatima Malik', role: 'Lead Quality Auditor', bio: 'Coordinates phytosanitary compliance and laboratory metal checks for surgical lines.' },
+  // { name: 'Usman Tariq', role: 'Director of Logistics', bio: 'Handles terminal scheduling, container packing, and global freight forwarding.' },
 ];
 
 export default function AboutPage() {
@@ -158,13 +158,13 @@ export default function AboutPage() {
             <h2 className="text-3xl font-black text-slate-900 mt-2">Executive Leadership</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="flex flex-wrap justify-center gap-6">
             {team.map((member) => (
               <div key={member.name} className="glass rounded-3xl p-6 text-center card-hover border border-slate-100 bg-white flex flex-col items-center">
                 {/* Profile Image Frame */}
-                <div className="w-24 h-24 rounded-2xl overflow-hidden mb-5 border border-slate-100 shadow-sm relative bg-slate-50">
+                <div className="w-48 h-48 rounded-2xl overflow-hidden mb-5 border border-slate-100 shadow-sm relative bg-slate-50">
                   {member.image ? (
-                    <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
+                    <img src={member.image} alt={member.name} className="w-full h-full object-contain p-2" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-slate-600 text-lg font-bold">
                       {member.name.split(' ').map(n => n[0]).join('')}
