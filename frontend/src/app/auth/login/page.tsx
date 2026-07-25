@@ -28,8 +28,8 @@ export default function LoginPage() {
       
       {/* Background Decorators */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="fluid-blob bg-sky-50 w-[450px] h-[450px] top-[10%] right-[-100px]" />
-        <div className="fluid-blob bg-teal-50/50 w-[400px] h-[400px] bottom-[10%] left-[-100px]" />
+        <div className="fluid-blob bg-primary/5 w-[450px] h-[450px] top-[10%] right-[-100px]" />
+        <div className="fluid-blob bg-secondary/5 w-[400px] h-[400px] bottom-[10%] left-[-100px]" />
       </div>
 
       <motion.div
@@ -77,7 +77,7 @@ export default function LoginPage() {
             </div>
 
             <button type="submit" disabled={isLoginLoading}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-primary to-sky-600 hover:from-primary-hover hover:to-sky-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md shadow-primary/10 transition-all disabled:opacity-60 mt-2">
+              className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-primary to-green-700 hover:from-primary-hover hover:to-green-800 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md shadow-primary/10 transition-all disabled:opacity-60 mt-2">
               {isLoginLoading ? 'Signing in...' : <><LogIn size={12} /> Sign In</>}
             </button>
           </form>

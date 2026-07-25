@@ -70,11 +70,11 @@ export function getInitials(name: string): string {
 }
 
 export const CATEGORY_COLORS: Record<string, string> = {
-  fruits: 'from-orange-400 to-amber-400',
-  vegetables: 'from-teal-400 to-emerald-400',
-  rice: 'from-indigo-400 to-violet-400',
-  surgical: 'from-sky-400 to-cyan-400',
-  sports: 'from-rose-400 to-orange-400',
+  fruits: 'from-secondary to-sage',
+  vegetables: 'from-primary to-emerald-600',
+  rice: 'from-amber-600 to-amber-500',
+  surgical: 'from-accent to-red-800',
+  sports: 'from-mint to-sage',
 };
 
 export const CATEGORY_ICONS: Record<string, string> = {

@@ -11,11 +11,11 @@ import { formatPrice, formatDate } from '@/lib/utils';
 
 const STATUS_COLOR: Record<string, string> = {
   pending: 'bg-amber-50 border-amber-200 text-amber-700',
-  confirmed: 'bg-blue-50 border-blue-200 text-blue-700',
-  processing: 'bg-purple-50 border-purple-200 text-purple-700',
-  shipped: 'bg-cyan-50 border-cyan-200 text-cyan-700',
-  delivered: 'bg-emerald-50 border-emerald-200 text-emerald-700',
-  cancelled: 'bg-red-50 border-red-200 text-red-700',
+  confirmed: 'bg-primary/8 border-primary/15 text-primary',
+  processing: 'bg-slate-50 border-slate-200 text-slate-700',
+  shipped: 'bg-secondary/8 border-secondary/15 text-secondary',
+  delivered: 'bg-primary/8 border-primary/15 text-primary',
+  cancelled: 'bg-accent/8 border-accent/15 text-accent',
 };
 
 export default function UserOrdersPage() {
@@ -48,7 +48,7 @@ export default function UserOrdersPage() {
       
       {/* Background Decorators */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="fluid-blob bg-emerald-100/10 w-[450px] h-[450px] top-[15%] right-[-100px]" />
+        <div className="fluid-blob bg-primary/5 w-[450px] h-[450px] top-[15%] right-[-100px]" />
       </div>
 
       <section className="py-12 relative z-10">
@@ -118,7 +118,7 @@ export default function UserOrdersPage() {
                     <div className="divide-y divide-slate-100 px-6 py-2">
                       {order.items?.map((item: any) => (
                         <div key={item.id} className="flex items-center gap-4 py-3.5">
-                          <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-primary shrink-0">
+                          <div className="w-9 h-9 rounded-xl bg-primary/8 border border-primary/15 flex items-center justify-center text-primary shrink-0">
                             <Package size={15} />
                           </div>
                           <div className="flex-1 min-w-0">
