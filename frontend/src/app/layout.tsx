@@ -74,9 +74,9 @@ export const metadata: Metadata = {
     languages: { 'en-US': SITE_URL },
   },
   icons: {
-    icon: [{ url: '/images/logo.png', type: 'image/png' }],
-    apple: '/images/logo.png',
-    shortcut: '/images/logo.png',
+    icon: [{ url: '/images/dewan_new_logo.png', type: 'image/png' }],
+    apple: '/images/dewan_new_logo.png',
+    shortcut: '/images/dewan_new_logo.png',
   },
   verification: {
     google: 'h6UM8mFKWkVSZlfG8QFSve4zgzVYjypQtAZXPVb6NA4',
@@ -90,7 +90,7 @@ const organizationSchema = {
   name: 'Dewan Traders',
   alternateName: 'Dewan Trade',
   url: SITE_URL,
-  logo: `${SITE_URL}/images/logo.png`,
+  logo: `${SITE_URL}/images/dewan_new_logo.png`,
   image: `${SITE_URL}/og-image.png`,
   description:
     'Dewan Traders is a premium B2B import & export company in Sargodha, Punjab, Pakistan, specializing in Kinnow mandarins, Basmati rice, fresh produce, surgical instruments, and sports goods.',

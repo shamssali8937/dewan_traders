@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Mail, ArrowLeft, CheckCircle, Send } from 'lucide-react';
 import { authApi } from '@/services/endpoints';
 import { toast } from 'sonner';
+import DewanTradersLogo from '@/components/dewan_trader_logo';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -34,11 +35,8 @@ export default function ForgotPasswordPage() {
 
       <div className="w-full max-w-md relative z-10">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-sky-600 flex items-center justify-center font-black text-white text-base shadow-md shadow-primary/20">D</div>
-            <span className="text-xs font-black text-slate-800 uppercase tracking-widest">Dewan Traders</span>
-          </div>
+        <div className="flex justify-center mb-8">
+          <DewanTradersLogo width={150} className="mx-auto" />
         </div>
 
         <div className="glass rounded-3xl p-8 border border-slate-100 bg-white/80 shadow-xl shadow-slate-200/50">
