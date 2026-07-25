@@ -19,11 +19,11 @@ import DewanTradersLogo from '@/components/dewan_trader_logo';
 
 const STATUS_LABEL: Record<string, { label: string; color: string; icon: any }> = {
   pending: { label: 'Pending Payment', color: 'bg-amber-50 border-amber-200 text-amber-700', icon: Clock },
-  confirmed: { label: 'Confirmed', color: 'bg-blue-50 border-blue-200 text-blue-700', icon: CheckCircle },
-  processing: { label: 'Processing', color: 'bg-purple-50 border-purple-200 text-purple-700', icon: RefreshCw },
-  shipped: { label: 'Shipped', color: 'bg-cyan-50 border-cyan-200 text-cyan-700', icon: Truck },
-  delivered: { label: 'Delivered', color: 'bg-emerald-50 border-emerald-200 text-emerald-700', icon: CheckCircle },
-  cancelled: { label: 'Cancelled', color: 'bg-red-50 border-red-200 text-red-755', icon: XCircle },
+  confirmed: { label: 'Confirmed', color: 'bg-primary/8 border-primary/15 text-primary', icon: CheckCircle },
+  processing: { label: 'Processing', color: 'bg-slate-50 border-slate-200 text-slate-700', icon: RefreshCw },
+  shipped: { label: 'Shipped', color: 'bg-secondary/8 border-secondary/15 text-secondary', icon: Truck },
+  delivered: { label: 'Delivered', color: 'bg-primary/8 border-primary/15 text-primary', icon: CheckCircle },
+  cancelled: { label: 'Cancelled', color: 'bg-accent/8 border-accent/15 text-accent', icon: XCircle },
 };
 
 const TRACK_STEPS = ['pending', 'confirmed', 'processing', 'shipped', 'delivered'];
@@ -347,7 +347,7 @@ export default function UserDashboard() {
       {/* 2. Main Content Wrapper */}
       <main className="flex-1 overflow-y-auto h-screen p-6 md:p-10 relative">
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="fluid-blob bg-emerald-100/10 w-[400px] h-[400px] top-[10%] right-[-100px]" />
+          <div className="fluid-blob bg-primary/5 w-[400px] h-[400px] top-[10%] right-[-100px]" />
         </div>
 
         <div className="max-w-4xl mx-auto space-y-8 relative z-10">

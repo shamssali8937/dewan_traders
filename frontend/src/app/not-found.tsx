@@ -7,12 +7,12 @@ export default function NotFound() {
       
       {/* Background Decorators */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="fluid-blob bg-sky-50 w-[450px] h-[450px] top-[20%] right-[-100px]" />
-        <div className="fluid-blob bg-rose-50/50 w-[400px] h-[400px] bottom-[20%] left-[-100px]" />
+        <div className="fluid-blob bg-primary/5 w-[450px] h-[450px] top-[20%] right-[-100px]" />
+        <div className="fluid-blob bg-secondary/5 w-[400px] h-[400px] bottom-[20%] left-[-100px]" />
       </div>
 
       <div className="relative text-center max-w-md z-10 space-y-6 animate-in fade-in duration-300">
-        <div className="w-20 h-20 bg-sky-50 border border-sky-100 rounded-3xl flex items-center justify-center text-primary mx-auto shadow-sm">
+        <div className="w-20 h-20 bg-primary/5 border border-primary/10 rounded-3xl flex items-center justify-center text-primary mx-auto shadow-sm">
           <FileQuestion size={36} />
         </div>
 
@@ -27,7 +27,7 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row gap-3.5 justify-center pt-4">
           <Link
             href="/"
-            className="px-6 py-3 bg-gradient-to-r from-primary to-sky-600 text-white font-bold rounded-xl text-xs uppercase tracking-wider hover:from-primary-hover hover:to-sky-700 transition-all shadow-md shadow-primary/10"
+            className="px-6 py-3 bg-gradient-to-r from-primary to-green-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider hover:from-primary-hover hover:to-green-800 transition-all shadow-md shadow-primary/10"
           >
             Go Back Home
           </Link>

@@ -83,7 +83,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border ${
                 isActive
-                  ? 'bg-emerald-50 border-emerald-100 text-primary font-bold shadow-sm'
+                  ? 'bg-primary/8 border-primary/15 text-primary font-bold shadow-sm'
                   : 'bg-white border-transparent text-slate-500 hover:text-slate-905 hover:bg-slate-50'
               }`}
               title={collapsed ? label : undefined}

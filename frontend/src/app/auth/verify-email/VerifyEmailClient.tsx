@@ -23,8 +23,8 @@ export default function VerifyEmailClient({ params }: { params: Promise<{}> }) {
     <div className="min-h-screen bg-slate-900 flex items-center justify-center p-6 relative overflow-hidden">
       {/* Background Decorators */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="fluid-blob bg-sky-500/10 w-[450px] h-[450px] top-[10%] left-[-100px] blur-3xl" />
-        <div className="fluid-blob bg-blue-500/10 w-[450px] h-[450px] bottom-[10%] right-[-100px] blur-3xl" />
+        <div className="fluid-blob bg-primary/10 w-[450px] h-[450px] top-[10%] left-[-100px] blur-3xl" />
+        <div className="fluid-blob bg-secondary/10 w-[450px] h-[450px] bottom-[10%] right-[-100px] blur-3xl" />
       </div>
 
       <motion.div
@@ -34,7 +34,7 @@ export default function VerifyEmailClient({ params }: { params: Promise<{}> }) {
         className="w-full max-w-md bg-slate-800/80 backdrop-blur-xl border border-slate-700 p-8 rounded-3xl shadow-2xl relative z-10 text-center"
       >
         <div className="flex justify-center mb-6">
-          <div className="p-3 bg-sky-500/10 rounded-2xl border border-sky-500/20 text-sky-400">
+          <div className="p-3 bg-primary/10 rounded-2xl border border-primary/20 text-primary">
             <ShieldCheck size={32} />
           </div>
         </div>
@@ -58,7 +58,7 @@ export default function VerifyEmailClient({ params }: { params: Promise<{}> }) {
             </p>
             <Link
               href="/user"
-              className="w-full py-3.5 bg-gradient-to-r from-primary to-sky-600 hover:from-primary/90 hover:to-sky-600/90 text-white font-black uppercase tracking-wider text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-lg shadow-sky-500/10 hover:shadow-sky-500/20 transition-all"
+              className="w-full py-3.5 bg-gradient-to-r from-primary to-green-700 hover:from-primary/90 hover:to-green-700/90 text-white font-black uppercase tracking-wider text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-lg shadow-primary/10 hover:shadow-primary/20 transition-all"
             >
               Go to Dashboard <ArrowRight size={14} />
             </Link>

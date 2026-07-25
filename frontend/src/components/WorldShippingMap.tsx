@@ -115,7 +115,7 @@ function CurvedRoute({
         ref={pathRef}
         d={d}
         fill="none"
-        stroke="#1e40af"
+        stroke="#0E6B45"
         strokeWidth="0.6"
         strokeDasharray="3,5"
         opacity="0.25"
@@ -152,7 +152,7 @@ function DestinationNode({
       <motion.circle
         r="8"
         fill="none"
-        stroke="#1e40af"
+        stroke="#0E6B45"
         strokeWidth="0.6"
         initial={{ opacity: 0.5, scale: 0.5 }}
         animate={{ opacity: 0, scale: 2.5 }}
@@ -161,9 +161,9 @@ function DestinationNode({
       {/* Dot in Royal Blue */}
       <circle
         r={hov ? 4 : 3}
-        fill="#1e40af"
+        fill="#0E6B45"
         opacity={0.9}
-        style={{ filter: 'drop-shadow(0 0 3px #1e40af)', transition: 'r 0.2s ease' }}
+        style={{ filter: 'drop-shadow(0 0 3px #0E6B45)', transition: 'r 0.2s ease' }}
       />
       <circle r="1.2" fill="white" />
       {/* Label */}
@@ -191,7 +191,7 @@ function PakistanMarker() {
           key={r}
           r={r}
           fill="none"
-          stroke="#0b5e3a"
+          stroke="#0E6B45"
           strokeWidth="0.7"
           initial={{ opacity: 0.6, scale: 0.7 }}
           animate={{ opacity: 0, scale: 1.6 }}
@@ -199,9 +199,9 @@ function PakistanMarker() {
         />
       ))}
       {/* Glow */}
-      <circle r="9" fill="#0b5e3a" opacity="0.15" style={{ filter: 'blur(2px)' }} />
+      <circle r="9" fill="#0E6B45" opacity="0.15" style={{ filter: 'blur(2px)' }} />
       {/* Main dot */}
-      <circle r="6" fill="#0b5e3a" opacity="0.9" style={{ filter: 'drop-shadow(0 0 8px #0b5e3a)' }} />
+      <circle r="6" fill="#0E6B45" opacity="0.9" style={{ filter: 'drop-shadow(0 0 8px #0E6B45)' }} />
       <circle r="3" fill="white" />
       {/* Label */}
       <text
@@ -256,14 +256,13 @@ function ShippingRoutes() {
   );
 }
 
-// ─── MAIN COMPONENT ───────────────────────────────────────────
 export default function WorldShippingMap() {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.97, y: 12 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full rounded-3xl border border-slate-200/50 relative overflow-hidden"
+      className="w-full rounded-3xl border border-slate-200/50 relative"
       style={{
         background: 'rgba(255,255,255,0.85)',
         backdropFilter: 'blur(20px)',
@@ -273,15 +272,15 @@ export default function WorldShippingMap() {
       {/* Live indicator */}
       <div className="absolute top-4 left-5 z-20 flex items-center gap-2 text-[9px] text-slate-600 uppercase tracking-[0.15em] font-bold">
         <motion.span
-          className="w-1.5 h-1.5 rounded-full bg-emerald-600 inline-block"
+          className="w-1.5 h-1.5 rounded-full bg-primary inline-block"
           animate={{ opacity: [1, 0.3, 1] }}
           transition={{ duration: 1.6, repeat: Infinity }}
         />
         Live Shipping Corridors
       </div>
 
-      {/* Stat cards */}
-      <div className="absolute top-4 right-4 z-20 grid grid-cols-2 gap-1.5">
+      {/* Stat cards — DESKTOP: absolute overlay (sm+) */}
+      <div className="hidden sm:grid absolute top-4 right-4 z-20 grid-cols-2 gap-1.5">
         {STATS.map((s, i) => (
           <motion.div
             key={s.label}
@@ -290,7 +289,7 @@ export default function WorldShippingMap() {
             transition={{ duration: 0.5, delay: 0.7 + i * 0.12 }}
             className="flex items-center gap-2 rounded-xl px-2.5 py-2 border border-slate-100 bg-white/95 shadow-sm backdrop-blur-sm"
           >
-            <div className="w-6 h-6 rounded-lg bg-emerald-50 border border-emerald-100/50 flex items-center justify-center text-emerald-700 shrink-0">
+            <div className="w-6 h-6 rounded-lg bg-primary/8 border border-primary/15 flex items-center justify-center text-primary shrink-0">
               <s.Icon size={12} />
             </div>
             <div>
@@ -302,60 +301,81 @@ export default function WorldShippingMap() {
       </div>
 
       {/* Map */}
-      <ComposableMap
-        projection="geoNaturalEarth1"
-        projectionConfig={{ scale: 140, center: [30, 15] }}
-        style={{ width: '100%', height: 'auto', display: 'block' }}
-      >
-        <defs>
-          <radialGradient id="pkGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#0b5e3a" stopOpacity="0.20" />
-            <stop offset="100%" stopColor="#0b5e3a" stopOpacity="0" />
-          </radialGradient>
-        </defs>
+      <div className="relative overflow-hidden rounded-t-3xl">
+        <ComposableMap
+          projection="geoNaturalEarth1"
+          projectionConfig={{ scale: 140, center: [30, 15] }}
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        >
+          <defs>
+            <radialGradient id="pkGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#0E6B45" stopOpacity="0.20" />
+              <stop offset="100%" stopColor="#0E6B45" stopOpacity="0" />
+            </radialGradient>
+          </defs>
 
-        {/* Geographically accurate world map */}
-        <Geographies geography={GEO_URL}>
-          {({ geographies }) =>
-            geographies.map(geo => (
-              <Geography
-                key={geo.rsmKey}
-                geography={geo}
-                fill="#f3f4f6"
-                stroke="#e5e7eb"
-                strokeWidth={0.4}
-                style={{
-                  default: { outline: 'none' },
-                  hover: { fill: '#e6f4ea', outline: 'none' },
-                  pressed: { outline: 'none' },
-                }}
+          {/* Geographically accurate world map */}
+          <Geographies geography={GEO_URL}>
+            {({ geographies }) =>
+              geographies.map(geo => (
+                <Geography
+                  key={geo.rsmKey}
+                  geography={geo}
+                  fill="#f3f4f6"
+                  stroke="#e5e7eb"
+                  strokeWidth={0.4}
+                  style={{
+                    default: { outline: 'none' },
+                    hover: { fill: '#e6f4ea', outline: 'none' },
+                    pressed: { outline: 'none' },
+                  }}
+                />
+              ))
+            }
+          </Geographies>
+
+          {/* Animated shipping routes from context */}
+          <ShippingRoutes />
+
+          {/* Destination nodes */}
+          {DESTINATIONS.map(dest => (
+            <Marker key={`dest-${dest.id}`} coordinates={dest.coords}>
+              <DestinationNode
+                label={dest.label}
+                delay={dest.delay}
               />
-            ))
-          }
-        </Geographies>
+            </Marker>
+          ))}
 
-        {/* Animated shipping routes from context */}
-        <ShippingRoutes />
-
-        {/* Destination nodes */}
-        {DESTINATIONS.map(dest => (
-          <Marker key={`dest-${dest.id}`} coordinates={dest.coords}>
-            <DestinationNode
-              label={dest.label}
-              delay={dest.delay}
-            />
+          {/* Pakistan hub */}
+          <Marker coordinates={PK_COORDS}>
+            <PakistanMarker />
           </Marker>
+        </ComposableMap>
+
+        {/* Bottom watermark — inside map area */}
+        <div className="absolute bottom-3.5 left-5 text-[7.5px] text-slate-400 uppercase tracking-[0.15em] font-semibold">
+          Dewan Traders · Sargodha, Pakistan · Est. 1998
+        </div>
+      </div>
+
+      {/* Stat cards — MOBILE: horizontal strip below map (sm breakpoint and below) */}
+      <div className="grid grid-cols-4 sm:hidden border-t border-slate-100 divide-x divide-slate-100">
+        {STATS.map((s, i) => (
+          <motion.div
+            key={s.label}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.8 + i * 0.1 }}
+            className="flex flex-col items-center justify-center gap-0.5 py-2.5 px-1"
+          >
+            <div className="w-5 h-5 rounded-md bg-primary/8 border border-primary/15 flex items-center justify-center text-primary mb-0.5">
+              <s.Icon size={10} />
+            </div>
+            <Counter target={s.value} suffix={s.suffix} />
+            <div className="text-[7px] text-slate-400 font-semibold uppercase tracking-wider text-center leading-tight">{s.label}</div>
+          </motion.div>
         ))}
-
-        {/* Pakistan hub */}
-        <Marker coordinates={PK_COORDS}>
-          <PakistanMarker />
-        </Marker>
-      </ComposableMap>
-
-      {/* Bottom watermark */}
-      <div className="absolute bottom-3.5 left-5 text-[7.5px] text-slate-400 uppercase tracking-[0.15em] font-semibold">
-        Dewan Traders · Sargodha, Pakistan · Est. 1998
       </div>
     </motion.div>
   );

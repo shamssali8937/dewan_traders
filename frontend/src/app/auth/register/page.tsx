@@ -44,8 +44,8 @@ export default function RegisterPage() {
       
       {/* Background Decorators */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="fluid-blob bg-sky-50 w-[450px] h-[450px] top-[10%] right-[-100px]" />
-        <div className="fluid-blob bg-teal-50/50 w-[400px] h-[400px] bottom-[10%] left-[-100px]" />
+        <div className="fluid-blob bg-primary/5 w-[450px] h-[450px] top-[10%] right-[-100px]" />
+        <div className="fluid-blob bg-secondary/5 w-[400px] h-[400px] bottom-[10%] left-[-100px]" />
       </div>
 
       <motion.div
@@ -67,12 +67,12 @@ export default function RegisterPage() {
 
           {/* User Type Toggle */}
           <div className="flex gap-2 p-1 bg-slate-100/60 border border-slate-200/50 rounded-xl mb-6">
-            <label className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold uppercase tracking-wider cursor-pointer transition-all ${userType === 'individual' ? 'bg-gradient-to-r from-primary to-sky-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>
+            <label className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold uppercase tracking-wider cursor-pointer transition-all ${userType === 'individual' ? 'bg-gradient-to-r from-primary to-green-700 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>
               <input {...register('userType')} type="radio" value="individual" className="hidden" />
               <User size={13} />
               Individual
             </label>
-            <label className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold uppercase tracking-wider cursor-pointer transition-all ${userType === 'company' ? 'bg-gradient-to-r from-primary to-sky-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>
+            <label className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold uppercase tracking-wider cursor-pointer transition-all ${userType === 'company' ? 'bg-gradient-to-r from-primary to-green-700 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>
               <input {...register('userType')} type="radio" value="company" className="hidden" />
               <Building2 size={13} />
               Company
@@ -139,7 +139,7 @@ export default function RegisterPage() {
             )}
 
             <button type="submit" disabled={isRegisterLoading}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-primary to-sky-600 hover:from-primary-hover hover:to-sky-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md shadow-primary/10 transition-all disabled:opacity-60 mt-2">
+              className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-primary to-green-700 hover:from-primary-hover hover:to-green-800 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-md shadow-primary/10 transition-all disabled:opacity-60 mt-2">
               {isRegisterLoading ? 'Creating account...' : <><UserPlus size={12} /> Create Account</>}
             </button>
           </form>

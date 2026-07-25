@@ -100,7 +100,7 @@ function ResetPasswordForm() {
             </div>
 
             <button type="submit" disabled={loading}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-primary to-sky-600 hover:from-primary-hover hover:to-sky-700 text-white font-bold rounded-xl transition-all shadow-md shadow-primary/10 text-xs uppercase tracking-wider disabled:opacity-60">
+              className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-primary to-green-700 hover:from-primary-hover hover:to-green-800 text-white font-bold rounded-xl transition-all shadow-md shadow-primary/10 text-xs uppercase tracking-wider disabled:opacity-60">
               <Lock size={13} /> {loading ? 'Resetting...' : 'Reset Password'}
             </button>
           </form>
@@ -118,15 +118,14 @@ export default function ResetPasswordPage() {
   return (
     <div className="min-h-screen bg-white pattern-dots-light flex items-center justify-center px-4 relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="fluid-blob bg-sky-50 w-[500px] h-[500px] top-[-100px] right-[-100px]" />
-        <div className="fluid-blob bg-teal-50 w-[400px] h-[400px] bottom-[-100px] left-[-100px]" />
+        <div className="fluid-blob bg-primary/5 w-[500px] h-[500px] top-[-100px] right-[-100px]" />
+        <div className="fluid-blob bg-secondary/5 w-[400px] h-[400px] bottom-[-100px] left-[-100px]" />
       </div>
 
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-sky-600 flex items-center justify-center font-black text-white text-base shadow-md shadow-primary/20">D</div>
-            <span className="text-xs font-black text-slate-800 uppercase tracking-widest">Dewan Traders</span>
+          <div className="flex justify-center mb-4">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-green-700 flex items-center justify-center font-black text-white text-base shadow-md shadow-primary/20">D</div>
           </div>
         </div>
         <div className="glass rounded-3xl p-8 border border-slate-100 bg-white/80 shadow-xl shadow-slate-200/50">
