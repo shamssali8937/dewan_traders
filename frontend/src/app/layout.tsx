@@ -13,8 +13,8 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dewantrade.com
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Dewan Traders | Import & Export Company — Sargodha, Pakistan',
-    template: '%s | Dewan Traders Pakistan',
+    default: 'Dewan Traders',
+    template: '%s | Dewan Traders',
   },
   description:
     'Dewan Traders is a trusted B2B import & export company based in Sargodha, Punjab, Pakistan. We export premium Kinnow mandarins, Basmati rice, fresh vegetables, surgical instruments from Sialkot, and sports goods globally. Contact us for wholesale trade enquiries.',
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: SITE_URL,
     siteName: 'Dewan Traders',
-    title: 'Dewan Traders | Premium Import & Export — Pakistan',
+    title: 'Dewan Traders',
     description:
       'B2B export of Kinnow mandarins, Basmati rice, fresh fruits & vegetables, surgical instruments, and sports goods from Pakistan. Est. 2005.',
     images: [
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Dewan Traders | Premium Import & Export — Pakistan',
+    title: 'Dewan Traders',
     description: 'B2B export of Kinnow, Basmati rice, fruits, vegetables, surgical & sports goods from Pakistan.',
     images: ['/og-image.png'],
   },
