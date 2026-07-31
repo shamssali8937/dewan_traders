@@ -357,10 +357,8 @@ export default function Navbar() {
                 <button
                   className="flex items-center gap-2 px-3 py-2 bg-white hover:bg-slate-50 rounded-xl border border-slate-200 transition-all text-xs font-bold text-slate-800 shadow-sm"
                 >
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-primary to-secondary text-white font-extrabold text-[9px] flex items-center justify-center uppercase shadow-inner">
-                    {user.name[0]}
-                  </div>
-                  <span className="max-w-[80px] truncate">{user.name.split(' ')[0]}</span>
+                  <User size={13} className="text-primary" />
+                  <span className="max-w-[100px] truncate">{(user?.name || 'Account').split(' ')[0]}</span>
                   <ChevronDown size={11} className="text-slate-500" />
                 </button>
                 

@@ -16,6 +16,7 @@ import { formatPrice, formatDate, getInitials, resolveImageUrl } from '@/lib/uti
 import { useAuth, useUpdateProfile } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import DewanTradersLogo from '@/components/dewan_trader_logo';
+import RealisticPaymentCard from '@/components/RealisticPaymentCard';
 
 const STATUS_LABEL: Record<string, { label: string; color: string; icon: any }> = {
   pending: { label: 'Pending Payment', color: 'bg-amber-50 border-amber-200 text-amber-700', icon: Clock },
@@ -287,11 +288,11 @@ export default function UserDashboard() {
           {/* User profile brief */}
           <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
             <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-150 text-emerald-800 font-extrabold text-xs flex items-center justify-center uppercase">
-              {getInitials(user.name)}
+              {getInitials(user?.name)}
             </div>
             <div className="min-w-0">
-              <div className="text-xs font-black truncate">{user.name}</div>
-              <div className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{user.role}</div>
+              <div className="text-xs font-black truncate">{user?.name || 'User Account'}</div>
+              <div className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{user?.role || 'User'}</div>
             </div>
           </div>
 
@@ -475,13 +476,9 @@ export default function UserDashboard() {
                     <p className="text-[11px] text-slate-500 leading-relaxed font-medium">
                       Select one of our active bank accounts below to complete wire payments directly.
                     </p>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       {paymentAccounts.slice(0, 2).map((acc) => (
-                        <div key={acc.id} className="p-3 bg-slate-50 border border-slate-200/60 rounded-xl space-y-1 text-[11px]">
-                          <div className="font-black text-slate-800 text-[10px] uppercase tracking-wide truncate">{acc.bankName}</div>
-                          <div className="text-slate-500 truncate">{acc.accountTitle}</div>
-                          <div className="font-mono text-slate-700 font-semibold truncate">{acc.accountNumber}</div>
-                        </div>
+                        <RealisticPaymentCard key={acc.id} account={acc} />
                       ))}
                     </div>
                     <button onClick={() => setActiveTab('upload')} className="w-full py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-[10px] font-black uppercase tracking-wider rounded-xl transition-all">

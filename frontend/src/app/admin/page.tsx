@@ -127,7 +127,7 @@ export default function AdminDashboard() {
           ) : (
             <div className="divide-y divide-slate-100">
               {recentInquiries.map((inquiry: any) => (
-                <Link key={inquiry.id} href={`/admin/inquiries/${inquiry.id}`} className="flex items-center justify-between p-4.5 hover:bg-slate-50/50 transition-colors">
+                <Link key={inquiry.id} href="/admin/inquiries" className="flex items-center justify-between p-4.5 hover:bg-slate-50/50 transition-colors">
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-slate-850 truncate">{inquiry.name}</p>
                     <p className="text-[10px] text-slate-500 truncate mt-1 font-semibold">{inquiry.subject}</p>
@@ -150,7 +150,6 @@ export default function AdminDashboard() {
           {[
             { label: '+ Add Sourced Product', href: '/admin/products/new', style: 'bg-gradient-to-r from-primary to-secondary hover:from-primary-hover hover:to-secondary-hover text-white font-extrabold shadow-md shadow-primary/10' },
             { label: '+ Publish Journal post', href: '/admin/journal/new', style: 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold' },
-            { label: 'Edit Website Home', href: '/admin/pages/home', style: 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold' },
             { label: 'View Website', href: '/', style: 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold' },
           ].map(({ label, href, style }) => (
             <Link key={label} href={href}

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { CreditCard, Edit, Plus, Trash2, CheckCircle2, XCircle, Clock, Check, X, Shield } from 'lucide-react';
 import { toast } from 'sonner';
+import RealisticPaymentCard from '@/components/RealisticPaymentCard';
 
 export default function AdminPaymentAccountsPage() {
   const [accounts, setAccounts] = useState<any[]>([]);
@@ -302,60 +303,16 @@ export default function AdminPaymentAccountsPage() {
               <p className="text-xs font-bold uppercase">No billing credentials setup yet.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {accounts.map(acc => (
-                <div key={acc.id} className="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm space-y-4 hover:shadow-md transition-shadow">
-                  <div className="flex justify-between items-center pb-2.5 border-b border-slate-50">
-                    <div>
-                      <span className="text-xs font-bold text-slate-800">{acc.bankName || 'Mobile Account'}</span>
-                      <span className="text-[9px] px-2 py-0.5 rounded bg-sky-100 text-sky-700 font-bold capitalize ml-2">{acc.type}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => handleToggleActive(acc)}
-                        className={`p-1 rounded ${acc.isActive ? 'text-emerald-500 hover:bg-emerald-50' : 'text-slate-500 hover:bg-slate-50'}`}
-                        title={acc.isActive ? 'Active' : 'Inactive'}
-                      >
-                        {acc.isActive ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
-                      </button>
-                      <button
-                        onClick={() => handleEditClick(acc)}
-                        className="p-1 text-slate-600 hover:text-slate-700 hover:bg-slate-50 rounded"
-                      >
-                        <Edit size={16} />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(acc.id)}
-                        className="p-1 text-red-400 hover:text-red-600 hover:bg-red-50 rounded"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="text-[11px] font-semibold text-slate-600 grid grid-cols-1 sm:grid-cols-2 gap-2 leading-relaxed">
-                    <div>
-                      <span className="text-[9px] text-slate-600 block">Account Title</span>
-                      <span className="text-slate-800">{acc.accountTitle}</span>
-                    </div>
-                    <div>
-                      <span className="text-[9px] text-slate-600 block">Account/Wallet No</span>
-                      <span className="text-slate-800">{acc.accountNumber}</span>
-                    </div>
-                    {acc.iban && (
-                      <div className="sm:col-span-2">
-                        <span className="text-[9px] text-slate-600 block">IBAN Code</span>
-                        <span className="font-mono text-slate-800">{acc.iban}</span>
-                      </div>
-                    )}
-                    {acc.branch && (
-                      <div className="sm:col-span-2">
-                        <span className="text-[9px] text-slate-600 block">Branch Details</span>
-                        <span className="text-slate-700">{acc.branch}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {accounts.map((acc) => (
+                <RealisticPaymentCard
+                  key={acc.id}
+                  account={acc}
+                  isAdmin={true}
+                  onEdit={handleEditClick}
+                  onDelete={handleDelete}
+                  onToggleActive={handleToggleActive}
+                />
               ))}
             </div>
           )}

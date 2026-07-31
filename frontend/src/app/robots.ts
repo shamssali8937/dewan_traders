@@ -10,7 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: [
           '/admin/',
           '/user/',
-          '/auth/',
           '/orders/', // Customer transaction details
           '/api/',    // Raw API access
           '/*?*',     // Avoid crawling parameters/searches to prevent duplicate content
