@@ -5,6 +5,7 @@ import { QueryProvider } from '@/lib/QueryProvider';
 import { Toaster } from 'sonner';
 import AnimatedBackground from '@/components/AnimatedBackground';
 import JsonLd from '@/components/seo/JsonLd';
+import AuthInitializer from '@/components/AuthInitializer';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -173,6 +174,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${inter.variable} font-sans antialiased bg-white text-slate-900`} suppressHydrationWarning>
         <QueryProvider>
+          <AuthInitializer />
           {/* Global Ambient Background Animation */}
           <AnimatedBackground />
 

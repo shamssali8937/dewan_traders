@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import { prisma } from '../config/database';
 import { config } from '../config/config';
 import { ApiError } from '../utils/ApiError';
+import { logger } from '../utils/logger';
 
 interface RegisterInput {
   name: string;
@@ -75,8 +76,22 @@ export const authService = {
   },
 
   async login(input: LoginInput) {
-    const user = await prisma.user.findUnique({ where: { email: input.email } });
+    const cleanEmail = (input.email || '').trim().toLowerCase();
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: { equals: cleanEmail, mode: 'insensitive' } },
+          { email: { startsWith: cleanEmail, mode: 'insensitive' } },
+        ],
+      },
+    });
     if (!user || !user.isActive) throw ApiError.unauthorized('Invalid credentials');
+
+    // Auto-heal/sanitize database email if it contained trailing newlines or spaces
+    if (user.email.trim() !== cleanEmail) {
+      await prisma.user.update({ where: { id: user.id }, data: { email: cleanEmail } });
+      user.email = cleanEmail;
+    }
 
     if (!user.isEmailVerified) {
       throw ApiError.forbidden('Please verify your email before logging in. Check your inbox for the verification link.');
@@ -164,14 +179,36 @@ export const authService = {
   },
 
   async forgotPassword(email: string) {
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user || !user.isActive) return null; // silent fail (prevent email enumeration)
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: { equals: cleanEmail, mode: 'insensitive' } },
+          { email: { startsWith: cleanEmail, mode: 'insensitive' } },
+        ],
+      },
+    });
+
+    if (!user) {
+      logger.warn(`[forgotPassword] No user found in Database for email "${email}" (searched normalized: "${cleanEmail}")`);
+      return null;
+    }
+    if (!user.isActive) {
+      logger.warn(`[forgotPassword] User found for "${cleanEmail}" (ID: ${user.id}), but account isActive is false`);
+      return null;
+    }
+
+    // Auto-heal/sanitize database email if it contained trailing newlines or spaces
+    if (user.email.trim() !== cleanEmail) {
+      await prisma.user.update({ where: { id: user.id }, data: { email: cleanEmail } });
+      user.email = cleanEmail;
+    }
 
     const resetToken = crypto.randomBytes(32).toString('hex');
     const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
     const resetExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
-    // Store hashed token in dedicated column (does NOT overwrite refreshToken / active session)
+    // Store hashed token in dedicated column
     await prisma.user.update({
       where: { id: user.id },
       data: {

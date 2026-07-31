@@ -60,9 +60,11 @@ export function truncate(text: string, length = 150): string {
   return text.slice(0, length).trim() + '...';
 }
 
-export function getInitials(name: string): string {
-  return name
-    .split(' ')
+export function getInitials(name?: string | null): string {
+  if (!name || typeof name !== 'string') return 'DT';
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return 'DT';
+  return parts
     .map((n) => n[0])
     .join('')
     .toUpperCase()

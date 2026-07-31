@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 import { authService } from '../services/auth.service';
 import { asyncHandler } from '../utils/asyncHandler';
 import { ApiResponse } from '../utils/ApiResponse';
@@ -43,11 +44,23 @@ export const authController = {
       .json(ApiResponse.ok('Token refreshed', { accessToken: result.accessToken }));
   }),
 
-  logout: asyncHandler(async (req: AuthRequest, res: Response) => {
-    if (req.user) {
-      await authService.logout(req.user.id);
-      logger.info(`User logout: ${req.user.email}`);
+  logout: asyncHandler(async (req: Request, res: Response) => {
+    try {
+      const token =
+        req.cookies?.accessToken ||
+        req.headers.authorization?.replace('Bearer ', '');
+
+      if (token) {
+        const decoded = jwt.verify(token, config.jwt.secret) as { id: string; email?: string };
+        if (decoded?.id) {
+          await authService.logout(decoded.id);
+          logger.info(`User logout: ${decoded.id}`);
+        }
+      }
+    } catch {
+      // Ignore token decoding or expiration errors on logout
     }
+
     res
       .clearCookie('accessToken')
       .clearCookie('refreshToken')
@@ -71,9 +84,11 @@ export const authController = {
     const result = await authService.forgotPassword(email);
     if (result) {
       mailer.sendPasswordReset(result.email, result.name, result.resetToken);
+    } else {
+      logger.warn(`Password reset requested for non-existent or inactive user in database: ${email}`);
     }
     // Always return success to prevent email enumeration
-    logger.info(`Password reset requested for: ${email}`);
+    logger.info(`Password reset request handled for: ${email}`);
     res.json(ApiResponse.ok('If that email exists, a reset link has been sent.'));
   }),
 

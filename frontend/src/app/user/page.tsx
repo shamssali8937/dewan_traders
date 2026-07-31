@@ -287,11 +287,11 @@ export default function UserDashboard() {
           {/* User profile brief */}
           <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
             <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-150 text-emerald-800 font-extrabold text-xs flex items-center justify-center uppercase">
-              {getInitials(user.name)}
+              {getInitials(user?.name)}
             </div>
             <div className="min-w-0">
-              <div className="text-xs font-black truncate">{user.name}</div>
-              <div className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{user.role}</div>
+              <div className="text-xs font-black truncate">{user?.name || 'User Account'}</div>
+              <div className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{user?.role || 'User'}</div>
             </div>
           </div>
 

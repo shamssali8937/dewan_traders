@@ -23,8 +23,8 @@ router.post('/login', validateLogin, authController.login);
 // POST /api/auth/refresh
 router.post('/refresh', authController.refreshToken);
 
-// POST /api/auth/logout  (protected)
-router.post('/logout', authenticate, authController.logout);
+// POST /api/auth/logout (public / soft-authenticated)
+router.post('/logout', authController.logout);
 
 // GET /api/auth/me  (protected)
 router.get('/me', authenticate, authController.me);

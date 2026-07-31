@@ -157,11 +157,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="text-[10px] text-slate-450 font-black hidden lg:block uppercase tracking-wider">
             {new Date().toLocaleDateString('en-PK', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </div>
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-xs font-black shadow-sm">
-              {getInitials(user?.name || 'A')}
-            </div>
-          </div>
         </header>
 
         {/* Page content */}

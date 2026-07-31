@@ -7,8 +7,21 @@ import { prisma } from '../config/database';
 export interface AuthRequest extends Request {
   user?: {
     id: string;
+    name: string;
     email: string;
     role: string;
+    userType: string;
+    phone?: string | null;
+    companyName?: string | null;
+    companyReg?: string | null;
+    taxNumber?: string | null;
+    businessType?: string | null;
+    address?: string | null;
+    city?: string | null;
+    country?: string | null;
+    postalCode?: string | null;
+    website?: string | null;
+    isEmailVerified?: boolean;
   };
 }
 
@@ -34,14 +47,32 @@ export const authenticate = async (
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },
-      select: { id: true, email: true, role: true, isActive: true },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        userType: true,
+        phone: true,
+        companyName: true,
+        companyReg: true,
+        taxNumber: true,
+        businessType: true,
+        address: true,
+        city: true,
+        country: true,
+        postalCode: true,
+        website: true,
+        isEmailVerified: true,
+        isActive: true,
+      },
     });
 
     if (!user || !user.isActive) {
       throw ApiError.unauthorized('User not found or inactive');
     }
 
-    req.user = { id: user.id, email: user.email, role: user.role };
+    req.user = user;
     next();
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {

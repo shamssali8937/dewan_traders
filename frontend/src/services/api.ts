@@ -231,51 +231,66 @@ const processQueue = (error: unknown, token: string | null = null) => {
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
+    const originalRequest = error.config || {};
+    const url = originalRequest.url || '';
 
-    // In production, never fall back to mock — reject properly
-    if (process.env.NODE_ENV === 'production') {
-      return Promise.reject(error);
-    }
     // Check if network error or connection refused (backend server is down)
     if (!error.response || error.code === 'ERR_NETWORK' || error.response.status >= 500) {
-      return handleMockRequest(originalRequest);
+      if (process.env.NODE_ENV !== 'production') {
+        return handleMockRequest(originalRequest);
+      }
+      return Promise.reject(error);
     }
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then(() => api(originalRequest))
-          .catch((err) => Promise.reject(err));
+    if (error.response?.status === 401) {
+      // If logout endpoint returned 401, clear local store and resolve cleanly
+      if (url.includes('/auth/logout')) {
+        useAuthStore.getState().logout();
+        return Promise.resolve({ data: { success: true, message: 'Logged out' } });
       }
 
-      originalRequest._retry = true;
-      isRefreshing = true;
+      // If refresh or login endpoints return 401, clear local store and reject
+      if (url.includes('/auth/refresh') || url.includes('/auth/login')) {
+        useAuthStore.getState().logout();
+        return Promise.reject(error);
+      }
 
-      try {
-        const refreshResponse = await api.post('/auth/refresh');
-        const accessToken = refreshResponse.data?.data?.accessToken;
-
-        if (accessToken) {
-          // Persist new token in Zustand store (also saves to localStorage via zustand/persist)
-          useAuthStore.getState().setToken(accessToken);
-          // Immediately attach the new token to the retried request header
-          originalRequest.headers = originalRequest.headers || {};
-          originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
+      if (!originalRequest._retry) {
+        if (isRefreshing) {
+          return new Promise((resolve, reject) => {
+            failedQueue.push({ resolve, reject });
+          })
+            .then(() => api(originalRequest))
+            .catch((err) => Promise.reject(err));
         }
 
-        processQueue(null);
-        return api(originalRequest);
-      } catch (refreshError) {
-        processQueue(refreshError, null);
-        if (typeof window !== 'undefined') {
-          window.location.href = '/auth/login';
+        originalRequest._retry = true;
+        isRefreshing = true;
+
+        try {
+          const refreshResponse = await api.post('/auth/refresh');
+          const accessToken = refreshResponse.data?.data?.accessToken;
+
+          if (accessToken) {
+            // Persist new token in Zustand store (also saves to localStorage via zustand/persist)
+            useAuthStore.getState().setToken(accessToken);
+            // Immediately attach the new token to the retried request header
+            originalRequest.headers = originalRequest.headers || {};
+            originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
+          }
+
+          processQueue(null);
+          return api(originalRequest);
+        } catch (refreshError) {
+          processQueue(refreshError, null);
+          useAuthStore.getState().logout();
+          if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/auth/login')) {
+            window.location.href = '/auth/login';
+          }
+          return Promise.reject(refreshError);
+        } finally {
+          isRefreshing = false;
         }
-        return Promise.reject(refreshError);
-      } finally {
-        isRefreshing = false;
       }
     }
 
