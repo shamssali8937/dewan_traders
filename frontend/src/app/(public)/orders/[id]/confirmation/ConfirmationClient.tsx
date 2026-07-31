@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useOrder } from '@/hooks/useOrders';
 import { formatPrice } from '@/lib/utils';
 import { CheckCircle, ArrowRight, ShoppingBag, CreditCard, ChevronRight, HelpCircle, Sparkles } from 'lucide-react';
+import RealisticPaymentCard from '@/components/RealisticPaymentCard';
 
 export default function OrderConfirmationPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -115,40 +116,13 @@ export default function OrderConfirmationPage({ params }: { params: Promise<{ id
             Please transfer the amount of <strong className="text-slate-800">{formatPrice(order.total, 'PKR', order.notes)}</strong> to one of our active corporate accounts:
           </p>
           
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {relevantAccounts.length > 0 ? (
               relevantAccounts.map((acc) => (
-                <div key={acc.id} className="p-4.5 border border-slate-200/60 rounded-2xl bg-[#fafbf9] hover:bg-slate-50 transition-colors space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs font-black text-slate-900 uppercase tracking-wide">{acc.bankName || 'Mobile Wallet Account'}</span>
-                    <span className="text-[8px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 font-black uppercase border border-emerald-100/50">{acc.type}</span>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-[11px] text-slate-600 font-bold">
-                    <div>
-                      <span className="text-[9px] text-slate-400 font-black uppercase block">Account Title</span>
-                      <span className="text-slate-800">{acc.accountTitle}</span>
-                    </div>
-                    <div>
-                      <span className="text-[9px] text-slate-400 font-black uppercase block">Account Number</span>
-                      <span className="text-slate-800">{acc.accountNumber}</span>
-                    </div>
-                    {acc.iban && (
-                      <div className="sm:col-span-2">
-                        <span className="text-[9px] text-slate-400 font-black uppercase block">IBAN Code</span>
-                        <span className="font-mono text-slate-800">{acc.iban}</span>
-                      </div>
-                    )}
-                    {acc.branch && (
-                      <div className="sm:col-span-2">
-                        <span className="text-[9px] text-slate-400 font-black uppercase block">Branch Details</span>
-                        <span className="text-slate-700">{acc.branch}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <RealisticPaymentCard key={acc.id} account={acc} />
               ))
             ) : (
-              <div className="text-center py-5 border border-dashed border-slate-200 rounded-2xl text-xs text-slate-500 font-medium">
+              <div className="md:col-span-2 text-center py-8 border border-dashed border-slate-200 rounded-2xl text-xs text-slate-500 font-medium">
                 No active mobile or bank accounts configured. Our operations desk will supply details.
               </div>
             )}
