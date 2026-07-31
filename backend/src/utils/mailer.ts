@@ -13,7 +13,7 @@ const getFrontendUrl = (): string => {
 
 const FROM = process.env.FROM_EMAIL || 'noreply@dewantrade.com';
 const FROM_DISPLAY = `Dewan Traders <${FROM}>`;
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'awantransportuae@gmail.com';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'dewantraderssargodha@gmail.com';
 
 // ─── Helper ──────────────────────────────────────────────────────────────────
 async function send(to: string | string[], subject: string, html: string) {

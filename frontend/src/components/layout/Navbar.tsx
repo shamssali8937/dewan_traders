@@ -93,8 +93,8 @@ export default function Navbar() {
             <a href="https://wa.me/923456776075" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">
               <Phone size={10} className="text-primary" /> +92 345 6776075
             </a>
-            <a href="mailto:awantransportuae@gmail.com" className="flex items-center gap-2 hover:text-white transition-colors">
-              <Mail size={10} className="text-primary" /> awantransportuae@gmail.com
+            <a href="mailto:dewantraderssargodha@gmail.com" className="flex items-center gap-2 hover:text-white transition-colors">
+              <Mail size={10} className="text-primary" /> dewantraderssargodha@gmail.com
             </a>
             <span className="text-slate-700">|</span>
             <span className="text-slate-400 font-sans tracking-wide">B2B Enterprise Export Portal</span>

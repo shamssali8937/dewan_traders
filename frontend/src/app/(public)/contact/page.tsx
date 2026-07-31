@@ -7,7 +7,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dewantrade.com
 export const metadata: Metadata = {
   title: 'Contact Us | Dewan Traders — Sargodha, Punjab, Pakistan',
   description:
-    'Contact Dewan Traders for B2B import/export inquiries. We are located at 38-A, Mansoorabad, Sargodha, Punjab 40100, Pakistan. WhatsApp: +92 345 6776075. Email: awantransportuae@gmail.com. Get a free trade quote today.',
+    'Contact Dewan Traders for B2B import/export inquiries. We are located at 38-A, Mansoorabad, Sargodha, Punjab 40100, Pakistan. WhatsApp: +92 345 6776075. Email: dewantraderssargodha@gmail.com. Get a free trade quote today.',
   keywords: [
     'contact Dewan Traders', 'Sargodha exporter contact', 'Pakistan trade inquiry',
     'B2B trade contact Pakistan', 'export quote Pakistan', 'Dewan Traders phone number',
