@@ -30,7 +30,7 @@ export default function Footer() {
             </div>
             <div className="flex items-center gap-2">
               <Mail size={13} className="text-primary shrink-0" />
-              <a href="mailto:awantransportuae@gmail.com" className="hover:text-primary transition-colors">awantransportuae@gmail.com</a>
+              <a href="mailto:dewantraderssargodha@gmail.com" className="hover:text-primary transition-colors">dewantraderssargodha@gmail.com</a>
             </div>
           </div>
         </div>

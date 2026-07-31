@@ -50,8 +50,8 @@ const initialContact = {
   country: 'Pakistan',
   phone1: '+92 345 6776075',
   phone2: '+92 345 6776075',
-  email1: 'awantransportuae@gmail.com',
-  email2: 'awantransportuae@gmail.com',
+  email1: 'dewantraderssargodha@gmail.com',
+  email2: 'dewantraderssargodha@gmail.com',
   whatsapp: '+923456776075',
   workingHours: 'Mon–Sat: 9:00 AM – 6:00 PM (PKT)',
 };

@@ -63,7 +63,7 @@ export default function ContactPage() {
             {[
               { icon: MapPin, title: 'Office Address', lines: ['38-A, Mansoorabad, Sargodha', 'Punjab, 40100, Pakistan'], color: 'text-orange-500 bg-orange-50 border-orange-100' },
               { icon: Phone, title: 'Phone / WhatsApp', lines: ['+92 345 6776075'], color: 'text-emerald-500 bg-emerald-50 border-emerald-100' },
-              { icon: Mail, title: 'Email Address', lines: ['awantransportuae@gmail.com'], color: 'text-sky-500 bg-sky-50 border-sky-100' },
+              { icon: Mail, title: 'Email Address', lines: ['dewantraderssargodha@gmail.com'], color: 'text-sky-500 bg-sky-50 border-sky-100' },
               { icon: Clock, title: 'Trading Hours', lines: ['Mon–Sat: 9:00 AM – 6:00 PM', 'Sunday: Closed (PKT)'], color: 'text-indigo-500 bg-indigo-50 border-indigo-100' },
             ].map(({ icon: Icon, title, lines, color }) => (
               <div key={title} className="glass rounded-2xl p-5 flex gap-4 bg-white/70 border border-slate-100 shadow-sm">

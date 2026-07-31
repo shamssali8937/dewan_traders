@@ -346,7 +346,7 @@ export default function MobileMenu({
                 <Phone size={11} className="text-slate-400" /> +92 345 6776075
               </a>
               <div className="flex items-center gap-2">
-                <Mail size={11} className="text-slate-400" /> awantransportuae@gmail.com
+                <Mail size={11} className="text-slate-400" /> dewantraderssargodha@gmail.com
               </div>
               <div className="font-medium text-[9px] tracking-wide">Sargodha, Punjab, Pakistan — B2B Consolidation Packhouse</div>
             </div>

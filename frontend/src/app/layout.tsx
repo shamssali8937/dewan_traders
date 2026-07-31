@@ -119,7 +119,7 @@ const organizationSchema = {
     },
     {
       '@type': 'ContactPoint',
-      email: 'awantransportuae@gmail.com',
+      email: 'dewantraderssargodha@gmail.com',
       contactType: 'sales',
     },
   ],
