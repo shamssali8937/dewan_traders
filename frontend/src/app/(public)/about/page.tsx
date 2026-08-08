@@ -5,7 +5,7 @@ import JsonLd from '@/components/seo/JsonLd';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dewantrade.com';
 
 export const metadata: Metadata = {
-  title: 'About Us | Dewan Traders — Sargodha Export Company Est. 2005',
+  title: 'About Us',
   description:
     'Learn about Dewan Traders — a family-owned B2B import & export company founded in 2005 in Sargodha, Punjab, Pakistan by Sajjad Hussain Awan. Our mission is to connect Pakistan\'s finest agricultural and industrial products with global buyers.',
   keywords: [
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: `${SITE_URL}/about` },
   openGraph: {
-    title: 'About Dewan Traders — Sargodha Export Company Est. 2005',
+    title: 'About Us | Dewan Traders',
     description: 'Family-owned B2B import & export company from Sargodha, Punjab, Pakistan. Est. 2005.',
     url: `${SITE_URL}/about`,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'About Dewan Traders' }],

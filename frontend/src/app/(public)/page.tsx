@@ -5,7 +5,7 @@ import JsonLd from '@/components/seo/JsonLd';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dewantrade.com';
 
 export const metadata: Metadata = {
-  title: 'Dewan Traders',
+  title: { absolute: 'Dewan Traders | B2B Pakistan Exporter' },
   description:
     'Dewan Traders — Sargodha\'s premier B2B export company. We supply Kinnow mandarins, Basmati rice, fresh fruits & vegetables, surgical instruments, and sports goods to buyers worldwide. Get a free trade quote today.',
   keywords: [
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: SITE_URL },
   openGraph: {
-    title: 'Dewan Traders',
+    title: 'Dewan Traders | B2B Pakistan Exporter',
     description: 'Sargodha\'s premier B2B export company. Kinnow, Basmati rice, fresh produce, surgical & sports goods.',
     url: SITE_URL,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Dewan Traders Pakistan' }],

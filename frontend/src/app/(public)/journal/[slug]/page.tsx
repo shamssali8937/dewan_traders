@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const title = `${post.title} | Dewan Traders Pakistan`;
+  const title = post.title;
   const desc = post.excerpt || `${post.title}. Read export insights, agriculture trends, and Sialkot quality standards from Dewan Traders.`;
 
   return {

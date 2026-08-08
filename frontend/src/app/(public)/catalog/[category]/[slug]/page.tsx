@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const title = `${product.name} Exporter Pakistan | B2B Wholesale — Dewan Traders`;
+  const title = `${product.name} Wholesale Exporter`;
   const desc = `${product.description} Sourced directly from Pakistan. SKU: ${product.sku}. Grade-A export quality, custom packing, competitive FOB/CIF shipping rates.`;
 
   return {

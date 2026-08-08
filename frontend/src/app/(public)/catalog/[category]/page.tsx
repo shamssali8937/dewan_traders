@@ -6,27 +6,27 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dewantrade.com
 
 const categoryMeta: Record<string, { title: string; desc: string; keywords: string[] }> = {
   fruits: {
-    title: 'Fresh Fruits Export | Sargodha Kinnow & Mangoes — Dewan Traders',
+    title: 'Fresh Fruits Export',
     desc: 'Sourcing premium Sargodha Kinnow mandarins, fresh sweet mangoes, and high-quality seasonal Pakistani fruits for global markets. Phytosanitary cleared cold chain export.',
     keywords: ['Sargodha Kinnow export', 'Pakistani citrus supplier', 'fresh mango exporter Pakistan', 'wholesale Kinnow mandarin'],
   },
   vegetables: {
-    title: 'Vegetables Export | Graded Potatoes, Onions, Garlic — Dewan Traders',
+    title: 'Fresh Vegetables Export',
     desc: 'B2B export of graded Pakistani potatoes, red onions, garlic bulbs, and fresh seasonal vegetables. Sorted and cured under ISO and HACCP compliance.',
     keywords: ['Pakistan vegetable exporter', 'wholesale potato supplier Pakistan', 'red onion export Pakistan', 'fresh produce Pakistan B2B'],
   },
   rice: {
-    title: 'Basmati Rice Export | 1121 Sella & Super Kernel — Dewan Traders',
+    title: 'Basmati Rice Export',
     desc: 'Exporting aged long-grain Super Kernel Basmati and premium 1121 Sella rice from top Punjab mills. High aroma, premium color sorting, custom B2B packaging.',
     keywords: ['Basmati rice exporter Pakistan', 'Super Kernel Basmati wholesale', '1121 sella rice exporter', 'buy Pakistan rice bulk'],
   },
   surgical: {
-    title: 'Surgical Instruments Export | CE & ISO Sialkot Tools — Dewan Traders',
+    title: 'Surgical Instruments Export',
     desc: 'Premium medical-grade AISI 410/420 stainless steel surgical instruments directly from Sialkot. CE and ISO compliant instruments for hospitals worldwide.',
     keywords: ['surgical instruments exporter Sialkot', 'medical tools wholesale Pakistan', 'Sialkot medical device exporter', 'surgical steel tools'],
   },
   sports: {
-    title: 'Sports Goods Export | Footballs, Cricket Bats, Gear — Dewan Traders',
+    title: 'Sports Goods Export',
     desc: 'Supplying professional thermo-bonded match footballs, English willow cricket bats, and athletic equipment directly from Sialkot. FIFA standards compliant.',
     keywords: ['sports goods exporter Pakistan', 'Sialkot football manufacturer', 'wholesale cricket bats Pakistan', 'sports gear supplier'],
   },
@@ -39,7 +39,7 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category } = await params;
   const meta = categoryMeta[category] || {
-    title: 'Export Categories | Premium Pakistan Goods — Dewan Traders',
+    title: 'Export Categories',
     desc: 'Explore our B2B export categories from Pakistan: fresh fruits, vegetables, aged Basmati rice, surgical tools, and sports goods.',
     keywords: ['Pakistan exporter', 'Dewan Traders export categories'],
   };

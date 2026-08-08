@@ -5,7 +5,7 @@ import JsonLd from '@/components/seo/JsonLd';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dewantrade.com';
 
 export const metadata: Metadata = {
-  title: 'How We Export | Pakistan Export Process & Documentation — Dewan Traders',
+  title: 'How We Export & Process',
   description:
     'Step-by-step Pakistan export process by Dewan Traders: RFQ, product selection, quality inspection, phytosanitary certificate, customs documentation, Karachi port loading, sea/air freight, and delivery. Fully documented and compliant.',
   keywords: [
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: `${SITE_URL}/export-process` },
   openGraph: {
-    title: 'Pakistan Export Process — Dewan Traders',
+    title: 'How We Export & Process | Dewan Traders',
     description: 'Full export process: RFQ → quality inspection → customs → Karachi port → delivery.',
     url: `${SITE_URL}/export-process`,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Dewan Traders Export Process' }],
