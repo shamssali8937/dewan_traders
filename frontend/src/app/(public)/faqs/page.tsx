@@ -5,7 +5,7 @@ import JsonLd from '@/components/seo/JsonLd';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dewantrade.com';
 
 export const metadata: Metadata = {
-  title: 'FAQs | Pakistan Export Compliance, MOQ, Shipping — Dewan Traders',
+  title: 'Frequently Asked Questions',
   description:
     'Frequently asked questions about Dewan Traders export services: minimum order quantities, private labeling, phytosanitary certificates, surgical steel grades, FOB/CIF Incoterms, shipping documents, and Karachi port logistics.',
   keywords: [
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: `${SITE_URL}/faqs` },
   openGraph: {
-    title: 'FAQs — Dewan Traders Pakistan Export',
+    title: 'Frequently Asked Questions | Dewan Traders',
     description: 'MOQ, documents, compliance, shipping terms — all your Pakistan export questions answered.',
     url: `${SITE_URL}/faqs`,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Dewan Traders FAQs' }],

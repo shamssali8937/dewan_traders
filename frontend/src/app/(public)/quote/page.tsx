@@ -5,7 +5,7 @@ import JsonLd from '@/components/seo/JsonLd';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dewantrade.com';
 
 export const metadata: Metadata = {
-  title: 'Request a Trade Quote | Pakistan B2B Export Pricing — Dewan Traders',
+  title: 'Request Trade Quote',
   description:
     'Get a free B2B export quote from Dewan Traders. Request FOB/CIF pricing for Kinnow mandarins, Basmati rice, fresh vegetables, surgical instruments, or sports goods. Fast response within 24 hours.',
   keywords: [
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: `${SITE_URL}/quote` },
   openGraph: {
-    title: 'Request a Trade Quote — Dewan Traders Pakistan',
+    title: 'Request Trade Quote | Dewan Traders',
     description: 'Free B2B export quote: Kinnow, Basmati rice, produce, surgical, sports. 24hr response.',
     url: `${SITE_URL}/quote`,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Get a Trade Quote — Dewan Traders' }],

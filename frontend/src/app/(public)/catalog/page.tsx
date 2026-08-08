@@ -5,7 +5,7 @@ import JsonLd from '@/components/seo/JsonLd';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dewantrade.com';
 
 export const metadata: Metadata = {
-  title: 'Product Catalog | Kinnow, Basmati Rice, Surgical & Sports Exports — Dewan Traders',
+  title: 'Product Catalog',
   description:
     'Browse Dewan Traders\' full export catalog: Sargodha Kinnow mandarins, Chaunsa mangoes, Basmati rice, fresh vegetables, Sialkot surgical instruments, and Pakistani sports goods. Wholesale B2B pricing available.',
   keywords: [
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: `${SITE_URL}/catalog` },
   openGraph: {
-    title: 'Product Catalog | Pakistan Export Goods — Dewan Traders',
+    title: 'Product Catalog | Dewan Traders',
     description: 'Kinnow, Basmati rice, fresh vegetables, surgical instruments & sports goods. Wholesale B2B pricing.',
     url: `${SITE_URL}/catalog`,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Dewan Traders Product Catalog' }],

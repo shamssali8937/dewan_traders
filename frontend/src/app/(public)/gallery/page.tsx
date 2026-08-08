@@ -5,7 +5,7 @@ import JsonLd from '@/components/seo/JsonLd';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dewantrade.com';
 
 export const metadata: Metadata = {
-  title: 'Media Gallery | Packing House & Export Quality — Dewan Traders',
+  title: 'Media & Operations Gallery',
   description:
     'Visual documentation of our export operations. Browse photos of premium Kinnow packaging in Sargodha, Basmati rice milling in Punjab, and surgical instrument inspections in Sialkot.',
   keywords: [
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: `${SITE_URL}/gallery` },
   openGraph: {
-    title: 'Media Gallery — Dewan Traders Pakistan',
+    title: 'Media & Operations Gallery | Dewan Traders',
     description: 'Visual documentation of our packing houses, quality inspection, and agricultural sourcing.',
     url: `${SITE_URL}/gallery`,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Dewan Traders Gallery' }],

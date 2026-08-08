@@ -5,7 +5,7 @@ import JsonLd from '@/components/seo/JsonLd';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dewantrade.com';
 
 export const metadata: Metadata = {
-  title: 'Export Services | Freight, Customs & Trade Logistics — Dewan Traders Pakistan',
+  title: 'Export Services & Logistics',
   description:
     'Dewan Traders provides end-to-end B2B export services from Pakistan: product sourcing, quality inspection, HACCP certification, phytosanitary clearance, freight booking, Karachi Port loading, and global delivery.',
   keywords: [
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: `${SITE_URL}/services` },
   openGraph: {
-    title: 'Export Services — Dewan Traders Pakistan',
+    title: 'Export Services & Logistics | Dewan Traders',
     description: 'End-to-end B2B export: sourcing, quality inspection, customs, freight, delivery from Pakistan.',
     url: `${SITE_URL}/services`,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Dewan Traders Export Services' }],

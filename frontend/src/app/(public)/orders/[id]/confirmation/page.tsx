@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import ConfirmationClient from './ConfirmationClient';
 
 export const metadata: Metadata = {
-  title: 'Order Confirmed | Dewan Traders',
+  title: 'Order Confirmed',
   description: 'Your trade contract has been generated successfully. Please check payment instructions.',
   robots: {
     index: false,

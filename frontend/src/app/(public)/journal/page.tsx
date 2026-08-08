@@ -5,7 +5,7 @@ import JsonLd from '@/components/seo/JsonLd';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.dewantrade.com';
 
 export const metadata: Metadata = {
-  title: 'Trade Journal & Blog | Pakistan Export Insights — Dewan Traders',
+  title: 'Trade Journal & Insights',
   description:
     'Stay informed with Dewan Traders\' trade journal: export market trends, Kinnow harvest seasons, Basmati rice price updates, Pakistan agricultural news, surgical instruments trade, and B2B export guides.',
   keywords: [
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: `${SITE_URL}/journal` },
   openGraph: {
-    title: 'Trade Journal — Dewan Traders Pakistan',
+    title: 'Trade Journal & Insights | Dewan Traders',
     description: 'Export market trends, harvest seasons, Basmati rice prices, Pakistan trade news.',
     url: `${SITE_URL}/journal`,
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Dewan Traders Trade Journal' }],
