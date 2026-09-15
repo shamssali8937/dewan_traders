@@ -102,27 +102,27 @@ export default function KinnowPreBookingBanner() {
                 {/* Image panel */}
                 <div className="sm:col-span-2 relative h-44 sm:h-auto sm:min-h-[340px] overflow-hidden">
                   <Image
-                    src="/images/fruits_hero.png"
-                    alt="Sargodha Kinnow Mandarins 2027"
+                    src="/images/orange1.jpg"
+                    alt="Sargodha Kinnow Mandarins 2027 Pre-Booking"
                     fill
                     sizes="(max-width: 640px) 100vw, 400px"
                     className="object-cover"
                     priority
                   />
-                  {/* Gradient: bottom on mobile, right on sm */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent sm:bg-gradient-to-r sm:from-transparent sm:via-transparent sm:to-slate-950/30" />
+                  {/* Subtle bottom gradient only — keeps image visible, text legible */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/10 to-transparent" />
 
-                  {/* Origin badge */}
-                  <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-white/15 backdrop-blur-md border border-white/30 px-2.5 py-1 rounded-full text-white text-[10px] font-black uppercase tracking-widest shadow-md">
-                    <Trophy size={10} className="text-[#F47A16]" /> Sargodha Origin
+                  {/* Origin badge — white text on dark glass */}
+                  <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-slate-900/70 backdrop-blur-md border border-white/20 px-2.5 py-1 rounded-full text-white text-[10px] font-black uppercase tracking-widest shadow-md">
+                    <Trophy size={10} className="text-white" /> Sargodha Origin
                   </div>
 
-                  {/* SGS badge – only on sm+ (hidden on mobile to save space) */}
+                  {/* SGS badge – only on sm+ */}
                   <div className="hidden sm:block absolute bottom-4 left-4 right-4">
-                    <div className="text-[10px] font-black tracking-wide uppercase text-[#F47A16] flex items-center gap-1 mb-0.5">
-                      <CheckCircle2 size={11} /> SGS Tested &amp; Lab Cleared
+                    <div className="text-[10px] font-black tracking-wide uppercase text-white flex items-center gap-1 mb-0.5">
+                      <CheckCircle2 size={11} className="text-white" /> SGS Tested &amp; Lab Cleared
                     </div>
-                    <div className="text-[9px] text-slate-300 font-medium leading-snug">
+                    <div className="text-[9px] text-white/70 font-medium leading-snug">
                       Guaranteed brix ratio, uniform sizing &amp; high juice content.
                     </div>
                   </div>

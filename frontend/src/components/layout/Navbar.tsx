@@ -100,33 +100,45 @@ export default function Navbar() {
         {/* 0. Kinnow 2027 Top Announcement Bar */}
         {mounted && !isBannerDismissed && (
           <div
-            className="text-white text-[11px] font-bold px-4 py-2 flex items-center justify-between shadow-sm relative z-50 border-b border-white/10"
-            style={{ background: 'linear-gradient(90deg, #0E6B45 0%, #0B5537 40%, #F47A16 100%)' }}
+            className="text-white text-[11px] font-bold px-3 sm:px-4 py-2 flex items-center gap-2 shadow-sm relative z-50 border-b border-white/10"
+            style={{ background: 'linear-gradient(90deg, #0E6B45 0%, #0B5537 50%, #F47A16 100%)' }}
           >
-            <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 sm:gap-3 text-center flex-1">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+            {/* Live pulse dot */}
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
+            </span>
+
+            {/* Text — short on mobile, full on sm */}
+            <span className="flex-1 min-w-0 text-center leading-snug">
+              <span className="sm:hidden">
+                <span className="font-extrabold uppercase tracking-wider">Pre-Booking Open: </span>
+                Kinnow 2027 is Live!
               </span>
-              <span className="truncate">
-                🍊 <span className="uppercase font-extrabold tracking-wider" style={{ color: 'rgba(255,255,255,0.85)' }}>Pre-Booking Open:</span> Sargodha Kinnow 2027 Season Container Quota is Live!
+              <span className="hidden sm:inline">
+                <span className="font-extrabold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.9)' }}>Pre-Booking Open: </span>
+                Sargodha Kinnow 2027 Season Container Quota is Live!
               </span>
-              <Link
-                href="/quote?subject=Kinnow+2027+Pre-Booking+Inquiry&productCategory=fruits&quantity=1+Reefer+Container+(40ft)&message=We+would+like+to+reserve+refrigerated+container+slots+for+Sargodha+Kinnow+2027+export+season."
-                className="ml-2 px-3 py-0.5 bg-white/20 hover:bg-white/30 text-white rounded-full font-black text-[10px] uppercase tracking-wider transition-all flex items-center gap-1 shrink-0"
-              >
-                Reserve Slot <ChevronRight size={12} />
-              </Link>
-            </div>
+            </span>
+
+            {/* Reserve Slot CTA — hidden on xs, visible from sm */}
+            <Link
+              href="/quote?subject=Kinnow+2027+Pre-Booking+Inquiry&productCategory=fruits&quantity=1+Reefer+Container+(40ft)&message=We+would+like+to+reserve+refrigerated+container+slots+for+Sargodha+Kinnow+2027+export+season."
+              className="hidden sm:flex items-center gap-1 px-3 py-0.5 bg-white/20 hover:bg-white/30 text-white rounded-full font-black text-[10px] uppercase tracking-wider transition-all shrink-0"
+            >
+              Reserve Slot <ChevronRight size={11} />
+            </Link>
+
+            {/* Dismiss */}
             <button
               onClick={() => {
                 setIsBannerDismissed(true);
                 sessionStorage.setItem('kinnow_2027_bar_v2', 'true');
               }}
-              className="text-white/80 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors ml-2"
+              className="text-white/80 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors shrink-0"
               aria-label="Dismiss banner"
             >
-              <X size={14} />
+              <X size={13} />
             </button>
           </div>
         )}
