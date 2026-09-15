@@ -12,6 +12,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { formatPrice, resolveImageUrl } from '@/lib/utils';
 import { useMarketStore } from '@/store/marketStore';
+import { useProductPricing } from '@/hooks/usePricing';
+import { getCardPriceInfo } from '@/lib/pricing';
 
 import { Send, CheckCircle, ShieldCheck, Award, FileText, ChevronRight, Package, MapPin, Sparkles, ShoppingCart, Info, Lock } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -50,7 +52,6 @@ function ProductDetailPageContent({ params }: { params: Promise<{ category: stri
   const { user, isAuthenticated } = useAuthStore();
   const { mutate: placeOrder, isPending: ordering, isSuccess: ordered } = usePlaceOrder();
   const { mutate: sendInquiry, isPending: isPending, isSuccess: isSuccess } = useCreateInquiry();
-  const { region, exchangeRate, premiumPackagingCost, getProductPrice, getProductUnit, getProductMoq, formatProductPrice } = useMarketStore();
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -72,11 +73,31 @@ function ProductDetailPageContent({ params }: { params: Promise<{ category: stri
   const [customsClearance, setCustomsClearance] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState('bank_transfer');
 
-  const packingMultiplier = PACKING_MULTIPLIERS[containerType] || 1.0;
+  const { region, premiumPackagingCost, getProductPrice, getProductUnit, getProductMoq, formatProductPrice, getContainerCost, getPackingMultiplier, getDocumentationCost, getCustomsClearanceCost, getStandardDeliveryCost, getExpressDeliveryCost } = useMarketStore();
 
-  const activePrice = product ? getProductPrice(product.slug, Number(product.price)) : 0;
-  const activeUnit = product ? getProductUnit(product.slug, product.unit) : 'kg';
-  const activeMoq = product ? getProductMoq(product.slug, product.minOrderQty) : 1;
+  // ── Live DB pricing (with static-map fallback) ─────────────────────────────
+  const { data: dbPricing } = useProductPricing(product?.id);
+  const pricingData = dbPricing || product?.pricing;
+
+  const activePrice = product ? (
+    pricingData
+      ? (region === 'PK' ? Number(pricingData.pkPrice) : Number(pricingData.intPrice))
+      : (product.price && Number(product.price) > 0
+          ? (region === 'PK' ? Number(product.price) * 278 : Number(product.price))
+          : getProductPrice(product.slug, Number(product.price)))
+  ) : 0;
+
+  const activeUnit = product ? (
+    pricingData
+      ? (region === 'PK' ? pricingData.pkUnit : pricingData.intUnit)
+      : (product.unit || getProductUnit(product.slug, product.unit))
+  ) : 'kg';
+
+  const activeMoq = product ? (
+    pricingData
+      ? (region === 'PK' ? pricingData.pkMoq : pricingData.intMoq)
+      : (product.minOrderQty || getProductMoq(product.slug, product.minOrderQty))
+  ) : 1;
 
   // Gallery images list calculation
   const allImages = useMemo(() => {
@@ -103,33 +124,30 @@ function ProductDetailPageContent({ params }: { params: Promise<{ category: stri
   }, [allImages]);
 
   // Surcharges and logistics costs based on region
-  const baseProductCost = orderQty * activePrice;
+  const baseProductCost = Number(orderQty) * Number(activePrice);
 
-  // Surcharges and logistics costs based on region
-  const containerBaseCost = useMemo(() => {
-    switch (containerType) {
-      case '20ft_reefer': return 1800;
-      case '40ft_reefer': return 2800;
-      case '20ft_dry': return 1000;
-      case '40ft_dry': return 1500;
-      case 'bulk_loose': return 400;
-      default: return 0;
-    }
-  }, [containerType]);
+  // Surcharges and logistics costs from DB config
+  const containerBaseCost = useMemo(() => Number(getContainerCost(containerType)), [containerType, getContainerCost]);
+  const packingMultiplier = useMemo(() => Number(getPackingMultiplier(containerType)), [containerType, getPackingMultiplier]);
 
-  const docClearanceCost = (exportDocumentation ? 150 : 0) + (customsClearance ? 250 : 0);
+  const docClearanceCost = (exportDocumentation ? Number(getDocumentationCost()) : 0) + (customsClearance ? Number(getCustomsClearanceCost()) : 0);
   const transitPackagingSurcharge = baseProductCost * (packingMultiplier - 1);
 
-  // Grand totals:
+  // Incoterm adjustment logic:
+  // Under FOB & EXW, ocean container freight is paid by buyer at destination, so seller quotation excludes ocean freight.
+  const isFreightIncluded = incoterm === 'CIF' || incoterm === 'DAP';
+  const isExWorks = incoterm === 'EXW';
+
+  // Grand totals — all explicit Number() to guarantee numeric addition:
   const localProductTotalPkr = baseProductCost;
-  const localPackagingTotalPkr = packagingOption === 'premium' ? premiumPackagingCost : 0;
-  const localDeliveryTotalPkr = deliveryOption === 'express' ? 600 : deliveryOption === 'standard' ? 250 : 0;
+  const localPackagingTotalPkr = packagingOption === 'premium' ? Number(premiumPackagingCost) : 0;
+  const localDeliveryTotalPkr = deliveryOption === 'express' ? Number(getExpressDeliveryCost()) : deliveryOption === 'standard' ? Number(getStandardDeliveryCost()) : 0;
   const localGrandTotalPkr = localProductTotalPkr + localPackagingTotalPkr + localDeliveryTotalPkr;
 
   const intProductTotalUsd = baseProductCost;
-  const intPackagingTotalUsd = transitPackagingSurcharge;
-  const intLogisticsTotalUsd = containerBaseCost;
-  const intDocsTotalUsd = docClearanceCost;
+  const intPackagingTotalUsd = isExWorks ? 0 : transitPackagingSurcharge;
+  const intLogisticsTotalUsd = isFreightIncluded ? containerBaseCost : 0;
+  const intDocsTotalUsd = isExWorks ? 0 : docClearanceCost;
   const intGrandTotalUsd = intProductTotalUsd + intPackagingTotalUsd + intLogisticsTotalUsd + intDocsTotalUsd;
 
   // Value shown in the "Estimated Value" field
@@ -191,11 +209,23 @@ function ProductDetailPageContent({ params }: { params: Promise<{ category: stri
       orderNotes ? `Special Instructions: ${orderNotes}` : ''
     ].filter(Boolean).join(' | ');
 
+    // The unit price and shipping cost are already computed by the frontend using the live
+    // market config values. We pass them explicitly so the backend doesn't need to re-parse
+    // the notes string (which would miss incoterm logic, custom configs, etc.).
+    const computedUnitPrice = region === 'PK'
+      ? activePrice                           // PKR price per unit — no multiplier for domestic
+      : activePrice * packingMultiplier;      // USD price + packing surcharge for export
+
+    const computedShippingCost = region === 'PK'
+      ? localPackagingTotalPkr + localDeliveryTotalPkr
+      : intPackagingTotalUsd + intLogisticsTotalUsd + intDocsTotalUsd;
+
     placeOrder({
       items: [
         {
           productId: product.id,
           quantity: orderQty,
+          unitPrice: computedUnitPrice,        // explicit unit price for backend
           notes: region === 'PK' ? `Local packaging: ${packagingOption}` : `Export container: ${containerType}`,
         }
       ],
@@ -203,6 +233,10 @@ function ProductDetailPageContent({ params }: { params: Promise<{ category: stri
       billingAddress: billingAddr || shippingAddr,
       notes: formattedNotes,
       paymentMethod,
+      // Pass explicit cost overrides — backend will use these directly
+      subtotalOverride: baseProductCost,
+      shippingCostOverride: computedShippingCost,
+      unitPriceOverride: true,               // tells backend item.unitPrice is authoritative
     }, {
       onSuccess: (res: any) => {
         const orderId = res.data?.data?.id || res.data?.id;
@@ -313,7 +347,10 @@ function ProductDetailPageContent({ params }: { params: Promise<{ category: stri
                   {region === 'PK' ? 'Unit Price (PKR Wholesale)' : 'Unit Price (FOB Karachi)'}
                 </span>
                 <div className="text-slate-800 font-extrabold text-xl">
-                  {formatProductPrice(product.slug, product.price)} <span className="text-slate-500 font-normal text-xs">/{activeUnit}</span>
+                  {region === 'PK'
+                    ? `₨ ${Math.round(activePrice).toLocaleString()}`
+                    : `$${activePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                  } <span className="text-slate-500 font-normal text-xs">/{activeUnit}</span>
                 </div>
               </div>
               <div className="space-y-1">
@@ -398,7 +435,7 @@ function ProductDetailPageContent({ params }: { params: Promise<{ category: stri
                     {/* Quantity & Value Row */}
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1.5 block">Quantity ({product.unit}) *</label>
+                        <label className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1.5 block">Quantity ({activeUnit}) *</label>
                         <input
                           type="number"
                           min={activeMoq}
@@ -487,8 +524,8 @@ function ProductDetailPageContent({ params }: { params: Promise<{ category: stri
                           <div>
                             <label className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1.5 block">Delivery Mode *</label>
                             <select value={deliveryOption} onChange={e => setDeliveryOption(e.target.value as any)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-medium">
-                              <option value="standard">Standard Trucking (₨ 250 - 3 to 5 Days)</option>
-                              <option value="express">Express Shipment (₨ 600 - 1 to 2 Days)</option>
+                              <option value="standard">Standard Trucking (₨ {getStandardDeliveryCost().toLocaleString()} - 3 to 5 Days)</option>
+                              <option value="express">Express Shipment (₨ {getExpressDeliveryCost().toLocaleString()} - 1 to 2 Days)</option>
                               <option value="pickup">Warehouse Pickup (FREE - Sargodha Depot)</option>
                             </select>
                           </div>
@@ -573,11 +610,11 @@ function ProductDetailPageContent({ params }: { params: Promise<{ category: stri
                         <div className="flex gap-4 p-4 bg-slate-50 border border-slate-200/50 rounded-2xl">
                           <label className="flex items-center gap-2 cursor-pointer select-none">
                             <input type="checkbox" checked={exportDocumentation} onChange={e => setExportDocumentation(e.target.checked)} className="rounded text-primary focus:ring-primary/20 border-slate-350" />
-                            <span className="text-[10px] font-black text-slate-700 uppercase tracking-wide">Documentation Work (+$150)</span>
+                            <span className="text-[10px] font-black text-slate-700 uppercase tracking-wide">Documentation Work (+${getDocumentationCost()})</span>
                           </label>
                           <label className="flex items-center gap-2 cursor-pointer select-none">
                             <input type="checkbox" checked={customsClearance} onChange={e => setCustomsClearance(e.target.checked)} className="rounded text-primary focus:ring-primary/20 border-slate-350" />
-                            <span className="text-[10px] font-black text-slate-700 uppercase tracking-wide">Customs Port Clearance (+$250)</span>
+                            <span className="text-[10px] font-black text-slate-700 uppercase tracking-wide">Customs Port Clearance (+${getCustomsClearanceCost()})</span>
                           </label>
                         </div>
 
@@ -665,7 +702,7 @@ function ProductDetailPageContent({ params }: { params: Promise<{ category: stri
                     </div>
                     <div className="p-4.5">
                       <h4 className="text-xs font-black text-slate-800 group-hover:text-primary transition-colors truncate uppercase tracking-wider">{p.name}</h4>
-                      <p className="text-slate-500 text-[11px] font-bold mt-1.5">{formatProductPrice(p.slug, p.price)}/{p.unit}</p>
+                      <p className="text-slate-500 text-[11px] font-bold mt-1.5">{getCardPriceInfo(p, region).priceDisplay}/{getCardPriceInfo(p, region).unit}</p>
                     </div>
                   </div>
                 </Link>

@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ChevronDown, Phone, Mail, Globe, Search, User, LogOut, Package, ClipboardList,
+  ChevronDown, ChevronRight, Phone, Mail, Globe, Search, User, LogOut, Package, ClipboardList,
   Citrus, Carrot, Wheat, Trophy, Scissors, BookOpen, HelpCircle, Award, Image, Download,
   PackageOpen, Ship, Truck, FileSpreadsheet, Warehouse, Settings, Bell, Heart, Menu, X
 } from 'lucide-react';
@@ -30,11 +30,21 @@ export default function Navbar() {
   
   const { region, setRegion, detectLocation } = useMarketStore();
   const [mounted, setMounted] = useState(false);
+  const [isBannerDismissed, setIsBannerDismissed] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     detectLocation();
   }, [detectLocation]);
+
+  useEffect(() => {
+    // Versioned key so old sessionStorage dismissals are ignored
+    const BAR_KEY = 'kinnow_2027_bar_v2';
+    const dismissed = sessionStorage.getItem(BAR_KEY);
+    if (dismissed === 'true') {
+      setIsBannerDismissed(true);
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -87,6 +97,40 @@ export default function Navbar() {
     <>
       <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
         
+        {/* 0. Kinnow 2027 Top Announcement Bar */}
+        {mounted && !isBannerDismissed && (
+          <div
+            className="text-white text-[11px] font-bold px-4 py-2 flex items-center justify-between shadow-sm relative z-50 border-b border-white/10"
+            style={{ background: 'linear-gradient(90deg, #0E6B45 0%, #0B5537 40%, #F47A16 100%)' }}
+          >
+            <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 sm:gap-3 text-center flex-1">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+              </span>
+              <span className="truncate">
+                🍊 <span className="uppercase font-extrabold tracking-wider" style={{ color: 'rgba(255,255,255,0.85)' }}>Pre-Booking Open:</span> Sargodha Kinnow 2027 Season Container Quota is Live!
+              </span>
+              <Link
+                href="/quote?subject=Kinnow+2027+Pre-Booking+Inquiry&productCategory=fruits&quantity=1+Reefer+Container+(40ft)&message=We+would+like+to+reserve+refrigerated+container+slots+for+Sargodha+Kinnow+2027+export+season."
+                className="ml-2 px-3 py-0.5 bg-white/20 hover:bg-white/30 text-white rounded-full font-black text-[10px] uppercase tracking-wider transition-all flex items-center gap-1 shrink-0"
+              >
+                Reserve Slot <ChevronRight size={12} />
+              </Link>
+            </div>
+            <button
+              onClick={() => {
+                setIsBannerDismissed(true);
+                sessionStorage.setItem('kinnow_2027_bar_v2', 'true');
+              }}
+              className="text-white/80 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors ml-2"
+              aria-label="Dismiss banner"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        )}
+
         {/* 1. Header Utility Bar */}
         <div className="hidden lg:flex items-center justify-between px-10 py-2.5 bg-slate-950 text-[10px] text-slate-300 font-semibold tracking-wider border-b border-white/5 shadow-sm">
           <div className="flex items-center gap-6">

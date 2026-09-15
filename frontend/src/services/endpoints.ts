@@ -77,3 +77,16 @@ export const cmsApi = {
   deleteTestimonial: (id: string) => api.delete(`/cms/testimonials/${id}`),
   getDashboardStats: () => api.get('/cms/dashboard'),
 };
+
+export const pricingApi = {
+  // Shipping Config (global singleton)
+  getShippingConfig: () => api.get('/pricing/shipping'),
+  updateShippingConfig: (data: unknown) => api.put('/pricing/shipping', data),
+
+  // Product Pricing (per product)
+  getForProduct: (productId: string) => api.get(`/pricing/product/${productId}`),
+  upsertForProduct: (productId: string, data: unknown) => api.put(`/pricing/product/${productId}`, data),
+  getAllPricings: () => api.get('/pricing/products'),
+  deletePricingForProduct: (productId: string) => api.delete(`/pricing/product/${productId}`),
+};
+

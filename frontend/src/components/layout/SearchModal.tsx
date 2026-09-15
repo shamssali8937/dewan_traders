@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useProducts } from '@/hooks/useProducts';
 import { useMarketStore } from '@/store/marketStore';
+import { getCardPriceInfo } from '@/lib/pricing';
 import { resolveImageUrl } from '@/lib/utils';
 
 interface SearchModalProps {
@@ -28,7 +29,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   
   const { data } = useProducts();
   const productsList = data?.products || data || [];
-  const { formatProductPrice, getProductUnit } = useMarketStore();
+  const { region } = useMarketStore();
 
   useEffect(() => {
     if (isOpen) {
@@ -191,35 +192,38 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
                 {filteredProducts.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {filteredProducts.map((p: any) => (
-                      <Link
-                        key={p.id}
-                        href={`/catalog/${p.category?.slug || 'products'}/${p.slug}`}
-                        onClick={onClose}
-                        className="flex gap-4 p-3 bg-white hover:bg-slate-50 rounded-2xl border border-slate-200 hover:border-primary/50 transition-all group shadow-sm"
-                      >
-                        <div className="w-16 h-16 rounded-xl bg-slate-50 overflow-hidden shrink-0 flex items-center justify-center relative border border-slate-200/80">
-                          {p.imageUrl ? (
-                            <img src={resolveImageUrl(p.imageUrl)} alt={p.name} className="w-full h-full object-cover animate-fade-in" />
-                          ) : (
-                            <Package size={20} className="text-slate-400" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0 flex flex-col justify-between">
-                          <div>
-                            <span className="text-[9px] text-primary uppercase font-bold tracking-widest">{p.category?.name}</span>
-                            <h4 className="text-xs font-bold truncate group-hover:text-primary transition-colors text-slate-800 mt-0.5">{p.name}</h4>
+                    {filteredProducts.map((p: any) => {
+                      const priceInfo = getCardPriceInfo(p, region);
+                      return (
+                        <Link
+                          key={p.id}
+                          href={`/catalog/${p.category?.slug || 'products'}/${p.slug}`}
+                          onClick={onClose}
+                          className="flex gap-4 p-3 bg-white hover:bg-slate-50 rounded-2xl border border-slate-200 hover:border-primary/50 transition-all group shadow-sm"
+                        >
+                          <div className="w-16 h-16 rounded-xl bg-slate-50 overflow-hidden shrink-0 flex items-center justify-center relative border border-slate-200/80">
+                            {p.imageUrl ? (
+                              <img src={resolveImageUrl(p.imageUrl)} alt={p.name} className="w-full h-full object-cover animate-fade-in" />
+                            ) : (
+                              <Package size={20} className="text-slate-400" />
+                            )}
                           </div>
-                          <div className="flex items-center justify-between text-[11px] font-bold mt-1">
-                            <span className="text-slate-700">
-                              {formatProductPrice(p.slug, p.price)}
-                              <span className="text-slate-400 font-normal">/{getProductUnit(p.slug, p.unit)}</span>
-                            </span>
-                            <span className="text-[9px] text-emerald-600 uppercase font-bold">RFQ Active</span>
+                          <div className="flex-1 min-w-0 flex flex-col justify-between">
+                            <div>
+                              <span className="text-[9px] text-primary uppercase font-bold tracking-widest">{p.category?.name}</span>
+                              <h4 className="text-xs font-bold truncate group-hover:text-primary transition-colors text-slate-800 mt-0.5">{p.name}</h4>
+                            </div>
+                            <div className="flex items-center justify-between text-[11px] font-bold mt-1">
+                              <span className="text-slate-700">
+                                {priceInfo.priceDisplay}
+                                <span className="text-slate-400 font-normal">/{priceInfo.unit}</span>
+                              </span>
+                              <span className="text-[9px] text-emerald-600 uppercase font-bold">RFQ Active</span>
+                            </div>
                           </div>
-                        </div>
-                      </Link>
-                    ))}
+                        </Link>
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-20 text-slate-400 text-center space-y-3">

@@ -1,66 +1,13 @@
 import { prisma } from '../config/database';
 import { ApiError } from '../utils/ApiError';
 
-// B2B Enterprise Pricing Map matching frontend pricing.ts
-const PRICING_MAP: Record<string, { pkPrice: number; intPrice: number }> = {
-  'kinnow-mandarin': { pkPrice: 120, intPrice: 9.00 },
-  'mango-chaunsa': { pkPrice: 350, intPrice: 18.00 },
-  'blood-orange': { pkPrice: 220, intPrice: 11.00 },
-  'guava': { pkPrice: 180, intPrice: 12.00 },
-  'red-onion': { pkPrice: 150, intPrice: 380.00 },
-  'potato': { pkPrice: 84, intPrice: 320.00 },
-  'tomato': { pkPrice: 160, intPrice: 8.00 },
-  'garlic': { pkPrice: 450, intPrice: 18.00 },
-  'super-kernel-basmati': { pkPrice: 490, intPrice: 1250.00 },
-  '1121-sella-basmati': { pkPrice: 530, intPrice: 1350.00 },
-  'surgical-scissors-set': { pkPrice: 2200, intPrice: 12.50 },
-  'forceps-set': { pkPrice: 2800, intPrice: 15.00 },
-  'scalpel-set': { pkPrice: 1800, intPrice: 9.50 },
-  'cricket-bat': { pkPrice: 8500, intPrice: 45.00 },
-  'football': { pkPrice: 3800, intPrice: 18.00 },
-  'hockey-stick': { pkPrice: 5500, intPrice: 28.00 }
-};
-
-const ALIASES: Record<string, string> = {
-  'kinnow': 'kinnow-mandarin',
-  'mango': 'mango-chaunsa',
-  'fresh-onion': 'red-onion',
-  'red-onions': 'red-onion',
-  'super-kernel-basmati-rice': 'super-kernel-basmati',
-  '1121-sella-basmati-rice': '1121-sella-basmati',
-  'surgical-scissors': 'surgical-scissors-set',
-  'hemostatic-forceps-set': 'forceps-set',
-  'scalpel-handles-blades': 'scalpel-set',
-  'surgical-knife-set': 'scalpel-set',
-  'english-willow-cricket-bat': 'cricket-bat',
-  'thermo-bonded-football': 'football',
-  'composite-hockey-stick': 'hockey-stick'
-};
-
-function getProductB2bPrice(slug: string, isInternational: boolean, fallback: number): number {
-  const clean = slug.toLowerCase().trim();
-  let targetKey = clean;
-  if (PRICING_MAP[clean]) {
-    targetKey = clean;
-  } else if (ALIASES[clean]) {
-    targetKey = ALIASES[clean];
-  } else {
-    for (const key of Object.keys(PRICING_MAP)) {
-      if (clean.includes(key) || key.includes(clean)) {
-        targetKey = key;
-        break;
-      }
-    }
-  }
-  
-  const pricing = PRICING_MAP[targetKey];
-  if (!pricing) return fallback;
-  return isInternational ? pricing.intPrice : pricing.pkPrice;
-}
-
 export const orderService = {
   async create(userId: string, data: any) {
-    const { items, notes, shippingAddress, billingAddress, paymentMethod } = data;
+    const {
+      items, notes, shippingAddress, billingAddress, paymentMethod,
+      // Frontend can pass pre-calculated totals to avoid note-parsing mismatches
+      subtotalOverride, shippingCostOverride, unitPriceOverride,
+    } = data;
 
     const isInternational = notes ? (
       notes.includes('Market: International') ||
@@ -70,63 +17,111 @@ export const orderService = {
       notes.includes('Incoterm')
     ) : false;
 
-    // Calculate packing surcharge multiplier
+    // ── Load shipping config from DB (used only when frontend doesn't send explicit values) ──
+    const shippingConfig = await prisma.shippingConfig.findFirst();
+    const cfg = {
+      packMult20ftReefer: shippingConfig ? Number(shippingConfig.packMult20ftReefer) : 1.15,
+      packMult40ftReefer: shippingConfig ? Number(shippingConfig.packMult40ftReefer) : 1.25,
+      packMult20ftDry:    shippingConfig ? Number(shippingConfig.packMult20ftDry)    : 1.04,
+      packMult40ftDry:    shippingConfig ? Number(shippingConfig.packMult40ftDry)    : 1.08,
+      intContainer20ftReefer: shippingConfig ? Number(shippingConfig.intContainer20ftReefer) : 1800,
+      intContainer40ftReefer: shippingConfig ? Number(shippingConfig.intContainer40ftReefer) : 2800,
+      intContainer20ftDry:    shippingConfig ? Number(shippingConfig.intContainer20ftDry)    : 1000,
+      intContainer40ftDry:    shippingConfig ? Number(shippingConfig.intContainer40ftDry)    : 1500,
+      intBulkLoose:           shippingConfig ? Number(shippingConfig.intBulkLoose)           : 400,
+      intDocumentationCost:    shippingConfig ? Number(shippingConfig.intDocumentationCost)    : 150,
+      intCustomsClearanceCost: shippingConfig ? Number(shippingConfig.intCustomsClearanceCost) : 250,
+      pkStandardDeliveryCost: shippingConfig ? Number(shippingConfig.pkStandardDeliveryCost) : 250,
+      pkExpressDeliveryCost:  shippingConfig ? Number(shippingConfig.pkExpressDeliveryCost)  : 600,
+      pkPremiumPackagingCost: shippingConfig ? Number(shippingConfig.pkPremiumPackagingCost) : 1500,
+    };
+
+    // ── Resolve packing multiplier from container type in notes (fallback path) ──
     let packingMultiplier = 1.0;
-    if (notes && typeof notes === 'string') {
+    if (!unitPriceOverride && notes && typeof notes === 'string') {
       const notesUpper = notes.toUpperCase();
-      if (notesUpper.includes('4FT_REEFER') || notesUpper.includes('40FT_REEFER')) packingMultiplier = 1.25;
-      else if (notesUpper.includes('2FT_REEFER') || notesUpper.includes('20FT_REEFER')) packingMultiplier = 1.15;
-      else if (notesUpper.includes('4FT_DRY') || notesUpper.includes('40FT_DRY')) packingMultiplier = 1.08;
-      else if (notesUpper.includes('2FT_DRY') || notesUpper.includes('20FT_DRY')) packingMultiplier = 1.04;
+      if (notesUpper.includes('40FT_REEFER'))      packingMultiplier = cfg.packMult40ftReefer;
+      else if (notesUpper.includes('20FT_REEFER')) packingMultiplier = cfg.packMult20ftReefer;
+      else if (notesUpper.includes('40FT_DRY'))    packingMultiplier = cfg.packMult40ftDry;
+      else if (notesUpper.includes('20FT_DRY'))    packingMultiplier = cfg.packMult20ftDry;
     }
 
-    // Calculate totals
+    // ── Calculate item totals ─────────────────────────────────────────────────
     let subtotal = 0;
     const orderItems = [];
 
     for (const item of items) {
-      const product = await prisma.product.findUnique({ where: { id: item.productId } });
+      const product = await prisma.product.findUnique({
+        where: { id: item.productId },
+        include: { pricing: true },
+      });
       if (!product) throw ApiError.notFound(`Product ${item.productId} not found`);
 
-      const basePrice = getProductB2bPrice(product.slug, isInternational, Number(product.price));
-      const adjustedPrice = basePrice * packingMultiplier;
-      const itemTotal = adjustedPrice * item.quantity;
+      // If frontend sends a pre-calculated unit price, use it. Otherwise compute from DB.
+      let unitPrice: number;
+      if (typeof item.unitPrice === 'number' && item.unitPrice > 0) {
+        unitPrice = item.unitPrice;
+      } else {
+        let basePrice: number;
+        if (product.pricing) {
+          basePrice = isInternational
+            ? Number(product.pricing.intPrice)
+            : Number(product.pricing.pkPrice);
+        } else {
+          basePrice = Number(product.price);
+        }
+        unitPrice = basePrice * packingMultiplier;
+      }
+
+      const itemTotal = unitPrice * item.quantity;
       subtotal += itemTotal;
       orderItems.push({
         productId: item.productId,
         quantity: item.quantity,
-        unitPrice: adjustedPrice,
+        unitPrice,
         total: itemTotal,
         notes: item.notes,
       });
     }
 
-    // Calculate dynamic shipping, delivery, and docs surcharges
+    // ── Use explicit subtotal if sent (more accurate than recalculated) ────────
+    if (typeof subtotalOverride === 'number' && subtotalOverride > 0) {
+      subtotal = subtotalOverride;
+      // Re-sync item unit prices proportionally to the override if needed
+    }
+
+    // ── Calculate shipping cost ───────────────────────────────────────────────
     let shippingCost = 0;
-    if (isInternational) {
-      let containerBaseCost = 0;
+
+    if (typeof shippingCostOverride === 'number' && shippingCostOverride >= 0) {
+      // Frontend sent explicit shipping cost — use it directly (reflects incoterm + config)
+      shippingCost = shippingCostOverride;
+    } else if (isInternational) {
+      // Fallback: parse from notes string
       const notesUpper = notes ? notes.toUpperCase() : '';
-      if (notesUpper.includes('20FT_REEFER')) containerBaseCost = 1800;
-      else if (notesUpper.includes('40FT_REEFER')) containerBaseCost = 2800;
-      else if (notesUpper.includes('20FT_DRY')) containerBaseCost = 1000;
-      else if (notesUpper.includes('40FT_DRY')) containerBaseCost = 1500;
-      else if (notesUpper.includes('BULK_LOOSE') || notesUpper.includes('BULK/LOOSE')) containerBaseCost = 400;
+      let containerBaseCost = 0;
+      if (notesUpper.includes('40FT_REEFER'))           containerBaseCost = cfg.intContainer40ftReefer;
+      else if (notesUpper.includes('20FT_REEFER'))      containerBaseCost = cfg.intContainer20ftReefer;
+      else if (notesUpper.includes('40FT_DRY'))         containerBaseCost = cfg.intContainer40ftDry;
+      else if (notesUpper.includes('20FT_DRY'))         containerBaseCost = cfg.intContainer20ftDry;
+      else if (notesUpper.includes('BULK_LOOSE') || notesUpper.includes('BULK/LOOSE')) containerBaseCost = cfg.intBulkLoose;
 
       let docClearanceCost = 0;
-      if (notesUpper.includes('DOCS')) docClearanceCost += 150;
-      if (notesUpper.includes('CUSTOMS')) docClearanceCost += 250;
+      if (notesUpper.includes('DOCS'))    docClearanceCost += cfg.intDocumentationCost;
+      if (notesUpper.includes('CUSTOMS')) docClearanceCost += cfg.intCustomsClearanceCost;
 
       shippingCost = containerBaseCost + docClearanceCost;
     } else {
+      // Fallback: parse domestic costs from notes
       let localPackagingTotal = 0;
       if (notes && notes.includes('Packaging: Premium Packaging')) {
-        localPackagingTotal = 1500;
+        localPackagingTotal = cfg.pkPremiumPackagingCost;
       }
 
       let localDeliveryTotal = 0;
       if (notes) {
-        if (notes.includes('Delivery: EXPRESS')) localDeliveryTotal = 600;
-        else if (notes.includes('Delivery: STANDARD')) localDeliveryTotal = 250;
+        if (notes.includes('Delivery: EXPRESS'))        localDeliveryTotal = cfg.pkExpressDeliveryCost;
+        else if (notes.includes('Delivery: STANDARD')) localDeliveryTotal = cfg.pkStandardDeliveryCost;
       }
 
       shippingCost = localPackagingTotal + localDeliveryTotal;
