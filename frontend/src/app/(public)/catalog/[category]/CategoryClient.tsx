@@ -52,7 +52,7 @@ const categoryDetails: Record<string, {
     label: 'Premium Rice',
     icon: 'Wheat',
     styleStyle: 'bg-blue-50 border-blue-100 text-blue-700',
-    bannerImg: '/images/rice_hero.png',
+    bannerImg: '/images/rice.jpg',
     longDesc: "Punjab's fertile soil produces the world's finest Basmati rice. Our Super Kernel and 1121 Sella varieties are aged, refined, and sorted inside modern color sorters to ensure length and aroma matching export standards.",
     origin: 'Punjab, Pakistan',
     productionHub: 'Kamoke & Gujranwala',

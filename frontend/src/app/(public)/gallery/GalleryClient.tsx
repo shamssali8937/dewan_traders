@@ -7,7 +7,7 @@ import { Camera, ShieldCheck } from 'lucide-react';
 const galleryItems = [
   { id: 1, title: 'Premium Kinnow Mandarins', category: 'fruits', imageUrl: '/images/fruits_hero.png', desc: 'Citrus harvesting and temperature packhouse grading in Sargodha.', bgStyle: 'bg-orange-50/50 border-orange-100' },
   { id: 2, title: 'Export-Grade Red Onions', category: 'vegetables', imageUrl: '/images/vegetables_hero.png', desc: 'Graded and cured red onions prepared for cold chain reefer transport.', bgStyle: 'bg-emerald-50/50 border-emerald-100' },
-  { id: 3, title: 'Aged Basmati Rice Grains', category: 'rice', imageUrl: '/images/rice_hero.png', desc: 'Super Kernel Basmati grains polishing process in Punjab mills.', bgStyle: 'bg-indigo-50/50 border-indigo-100' },
+  { id: 3, title: 'Aged Basmati Rice Grains', category: 'rice', imageUrl: '/images/rice.jpg', desc: 'Super Kernel Basmati grains polishing process in Punjab mills.', bgStyle: 'bg-indigo-50/50 border-indigo-100' },
   { id: 4, title: 'Precision Surgical UT Scissors', category: 'surgical', imageUrl: '/images/surgical_hero.png', desc: 'Medical-grade stainless steel instrument inspection in Sialkot.', bgStyle: 'bg-sky-50/50 border-sky-100' },
   { id: 5, title: 'English Willow Cricket Bats', category: 'sports', imageUrl: '/images/sports_hero.png', desc: 'Professional willow bats finished and balanced for export dispatch.', bgStyle: 'bg-rose-50/50 border-rose-100' },
   { id: 6, title: 'Sajjad Hussain Awan - Executive Officer', category: 'corporate', imageUrl: '/images/owner_sajjad.png', desc: 'Board governance and export operations leadership.', bgStyle: 'bg-slate-50/50 border-slate-200' },

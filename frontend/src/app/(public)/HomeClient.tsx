@@ -50,7 +50,7 @@ const categories = [
     description: 'Fragrant aged Super Kernel Basmati rice and double-polished premium 1121 Sella Basmati.',
     bgStyle: 'bg-blue-50/40 border-blue-100/50 hover:bg-blue-50 text-blue-600',
     count: '10+ Varieties',
-    imageUrl: '/images/rice_hero.png',
+    imageUrl: '/images/rice.jpg',
   },
   {
     name: 'Surgical Products',
