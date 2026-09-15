@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Search, Edit2, Trash2, Package, Star, Leaf, Sprout, Wheat, Scissors, Trophy } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, Package, Star, Leaf, Sprout, Wheat, Scissors, Trophy, DollarSign } from 'lucide-react';
 import { useProducts, useCategories, useDeleteProduct } from '@/hooks/useProducts';
 import { formatPrice, resolveImageUrl } from '@/lib/utils';
 import Link from 'next/link';
@@ -86,7 +86,8 @@ export default function AdminProductsPage() {
               <tr className="border-b border-slate-200 bg-slate-50/50">
                 <th className="text-slate-500 font-black uppercase tracking-wider px-5 py-4">Product</th>
                 <th className="text-slate-500 font-black uppercase tracking-wider px-5 py-4">Category</th>
-                <th className="text-slate-500 font-black uppercase tracking-wider px-5 py-4">Export Price</th>
+                <th className="text-slate-500 font-black uppercase tracking-wider px-5 py-4">Domestic Price (PKR)</th>
+                <th className="text-slate-500 font-black uppercase tracking-wider px-5 py-4">Export Price (USD)</th>
                 <th className="text-slate-500 font-black uppercase tracking-wider px-5 py-4">Available Stock</th>
                 <th className="text-slate-500 font-black uppercase tracking-wider px-5 py-4">Status</th>
                 <th className="text-right text-slate-500 font-black uppercase tracking-wider px-5 py-4">Actions</th>
@@ -97,7 +98,7 @@ export default function AdminProductsPage() {
               {isLoading ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <tr key={i} className="animate-pulse">
-                    {Array.from({ length: 6 }).map((_, j) => (
+                    {Array.from({ length: 7 }).map((_, j) => (
                       <td key={j} className="px-5 py-4">
                         <div className="h-4 bg-slate-100 rounded" />
                       </td>
@@ -106,7 +107,7 @@ export default function AdminProductsPage() {
                 ))
               ) : products.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-5 py-16 text-center space-y-2">
+                  <td colSpan={7} className="px-5 py-16 text-center space-y-2">
                     <Package className="mx-auto text-slate-400" size={32} />
                     <p className="text-slate-600 font-black uppercase tracking-wider text-xs">No products registered</p>
                     <Link href="/admin/products/new" className="text-primary hover:underline font-extrabold text-xs uppercase tracking-wide block pt-2">
@@ -115,54 +116,65 @@ export default function AdminProductsPage() {
                   </td>
                 </tr>
               ) : (
-                products.map((product: any) => (
-                  <tr key={product.id} className="hover:bg-slate-50/30 transition-colors">
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl border border-slate-205 overflow-hidden shrink-0 bg-slate-50 flex items-center justify-center relative">
-                          {product.imageUrl ? (
-                            <img src={resolveImageUrl(product.imageUrl)} alt={product.name} className="w-full h-full object-cover" />
-                          ) : (
-                            <div className="text-slate-450">
-                              <Package size={15} />
-                            </div>
-                          )}
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-1.5">
-                            <p className="font-extrabold text-slate-850 uppercase tracking-wide">{product.name}</p>
-                            {product.isFeatured && <Star size={11} className="text-amber-400 fill-amber-400" />}
+                products.map((product: any) => {
+                  const pkPriceDisplay = product.pricing
+                    ? `Rs. ${Number(product.pricing.pkPrice).toLocaleString()} / ${product.pricing.pkUnit}`
+                    : `Rs. ${(Number(product.price) * 278).toLocaleString()} / ${product.unit}`;
+
+                  const intPriceDisplay = product.pricing
+                    ? `$${Number(product.pricing.intPrice).toFixed(2)} / ${product.pricing.intUnit}`
+                    : `$${Number(product.price).toFixed(2)} / ${product.unit}`;
+
+                  return (
+                    <tr key={product.id} className="hover:bg-slate-50/30 transition-colors">
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-xl border border-slate-205 overflow-hidden shrink-0 bg-slate-50 flex items-center justify-center relative">
+                            {product.imageUrl ? (
+                              <img src={resolveImageUrl(product.imageUrl)} alt={product.name} className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="text-slate-450">
+                                <Package size={15} />
+                              </div>
+                            )}
                           </div>
-                          <p className="text-[10px] text-slate-500 mt-1 font-mono">SKU: {product.sku}</p>
+                          <div>
+                            <div className="flex items-center gap-1.5">
+                              <p className="font-extrabold text-slate-850 uppercase tracking-wide">{product.name}</p>
+                              {product.isFeatured && <Star size={11} className="text-amber-400 fill-amber-400" />}
+                            </div>
+                            <p className="text-[10px] text-slate-500 mt-1 font-mono">SKU: {product.sku}</p>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-5 py-4 text-slate-500 uppercase font-black text-[9px] tracking-wider">{product.category?.name}</td>
-                    <td className="px-5 py-4 text-slate-900 font-black">{formatPrice(product.price)}<span className="text-slate-500 font-normal text-[9px]">/{product.unit}</span></td>
-                    <td className="px-5 py-4">
-                      <span className={`text-[9px] px-2.5 py-0.5 rounded-full font-black border uppercase shadow-sm ${product.stock > 0 ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-red-50 text-red-650 border-red-100'}`}>
-                        {product.stock} {product.unit}
-                      </span>
-                    </td>
-                    <td className="px-5 py-4">
-                      <span className={`text-[9px] px-2.5 py-0.5 rounded-full font-black border uppercase shadow-sm ${product.isActive ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>
-                        {product.isActive ? 'Active' : 'Draft'}
-                      </span>
-                    </td>
-                    <td className="px-5 py-4">
-                      <div className="flex items-center justify-end gap-2">
-                        <Link href={`/admin/products/${product.id}/edit`}
-                          className="p-2 rounded-xl hover:bg-emerald-50 border border-transparent hover:border-emerald-100 text-slate-500 hover:text-primary transition-all">
-                          <Edit2 size={13} />
-                        </Link>
-                        <button onClick={() => handleDelete(product.id, product.name)}
-                          className="p-2 rounded-xl hover:bg-red-50 border border-transparent hover:border-red-100 text-slate-500 hover:text-red-500 transition-all">
-                          <Trash2 size={13} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                      </td>
+                      <td className="px-5 py-4 text-slate-500 uppercase font-black text-[9px] tracking-wider">{product.category?.name}</td>
+                      <td className="px-5 py-4 text-emerald-700 font-extrabold">{pkPriceDisplay}</td>
+                      <td className="px-5 py-4 text-blue-700 font-extrabold">{intPriceDisplay}</td>
+                      <td className="px-5 py-4">
+                        <span className={`text-[9px] px-2.5 py-0.5 rounded-full font-black border uppercase shadow-sm ${product.stock > 0 ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-red-50 text-red-650 border-red-100'}`}>
+                          {product.stock} {product.unit}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4">
+                        <span className={`text-[9px] px-2.5 py-0.5 rounded-full font-black border uppercase shadow-sm ${product.isActive ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>
+                          {product.isActive ? 'Active' : 'Draft'}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className="flex items-center justify-end gap-2">
+                          <Link href={`/admin/products/${product.id}/edit`}
+                            className="p-2 rounded-xl hover:bg-emerald-50 border border-transparent hover:border-emerald-100 text-slate-500 hover:text-primary transition-all" title="Edit product & pricing">
+                            <Edit2 size={13} />
+                          </Link>
+                          <button onClick={() => handleDelete(product.id, product.name)}
+                            className="p-2 rounded-xl hover:bg-red-50 border border-transparent hover:border-red-100 text-slate-500 hover:text-red-500 transition-all" title="Delete product">
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

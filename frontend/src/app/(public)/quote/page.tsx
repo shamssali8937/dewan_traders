@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import QuoteClient from './QuoteClient';
 import JsonLd from '@/components/seo/JsonLd';
@@ -35,7 +36,9 @@ export default function QuotePage() {
   return (
     <>
       <JsonLd data={breadcrumbSchema} />
-      <QuoteClient />
+      <Suspense fallback={<div className="min-h-screen pt-32 text-center text-xs font-bold text-slate-400">Loading Quote Desk...</div>}>
+        <QuoteClient />
+      </Suspense>
     </>
   );
 }

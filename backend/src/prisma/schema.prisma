@@ -150,6 +150,7 @@ model Product {
   updatedAt DateTime @updatedAt
 
   orderItems OrderItem[]
+  pricing    ProductPricing?
 
   @@map("products")
 }
@@ -373,5 +374,75 @@ model PaymentAccount {
   updatedAt      DateTime @updatedAt
 
   @@map("payment_accounts")
+}
+
+// ─────────────────────────────────────────
+// PRODUCT PRICING (Per-product PK/International pricing & packaging)
+// ─────────────────────────────────────────
+
+model ProductPricing {
+  id               String   @id @default(cuid())
+  productId        String   @unique
+  product          Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  // Domestic (PKR) pricing
+  pkPrice          Decimal  @db.Decimal(12, 2)
+  pkUnit           String   @default("kg")
+  pkUnitLabel      String   @default("per kg")
+  pkMoq            Int      @default(1)
+
+  // International (USD) pricing
+  intPrice         Decimal  @db.Decimal(12, 2)
+  intUnit          String   @default("kg")
+  intUnitLabel     String   @default("per kg")
+  intMoq           Int      @default(100)
+
+  // Packaging & Container Metadata
+  cartonSize       Int?
+  cartonPriceUsd   Decimal? @db.Decimal(10, 2)
+  containerEst20ft String?
+  containerEst40ft String?
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("product_pricing")
+}
+
+// ─────────────────────────────────────────
+// SHIPPING CONFIG (Global admin-managed logistics & multipliers)
+// ─────────────────────────────────────────
+
+model ShippingConfig {
+  id                      String   @id @default("shipping-config-main")
+
+  // Currency exchange rate
+  exchangeRatePkrPerUsd   Decimal  @default(278) @db.Decimal(10, 2)
+
+  // Domestic delivery options (PKR)
+  pkStandardDeliveryCost  Decimal  @default(250) @db.Decimal(10, 2)
+  pkExpressDeliveryCost   Decimal  @default(600) @db.Decimal(10, 2)
+  pkPremiumPackagingCost  Decimal  @default(1500) @db.Decimal(10, 2)
+
+  // International container base costs (USD)
+  intContainer20ftReefer  Decimal  @default(1800) @db.Decimal(10, 2)
+  intContainer40ftReefer  Decimal  @default(2800) @db.Decimal(10, 2)
+  intContainer20ftDry     Decimal  @default(1000) @db.Decimal(10, 2)
+  intContainer40ftDry     Decimal  @default(1500) @db.Decimal(10, 2)
+  intBulkLoose            Decimal  @default(400) @db.Decimal(10, 2)
+
+  // Container packaging cost multipliers
+  packMult20ftReefer      Decimal  @default(1.15) @db.Decimal(6, 4)
+  packMult40ftReefer      Decimal  @default(1.25) @db.Decimal(6, 4)
+  packMult20ftDry         Decimal  @default(1.04) @db.Decimal(6, 4)
+  packMult40ftDry         Decimal  @default(1.08) @db.Decimal(6, 4)
+
+  // Export documentation & clearance (USD)
+  intDocumentationCost    Decimal  @default(150) @db.Decimal(10, 2)
+  intCustomsClearanceCost Decimal  @default(250) @db.Decimal(10, 2)
+
+  updatedAt               DateTime @updatedAt
+
+  @@map("shipping_config")
 }
 

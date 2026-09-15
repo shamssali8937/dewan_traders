@@ -32,7 +32,10 @@ export const productService = {
         where,
         skip,
         take: limit,
-        include: { category: { select: { id: true, name: true, slug: true, type: true } } },
+        include: {
+          category: { select: { id: true, name: true, slug: true, type: true } },
+          pricing: true,
+        },
         orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
       }),
     ]);
@@ -56,7 +59,7 @@ export const productService = {
           { id: slugOrId }
         ]
       },
-      include: { category: true },
+      include: { category: true, pricing: true },
     });
     if (!product) throw ApiError.notFound('Product not found');
     return product;
@@ -65,7 +68,7 @@ export const productService = {
   async getById(id: string) {
     const product = await prisma.product.findUnique({
       where: { id },
-      include: { category: true },
+      include: { category: true, pricing: true },
     });
     if (!product) throw ApiError.notFound('Product not found');
     return product;
@@ -77,7 +80,7 @@ export const productService = {
 
     return prisma.product.create({
       data: { ...data, slug, sku },
-      include: { category: true },
+      include: { category: true, pricing: true },
     });
   },
 
@@ -86,7 +89,7 @@ export const productService = {
     return prisma.product.update({
       where: { id },
       data,
-      include: { category: true },
+      include: { category: true, pricing: true },
     });
   },
 
@@ -99,7 +102,10 @@ export const productService = {
     return prisma.product.findMany({
       where: { isActive: true, isFeatured: true },
       take: 8,
-      include: { category: { select: { name: true, slug: true, type: true } } },
+      include: {
+        category: { select: { name: true, slug: true, type: true } },
+        pricing: true,
+      },
     });
   },
 };

@@ -5,8 +5,9 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Search, ArrowRight, MapPin, Leaf, Sprout, Scissors, Trophy, Package, Wheat, Sparkles, Award } from 'lucide-react';
 import { useProducts, useCategories } from '@/hooks/useProducts';
-import { formatPrice, resolveImageUrl } from '@/lib/utils';
+import { getCardPriceInfo } from '@/lib/pricing';
 import { useMarketStore } from '@/store/marketStore';
+import { resolveImageUrl } from '@/lib/utils';
 
 const iconMap = {
   Leaf: Leaf,
@@ -81,9 +82,10 @@ const categoryDetails: Record<string, {
 
 export default function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
   const { category } = use(params);
+  const { region } = useMarketStore();
+
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
-  const { formatProductPrice, getProductUnit, getProductMoq } = useMarketStore();
 
   const { data: categoryData } = useCategories();
   const { data: productData, isLoading } = useProducts({
@@ -206,57 +208,60 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
           ) : (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {products.map((product: any, idx: number) => (
-                  <motion.div
-                    key={product.id}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: idx * 0.03 }}
-                  >
-                    <Link href={`/catalog/${category}/${product.slug}`} className="group block">
-                      <div className="glass rounded-3xl overflow-hidden card-hover border border-slate-200/60 bg-white shadow-sm flex flex-col h-full">
-                        {/* Product Image */}
-                        <div className="h-44 bg-slate-50 flex items-center justify-center border-b border-slate-100 relative overflow-hidden">
-                          {product.imageUrl ? (
-                            <img src={resolveImageUrl(product.imageUrl)} alt={product.name} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
-                          ) : (
-                            <Package size={36} className="text-slate-400" />
-                          )}
-                          <div className="absolute top-3 left-3 bg-white/80 backdrop-blur px-2.5 py-1 rounded text-[9px] font-extrabold text-slate-600 border border-slate-200">
-                            {product.origin || 'Pakistan'}
+                {products.map((product: any, idx: number) => {
+                  const priceInfo = getCardPriceInfo(product, region);
+                  return (
+                    <motion.div
+                      key={product.id}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: idx * 0.03 }}
+                    >
+                      <Link href={`/catalog/${category}/${product.slug}`} className="group block">
+                        <div className="glass rounded-3xl overflow-hidden card-hover border border-slate-200/60 bg-white shadow-sm flex flex-col h-full">
+                          {/* Product Image */}
+                          <div className="h-44 bg-slate-50 flex items-center justify-center border-b border-slate-100 relative overflow-hidden">
+                            {product.imageUrl ? (
+                              <img src={resolveImageUrl(product.imageUrl)} alt={product.name} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
+                            ) : (
+                              <Package size={36} className="text-slate-400" />
+                            )}
+                            <div className="absolute top-3 left-3 bg-white/80 backdrop-blur px-2.5 py-1 rounded text-[9px] font-extrabold text-slate-600 border border-slate-200">
+                              {product.origin || 'Pakistan'}
+                            </div>
                           </div>
-                        </div>
 
-                        {/* Card Info */}
-                        <div className="p-5 flex-1 flex flex-col justify-between">
-                          <div>
-                            <span className="text-[9px] text-primary font-black uppercase tracking-widest">{details.label}</span>
-                            <h3 className="text-xs font-black text-slate-800 group-hover:text-primary transition-colors truncate mt-1 uppercase tracking-wide">{product.name}</h3>
-                            <p className="text-[11px] text-slate-500 mt-2 line-clamp-2 leading-relaxed font-medium">{product.description}</p>
-                          </div>
-                          
-                          <div className="space-y-4 mt-5">
-                            <div className="flex flex-col gap-2.5 border-t border-slate-100 pt-4">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <span className="text-xs font-extrabold text-slate-900">{formatProductPrice(product.slug, product.price)}</span>
-                                  <span className="text-[10px] text-slate-500 font-normal">/{getProductUnit(product.slug, product.unit)}</span>
+                          {/* Card Info */}
+                          <div className="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                              <span className="text-[9px] text-primary font-black uppercase tracking-widest">{details.label}</span>
+                              <h3 className="text-xs font-black text-slate-800 group-hover:text-primary transition-colors truncate mt-1 uppercase tracking-wide">{product.name}</h3>
+                              <p className="text-[11px] text-slate-500 mt-2 line-clamp-2 leading-relaxed font-medium">{product.description}</p>
+                            </div>
+                            
+                            <div className="space-y-4 mt-5">
+                              <div className="flex flex-col gap-2.5 border-t border-slate-100 pt-4">
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    <span className="text-xs font-extrabold text-slate-900">{priceInfo.priceDisplay}</span>
+                                    <span className="text-[10px] text-slate-500 font-normal">/{priceInfo.unit}</span>
+                                  </div>
+                                  <span className="text-[9px] text-slate-500 font-black uppercase">
+                                    MOQ: {priceInfo.moq} {priceInfo.unit}
+                                  </span>
                                 </div>
-                                <span className="text-[9px] text-slate-500 font-black uppercase">
-                                  MOQ: {getProductMoq(product.slug, product.minOrderQty)} {getProductUnit(product.slug, product.unit)}
-                                </span>
+                              </div>
+
+                              <div className="w-full py-2.5 bg-slate-50 group-hover:bg-primary group-hover:text-white rounded-xl text-center text-[10px] font-bold uppercase tracking-wider text-slate-600 transition-all border border-slate-200/60 group-hover:border-transparent flex items-center justify-center gap-1 shadow-sm">
+                                Request Pricing Spec &rarr;
                               </div>
                             </div>
-
-                            <div className="w-full py-2.5 bg-slate-50 group-hover:bg-primary group-hover:text-white rounded-xl text-center text-[10px] font-bold uppercase tracking-wider text-slate-600 transition-all border border-slate-200/60 group-hover:border-transparent flex items-center justify-center gap-1 shadow-sm">
-                              Request Pricing Spec &rarr;
-                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Link>
-                  </motion.div>
-                ))}
+                      </Link>
+                    </motion.div>
+                  );
+                })}
               </div>
 
               {/* Pagination Controls */}

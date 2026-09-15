@@ -5,8 +5,9 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Search, ArrowRight, Leaf, Sprout, Scissors, Trophy, Package, MapPin, Wheat, Sparkles } from 'lucide-react';
 import { useProducts, useCategories } from '@/hooks/useProducts';
-import { formatPrice, resolveImageUrl } from '@/lib/utils';
+import { getCardPriceInfo } from '@/lib/pricing';
 import { useMarketStore } from '@/store/marketStore';
+import { resolveImageUrl } from '@/lib/utils';
 
 const iconMap = {
   Leaf: Leaf,
@@ -155,6 +156,7 @@ export default function CatalogPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.map((product: any, idx: number) => {
                 const catMeta = categoryMeta[product.category?.slug] || { style: '' };
+                const priceInfo = getCardPriceInfo(product, region);
                 return (
                   <motion.div
                     key={product.id}
@@ -195,11 +197,11 @@ export default function CatalogPage() {
                             <div className="flex flex-col gap-2.5 border-t border-slate-100 pt-4">
                               <div className="flex items-center justify-between">
                                 <div>
-                                  <span className="text-xs font-extrabold text-slate-900">{formatProductPrice(product.slug, product.price)}</span>
-                                  <span className="text-[10px] text-slate-500 font-normal">/{getProductUnit(product.slug, product.unit)}</span>
+                                  <span className="text-xs font-extrabold text-slate-900">{priceInfo.priceDisplay}</span>
+                                  <span className="text-[10px] text-slate-500 font-normal">/{priceInfo.unit}</span>
                                 </div>
                                 <span className="text-[9px] text-slate-500 font-black uppercase">
-                                  MOQ: {getProductMoq(product.slug, product.minOrderQty)} {getProductUnit(product.slug, product.unit)}
+                                  MOQ: {priceInfo.moq} {priceInfo.unit}
                                 </span>
                               </div>
                             </div>

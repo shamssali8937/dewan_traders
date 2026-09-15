@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
@@ -8,10 +9,11 @@ import {
 } from 'lucide-react';
 import { useFeaturedProducts } from '@/hooks/useProducts';
 import { useTestimonials } from '@/hooks/useCms';
-import { formatPrice, resolveImageUrl } from '@/lib/utils';
-import { useState } from 'react';
+import { getCardPriceInfo } from '@/lib/pricing';
 import { useMarketStore } from '@/store/marketStore';
+import { resolveImageUrl } from '@/lib/utils';
 import WorldShippingMap from '@/components/WorldShippingMap';
+import KinnowPreBookingBanner from '@/components/KinnowPreBookingBanner';
 
 const iconMap = {
   Leaf: Leaf,
@@ -82,7 +84,7 @@ export default function HomePage() {
   const { data: testimonials } = useTestimonials();
   const products = featuredData?.products || featuredData || [];
   const testimonialList = testimonials || [];
-  const { formatProductPrice, getProductUnit, getProductMoq } = useMarketStore();
+  const { region } = useMarketStore();
 
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
@@ -176,6 +178,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ═══ KINNOW 2027 PRE-BOOKING POPUP ═════════════════════════ */}
+      <KinnowPreBookingBanner />
+
       {/* ═══ STATS BAR ════════════════════════════════════════════ */}
       <section className="py-16 border-y border-slate-200/60 bg-white/60 backdrop-blur-md relative z-10">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
@@ -253,34 +258,37 @@ export default function HomePage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {products.slice(0, 4).map((p: any) => (
-                <Link key={p.id} href={`/catalog/${p.category?.slug}/${p.slug}`} className="group block">
-                  <div className="glass rounded-3xl overflow-hidden card-hover border border-slate-200/60 flex flex-col h-full bg-white shadow-sm">
-                    <div className="h-44 bg-slate-50 flex items-center justify-center border-b border-slate-100 relative overflow-hidden">
-                      {p.imageUrl ? (
-                        <img src={resolveImageUrl(p.imageUrl)} alt={p.name} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
-                      ) : (
-                        <Package size={36} className="text-slate-400" />
-                      )}
-                      <div className="absolute top-3 left-3 bg-white/80 backdrop-blur px-2.5 py-1 rounded-lg text-[9px] font-black uppercase text-primary border border-slate-200">
-                        {p.origin || 'Pakistan'}
+              {products.slice(0, 4).map((p: any) => {
+                const priceInfo = getCardPriceInfo(p, region);
+                return (
+                  <Link key={p.id} href={`/catalog/${p.category?.slug}/${p.slug}`} className="group block">
+                    <div className="glass rounded-3xl overflow-hidden card-hover border border-slate-200/60 flex flex-col h-full bg-white shadow-sm">
+                      <div className="h-44 bg-slate-50 flex items-center justify-center border-b border-slate-100 relative overflow-hidden">
+                        {p.imageUrl ? (
+                          <img src={resolveImageUrl(p.imageUrl)} alt={p.name} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" />
+                        ) : (
+                          <Package size={36} className="text-slate-400" />
+                        )}
+                        <div className="absolute top-3 left-3 bg-white/80 backdrop-blur px-2.5 py-1 rounded-lg text-[9px] font-black uppercase text-primary border border-slate-200">
+                          {p.origin || 'Pakistan'}
+                        </div>
                       </div>
-                    </div>
-                    <div className="p-5 flex-1 flex flex-col justify-between">
-                      <div>
-                        <span className="text-[9px] text-primary font-black uppercase tracking-widest">{p.category?.name}</span>
-                        <h3 className="text-xs font-black text-slate-800 mt-1 truncate group-hover:text-primary transition-colors uppercase tracking-wide">{p.name}</h3>
-                        <p className="text-[11px] text-slate-500 mt-2 line-clamp-2 leading-relaxed font-medium">{p.description}</p>
-                      </div>
+                      <div className="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                          <span className="text-[9px] text-primary font-black uppercase tracking-widest">{p.category?.name}</span>
+                          <h3 className="text-xs font-black text-slate-800 mt-1 truncate group-hover:text-primary transition-colors uppercase tracking-wide">{p.name}</h3>
+                          <p className="text-[11px] text-slate-500 mt-2 line-clamp-2 leading-relaxed font-medium">{p.description}</p>
+                        </div>
 
-                      <div className="flex items-center justify-between border-t border-slate-100 pt-4 mt-5">
-                        <span className="text-xs font-extrabold text-slate-900">{formatProductPrice(p.slug, p.price)}<span className="text-[10px] text-slate-500 font-normal">/{getProductUnit(p.slug, p.unit)}</span></span>
-                        <span className="text-[9px] text-slate-500 uppercase font-black">MOQ: {getProductMoq(p.slug, p.minOrderQty)} {getProductUnit(p.slug, p.unit)}</span>
+                        <div className="flex items-center justify-between border-t border-slate-100 pt-4 mt-5">
+                          <span className="text-xs font-extrabold text-slate-900">{priceInfo.priceDisplay}<span className="text-[10px] text-slate-500 font-normal">/{priceInfo.unit}</span></span>
+                          <span className="text-[9px] text-slate-500 uppercase font-black">MOQ: {priceInfo.moq} {priceInfo.unit}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>

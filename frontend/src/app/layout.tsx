@@ -6,6 +6,7 @@ import { Toaster } from 'sonner';
 import AnimatedBackground from '@/components/AnimatedBackground';
 import JsonLd from '@/components/seo/JsonLd';
 import AuthInitializer from '@/components/AuthInitializer';
+import ShippingConfigInitializer from '@/components/ShippingConfigInitializer';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -175,6 +176,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.variable} font-sans antialiased bg-white text-slate-900`} suppressHydrationWarning>
         <QueryProvider>
           <AuthInitializer />
+          <ShippingConfigInitializer />
           {/* Global Ambient Background Animation */}
           <AnimatedBackground />
 

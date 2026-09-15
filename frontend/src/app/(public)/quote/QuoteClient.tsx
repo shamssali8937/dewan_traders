@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -23,14 +25,35 @@ const rfqSchema = z.object({
 type RfqFormData = z.infer<typeof rfqSchema>;
 
 export default function RequestQuotePage() {
+  const searchParams = useSearchParams();
   const { mutate: submitInquiry, isPending, isSuccess } = useCreateInquiry();
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<RfqFormData>({
+  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<RfqFormData>({
     resolver: zodResolver(rfqSchema),
     defaultValues: {
       incoterms: 'FOB',
     }
   });
+
+  useEffect(() => {
+    const categoryParam = searchParams.get('productCategory');
+    const quantityParam = searchParams.get('quantity');
+    const messageParam = searchParams.get('message');
+
+    if (categoryParam) {
+      if (categoryParam === 'fruits') {
+        setValue('productCategory', 'Fresh Fruits (Citrus / Mangoes)');
+      } else {
+        setValue('productCategory', categoryParam);
+      }
+    }
+    if (quantityParam) {
+      setValue('quantity', quantityParam);
+    }
+    if (messageParam) {
+      setValue('message', messageParam);
+    }
+  }, [searchParams, setValue]);
 
   const onSubmit = (data: RfqFormData) => {
     submitInquiry({

@@ -21,6 +21,7 @@ import journalRoutes from './routes/journal.routes';
 import cmsRoutes from './routes/cms.routes';
 import paymentAccountRoutes from './routes/paymentAccount.routes';
 import notificationRoutes from './routes/notification.routes';
+import pricingRoutes from './routes/pricing.routes';
 
 const app = express();
 
@@ -160,6 +161,7 @@ app.use('/api/journal', journalRoutes);
 app.use('/api/cms', cmsRoutes);
 app.use('/api/payment-accounts', paymentAccountRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/pricing', pricingRoutes);
 
 // ─── 404 + Error Handler ─────────────────
 app.use(notFoundHandler);
