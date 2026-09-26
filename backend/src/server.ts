@@ -25,6 +25,23 @@ async function startServer() {
 ║  Env     : ${config.nodeEnv.padEnd(36)}
 ╚══════════════════════════════════════════════╝
     `);
+
+    // ─── Optional Self-Ping Keepalive ───────────────────────
+    // Automatically prevents free-tier hosts (e.g. Render, Railway) from going to sleep
+    const keepAliveUrl = process.env.KEEP_ALIVE_URL || process.env.RENDER_EXTERNAL_URL || process.env.BACKEND_URL;
+    if (keepAliveUrl) {
+      const PING_INTERVAL_MS = 10 * 60 * 1000; // 10 minutes
+      const pingEndpoint = keepAliveUrl.replace(/\/+$/, '') + '/health';
+      setInterval(async () => {
+        try {
+          const res = await fetch(pingEndpoint);
+          console.log(`[KeepAlive] Pinged ${pingEndpoint} — status: ${res.status}`);
+        } catch (err: any) {
+          console.warn(`[KeepAlive] Ping error: ${err?.message || err}`);
+        }
+      }, PING_INTERVAL_MS);
+      console.log(`🔄 [KeepAlive] Auto-pinger enabled for: ${pingEndpoint} (interval: 10m)`);
+    }
   });
 }
 

@@ -15,7 +15,7 @@ const specs = [
   { icon: Leaf,     label: 'Grade',    value: 'Export Grade-A',   color: '#0E6B45' },
   { icon: Package,  label: 'Pack',     value: '10kg / 13kg Box',  color: '#0E6B45' },
   { icon: Ship,     label: 'Shipping', value: '40ft Reefer Slot', color: '#F47A16' },
-  { icon: Calendar, label: 'Harvest',  value: "Dec '26–Feb '27",  color: '#F47A16' },
+  { icon: Calendar, label: 'Harvest',  value: '10 Nov 2026',      color: '#F47A16' },
 ];
 
 export default function KinnowPreBookingBanner() {

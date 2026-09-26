@@ -304,29 +304,35 @@ export const mockDb = {
     for (const item of data.items) {
       const prod = db.products.find(p => p.id === item.productId);
       if (prod) {
-        const itemTotal = Number(prod.price) * item.quantity;
+        const unitPrice = typeof item.unitPrice === 'number' && item.unitPrice > 0 ? item.unitPrice : Number(prod.price);
+        const itemTotal = unitPrice * item.quantity;
         subtotal += itemTotal;
         orderItems.push({
           id: `item-${Date.now()}-${Math.random().toString().slice(2,5)}`,
           productId: item.productId,
           quantity: item.quantity,
-          unitPrice: prod.price,
+          unitPrice,
           total: itemTotal,
           product: { name: prod.name, unit: prod.unit },
         });
       }
     }
 
-    const total = subtotal;
+    const finalSubtotal = typeof data.subtotalOverride === 'number' && data.subtotalOverride > 0 ? data.subtotalOverride : subtotal;
+    const shippingCost = typeof data.shippingCostOverride === 'number' && data.shippingCostOverride >= 0 ? data.shippingCostOverride : 0;
+    const total = finalSubtotal + shippingCost;
     const newOrder = {
       id: `ord-${Date.now()}`,
       orderNumber: `DT-MOCK-${Date.now().toString().slice(-6)}`,
       userId,
       user: { name: user.name, email: user.email, companyName: user.companyName },
-      subtotal,
+      subtotal: finalSubtotal,
+      shippingCost,
+      tax: 0,
       total,
       status: 'pending',
       paymentStatus: 'pending',
+      paymentMethod: data.paymentMethod || 'bank_transfer',
       notes: data.notes,
       shippingAddress: data.shippingAddress,
       billingAddress: data.billingAddress,

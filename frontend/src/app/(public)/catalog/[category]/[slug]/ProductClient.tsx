@@ -212,9 +212,7 @@ function ProductDetailPageContent({ params }: { params: Promise<{ category: stri
     // The unit price and shipping cost are already computed by the frontend using the live
     // market config values. We pass them explicitly so the backend doesn't need to re-parse
     // the notes string (which would miss incoterm logic, custom configs, etc.).
-    const computedUnitPrice = region === 'PK'
-      ? activePrice                           // PKR price per unit — no multiplier for domestic
-      : activePrice * packingMultiplier;      // USD price + packing surcharge for export
+    const computedUnitPrice = activePrice;
 
     const computedShippingCost = region === 'PK'
       ? localPackagingTotalPkr + localDeliveryTotalPkr

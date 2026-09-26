@@ -145,7 +145,7 @@ export default function HomePage() {
               transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
               className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-xl font-medium"
             >
-              Dewan Traders consolidates and exports premium Sargodha mandarins, aged basmati rice, medical instruments, and sports gear directly to wholesalers, distributors, and manufacturers worldwide.
+              Dewan Traders consolidates and exports premium Sargodha mandarins, aged basmati rice, medical instruments, and sports wear directly to wholesalers, distributors, and manufacturers worldwide.
             </motion.p>
 
             {/* CTAs */}
