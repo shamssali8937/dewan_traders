@@ -170,15 +170,20 @@ export const orderService = {
 
     // Send confirmation emails
     const paymentAccounts = await prisma.paymentAccount.findMany({ where: { isActive: true } });
-    mailer.sendOrderConfirmation(
-      order.user.email,
-      order.user.name,
+    mailer.sendOrderConfirmation({
+      to: order.user.email,
+      name: order.user.name,
       orderNumber,
-      String(total),
-      order.items,
+      subtotal: Number(order.subtotal),
+      shippingCost: Number(order.shippingCost),
+      tax: Number(order.tax),
+      total: Number(order.total),
+      items: order.items,
       paymentMethod,
-      paymentAccounts
-    );
+      paymentAccounts,
+      notes: order.notes,
+      shippingAddress: order.shippingAddress,
+    });
 
     mailer.notifyAdminNewOrder({
       customerName: order.user.name,
@@ -187,7 +192,10 @@ export const orderService = {
       phone: order.user.phone || 'N/A',
       productName: order.items[0]?.product?.name || 'General Commodity',
       quantity: order.items[0]?.quantity || 0,
-      total: String(total),
+      subtotal: Number(order.subtotal),
+      shippingCost: Number(order.shippingCost),
+      total: Number(order.total),
+      notes: order.notes,
       paymentMethod,
       orderNumber,
       id: order.id,

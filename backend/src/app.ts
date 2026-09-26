@@ -135,7 +135,39 @@ if (config.isDev) {
 // ─── Static Files (uploads) ──────────────
 app.use('/uploads', express.static(path.join(process.cwd(), config.upload.dir)));
 
-// ─── Enhanced Health Check ────────────────────────
+// ─── Health & Keepalive Endpoints ─────────────────
+// Root landing endpoint (for monitors or pings hitting the base URL)
+app.get('/', (_req, res) => {
+  res.status(200).json({
+    success: true,
+    service: 'Dewan Traders API',
+    status: 'online',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      apiHealth: '/api/health',
+      ping: '/ping',
+    },
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Fast health check (zero DB query, instant 200 response — ideal for keepalive cron pingers)
+app.get('/health', (_req, res) => {
+  res.status(200).json({
+    success: true,
+    status: 'healthy',
+    uptime: Math.round(process.uptime()),
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Minimal text ping/pong route
+app.get('/ping', (_req, res) => {
+  res.status(200).send('pong');
+});
+
+// Enhanced API health check with database query test
 app.get('/api/health', async (_req, res) => {
   let dbStatus = 'ok';
   try {
@@ -147,6 +179,8 @@ app.get('/api/health', async (_req, res) => {
     success: true,
     service: 'Dewan Traders API',
     status: dbStatus === 'ok' ? 'healthy' : 'degraded',
+    database: dbStatus,
+    uptime: Math.round(process.uptime()),
     timestamp: new Date().toISOString(),
   });
 });
